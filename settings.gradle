@@ -1,1 +1,1 @@
-include ':Skrumaz'
+include ':Skrumaz', ':Skrumaz:libs:UserVoiceSDK'

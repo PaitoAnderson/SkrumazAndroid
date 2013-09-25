@@ -5,7 +5,6 @@
     android:layout_width="wrap_content"
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:layout_marginLeft="8dp"
-    android:drawableRight="@drawable/ag"
     android:gravity="left"
     android:paddingLeft="32dp"
     android:paddingTop="6dp"
@@ -14,3 +13,5 @@
     android:textSize="16dp"
     android:textAlignment="textEnd"
     android:textStyle="bold" />
+
+    <!--android:drawableRight="@drawable/ag"-->

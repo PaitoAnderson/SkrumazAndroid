@@ -91,6 +91,11 @@ public class UserStoryAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.listrow_group, null);
         }
+
+        if (getChildrenCount(groupPosition) == 0) {
+            //convertView.setEnabled(false);
+        }
+
         Group group = (Group) getGroup(groupPosition);
         ((CheckedTextView) convertView).setText(group.string);
         ((CheckedTextView) convertView).setChecked(isExpanded);

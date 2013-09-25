@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Skrumaz/Skrumaz.iml" filepath="$PROJECT_DIR$/Skrumaz/Skrumaz.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SkrumazAndroid.iml" filepath="$PROJECT_DIR$/SkrumazAndroid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Skrumaz/libs/UserVoiceSDK/UserVoiceSDK.iml" filepath="$PROJECT_DIR$/Skrumaz/libs/UserVoiceSDK/UserVoiceSDK.iml" />
+    </modules>
+  </component>
+</project>
+

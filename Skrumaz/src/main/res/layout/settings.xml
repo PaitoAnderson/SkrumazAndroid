@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen android:layout_width="fill_parent" android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/configuration">
+        <EditTextPreference  android:title="@string/pref_title_username" android:summary="@string/pref_summary_username" android:key="@string/pref_key_username" />
+        <EditTextPreference  android:title="@string/pref_title_password" android:summary="@string/pref_summary_password" android:inputType="textPassword" android:password="true" android:key="@string/pref_key_password" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/about">
+        <Preference android:title="@string/pref_title_appversion" android:selectable="false" android:summary="@string/pref_key_appversion" android:key="PrefAppVersion" />
+    </PreferenceCategory>
+</PreferenceScreen>
