@@ -103,6 +103,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         @Override
         protected void onPreExecute() {
             // Reset Views / Spinner
+            artifacts.clear();
             processContainer.setVisibility(View.VISIBLE);
             progressSpinner.setVisibility(View.VISIBLE);
             progressText.setVisibility(View.VISIBLE);
