@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +24,17 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
+import com.skrumaz.app.classes.Artifact;
+import com.skrumaz.app.classes.Iteration;
+import com.skrumaz.app.classes.Task;
 import com.skrumaz.app.data.Preferences;
 import com.uservoice.uservoicesdk.Config;
 import com.uservoice.uservoicesdk.UserVoice;
@@ -38,12 +47,12 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
     LinearLayout processContainer;
     TextView progressText;
     ProgressBar progressSpinner;
-    SparseArray<Group> userStories = new SparseArray<Group>();
-    UserStoryAdapter adapter;
-    String iterationID;
-    String iterationName;
+    ArtifactAdapter adapter;
+    Iteration iteration = new Iteration();
     boolean continueRequests = true;
     String breakingError = "";
+
+    List<Artifact> artifacts = new ArrayList<Artifact>();
 
     private PullToRefreshAttacher mPullToRefreshAttacher;
 
@@ -56,15 +65,11 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         processContainer = (LinearLayout) findViewById(R.id.processContainer);
         progressText = (TextView) findViewById(R.id.progressText);
         progressSpinner = (ProgressBar) findViewById(R.id.progressSpinner);
-        adapter = new UserStoryAdapter(this, userStories);
+        adapter = new ArtifactAdapter(this, artifacts);
         listView.setAdapter(adapter);
 
-        //Disable Group Indicator
+        // Disable Group Indicator
         //listView.setGroupIndicator(null);
-
-        // UserVoice Library
-        Config config = new Config("skrumaz.uservoice.com");
-        UserVoice.init(config, this);
 
         // Pull to Refresh Library
         mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
@@ -76,9 +81,8 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
 
     protected void populateExpandableListView() {
 
-        // Get Current Iteration URL
+        // Get Current Iteration (This will trigger get User Stories and Defects after it completes)
         new GetIteration().execute();
-
 
         if (continueRequests) {
             // We have added data too userStories
@@ -143,13 +147,13 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
                     while ((inputStr = streamReader.readLine()) != null) {
                         responseStrBuilder.append(inputStr);
                     }
-                    JSONObject iteration = new JSONObject(responseStrBuilder.toString());
+                    JSONObject jsonIteration = new JSONObject(responseStrBuilder.toString());
 
                     // Get Iteration Name and Reference
-                    iterationID = iteration.getJSONObject("Iteration").getString("ObjectID").toString();
-                    iterationName = iteration.getJSONObject("Iteration").getString("Name").toString();
+                    iteration.setOid(jsonIteration.getJSONObject("Iteration").getString("ObjectID").toString());
+                    iteration.setName(jsonIteration.getJSONObject("Iteration").getString("Name").toString());
 
-                    Log.i("MainActivity", "Iteration: " + iterationName);
+                    Log.i("MainActivity", "Iteration: " + iteration.getName());
                 } else {
                     continueRequests = false;
                     breakingError = statusLine.getReasonPhrase();
@@ -176,17 +180,14 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
 
         @Override
         protected void onPostExecute(Boolean result) {
-            if (continueRequests)
+            if (!continueRequests)
             {
-                processContainer.setVisibility(View.GONE);
-                listView.setVisibility(View.VISIBLE);
-            } else {
                 progressSpinner.setVisibility(View.GONE);
                 progressText.setText(breakingError);
+            } else {
+                //Continue Process
+                new GetDefects().execute();
             }
-
-            //Notify refresh finished
-            mPullToRefreshAttacher.setRefreshComplete();
 
             super.onPostExecute(result);
         }
@@ -194,20 +195,11 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         @Override
         protected Boolean doInBackground(String... params) {
 
-            // Sample Data
-            //for (int j = 0; j < 5; j++) {
-            //    Group group = new Group("Testing with updated User Interface Phase " + j);
-            //    for (int i = 0; i < 5; i++) {
-            //        group.children.add("Testing with updated User Interface Phase " + i);
-            //    }
-            //    userStories.append(j, group);
-            //}
-
             // Setup HTTP Request
             DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=((Iteration.Oid%20=%20%22" + iterationID + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(getBaseContext()) + "%22))&fetch=Tasks:summary[FormattedID;Name],Rank&order=Rank");
+            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(getBaseContext()) + "%22))&fetch=Tasks:summary[FormattedID;Name],Rank,Name,FormattedID&order=Rank");
 
-                 Log.d("MainActivity","https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=((Iteration.Oid%20=%20%22" + iterationID + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(getBaseContext()) + "%22))&fetch=Tasks:summary[FormattedID;Name],Rank&order=Rank");
+                 Log.d("MainActivity","https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(getBaseContext()) + "%22))&fetch=Tasks:summary[FormattedID;Name],Rank,Name,FormattedID&order=Rank");
 
             // Setup HTTP Headers / Authorization
             get.setHeader("Accept", "application/json");
@@ -233,40 +225,28 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
                     for (int i = 0; i < userStoriesArray.length(); i++) {
 
                         // Create an expandable list item for each user story
-                        Group userStory = new Group(userStoriesArray.getJSONObject(i).getString("_refObjectName").toString());
+                        Artifact userStory = new Artifact(userStoriesArray.getJSONObject(i).getString("Name").toString());
+                        userStory.setRank(userStoriesArray.getJSONObject(i).getString("DragAndDropRank").toString());
+                        userStory.setFormattedID(userStoriesArray.getJSONObject(i).getString("FormattedID").toString());
 
                         // Iterate though Tasks for User Story
                         for (int j = 0; j < userStoriesArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getInt("Count"); j++)
                         {
+                            Task task = new Task(userStoriesArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getJSONObject("Name").names().getString(j));
+                            task.setFormattedID(userStoriesArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getJSONObject("FormattedID").names().getString(j));
+
                             // Add Tasks as children
-                            userStory.children.add(userStoriesArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getJSONObject("Name").names().getString(j));
+                            userStory.addTask(task);
                         }
 
-                        userStories.append(i, userStory);
+                        artifacts.add(userStory);
                     }
-
-
-
-                    //Log.i("MainActivity", "Iteration: " + iterationName);
 
                 } else {
                     continueRequests = false;
                     breakingError = statusLine.getReasonPhrase();
-                    Log.d("MainActivity", "US Error: " + statusLine.getReasonPhrase());
+                    Log.d("MainActivity", "DE Error: " + statusLine.getReasonPhrase());
                 }
-
-                // Items for Iteration
-                //(Iteration = "https://rally1.rallydev.com/slm/webservice/v2.0/iteration/14094993021")
-                //https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=(Iteration%20=%20%22https://rally1.rallydev.com/slm/webservice/v2.0/iteration/14094993021%22)
-                //https://rally1.rallydev.com/slm/webservice/v2.0/defect?query=(Iteration%20=%20%22https://rally1.rallydev.com/slm/webservice/v2.0/iteration/14094993021%22)
-
-
-                //https://rally1.rallydev.com/slm/webservice/v2.0/artifact?query=(Iteration.Oid%20%=%20%2214094993021%22)&start=1&pagesize=20
-                //https://rally1.rallydev.com/slm/webservice/v2.0/artifact?query=((Iteration.Oid%20%=%20"14094993021")%20and%20(Owner.Name%20=%20%22panderso@qualcomm.com%22))&start=1&pagesize=20
-
-
-                //All stories with Tasks for current Owner / Iteration
-                //https://rally1.rallydev.com/slm/webservice/v2.0/task?workspace=https://rally1.rallydev.com/slm/webservice/v2.0/workspace/3418690630&query=((Iteration.Oid%20%3D%2014094993021)%20and%20(Owner.Name%20%3D%20panderso%40qualcomm.com))&fetch=true&order=WorkProduct&start=1&pagesize=20
 
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
@@ -276,6 +256,114 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
 
             return null;
         }
+    }
+
+    class GetDefects extends AsyncTask<String, Integer, Boolean> {
+        @Override
+        protected void onPreExecute() {
+            // Update Text
+            progressText.setText("Getting Defects...");
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (continueRequests)
+            {
+                processContainer.setVisibility(View.GONE);
+                listView.setVisibility(View.VISIBLE);
+            } else {
+                progressSpinner.setVisibility(View.GONE);
+                progressText.setText(breakingError);
+            }
+
+            //Sort by Rank
+            Collections.sort(artifacts, new Artifact.OrderByRank());
+
+            //Notify refresh finished
+            mPullToRefreshAttacher.setRefreshComplete();
+
+            super.onPostExecute(result);
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+
+            // Setup HTTP Request
+            DefaultHttpClient httpClient = new DefaultHttpClient();
+            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(getBaseContext()) + "%22))&fetch=Tasks:summary[FormattedID;Name],Rank,Name,FormattedID&order=Rank");
+
+                 Log.d("MainActivity","https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(getBaseContext()) + "%22))&fetch=Tasks:summary[FormattedID;Name],Rank,Name,FormattedID&order=Rank");
+
+            // Setup HTTP Headers / Authorization
+            get.setHeader("Accept", "application/json");
+            get.setHeader("Authorization", Preferences.getCredentials(getBaseContext()));
+            try {
+                // Make HTTP Request
+                HttpResponse response = httpClient.execute(get);
+                StatusLine statusLine = response.getStatusLine();
+                if (statusLine.getStatusCode() == HttpURLConnection.HTTP_OK) {
+
+                    // Parse JSON Response
+                    BufferedReader streamReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+                    StringBuilder responseStrBuilder = new StringBuilder();
+                    String inputStr;
+                    while ((inputStr = streamReader.readLine()) != null) {
+                        responseStrBuilder.append(inputStr);
+                    }
+
+                    // Get array of User Stories in Iteration for this user
+                    JSONArray defectsArray = new JSONObject(responseStrBuilder.toString()).getJSONObject("QueryResult").getJSONArray("Results");
+
+                    // Iterate though Defects
+                    for (int i = 0; i < defectsArray.length(); i++) {
+
+                        // Create an expandable list item for each defect
+                        Artifact defect = new Artifact(defectsArray.getJSONObject(i).getString("Name").toString());
+                        defect.setRank(defectsArray.getJSONObject(i).getString("DragAndDropRank").toString());
+                        defect.setFormattedID(defectsArray.getJSONObject(i).getString("FormattedID").toString());
+
+                        // Iterate though Tasks for Defect
+                        for (int j = 0; j < defectsArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getInt("Count"); j++)
+                        {
+                            Task task = new Task(defectsArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getJSONObject("Name").names().getString(j));
+                            task.setFormattedID(defectsArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getJSONObject("FormattedID").names().getString(j));
+
+                            // Add Tasks as children
+                            defect.addTask(task);
+                        }
+
+                        // Add defect with Tasks to List
+                        artifacts.add(defect);
+                    }
+
+                } else {
+                    continueRequests = false;
+                    breakingError = statusLine.getReasonPhrase();
+                    Log.d("MainActivity", "US Error: " + statusLine.getReasonPhrase());
+                }
+
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
+
+    public static <K, V extends Comparable<? super V>> SortedSet<Map.Entry<K, V>> artifactSortMap(Map<K, V> map) {
+        SortedSet<Map.Entry<K, V>> sortedEntries = new TreeSet<Map.Entry<K, V>>(
+          new Comparator<Map.Entry<K, V>>() {
+              @Override
+              public int compare(Map.Entry<K, V> lhs, Map.Entry<K, V> rhs) {
+                  return lhs.getValue().compareTo(rhs.getValue());
+              }
+          }
+        );
+        sortedEntries.addAll(map.entrySet());
+        return sortedEntries;
     }
 
     @Override
@@ -298,6 +386,11 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
                 startActivity(intent);
                 break;
             case R.id.action_help:
+                // UserVoice library
+                Config config = new Config("skrumaz.uservoice.com");
+                UserVoice.init(config, this);
+
+                // Launch UserVoice
                 UserVoice.launchUserVoice(this);
                 break;
         }

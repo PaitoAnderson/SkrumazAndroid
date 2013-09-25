@@ -1,5 +1,7 @@
 package com.skrumaz.app.classes;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -12,7 +14,24 @@ public class Artifact {
     private String FormattedID;
     private String Name;
     private String Rank;
-    private List<Task> Tasks;
+    private List<Task> Tasks = new ArrayList<Task>();
+
+    @Override
+    public String toString(){
+        return String.valueOf(this.Name);
+    }
+
+    public static class OrderByRank implements Comparator<Artifact> {
+
+        @Override
+        public int compare(Artifact o1, Artifact o2) {
+            return o1.getRank().compareTo(o2.getRank());
+        }
+    }
+
+    public Artifact(String name) {
+        this.Name = name;
+    }
 
     public String getFormattedID() {
         return FormattedID;
@@ -46,8 +65,8 @@ public class Artifact {
         return Tasks;
     }
 
-    public void addTask(int location, Task task) {
-        Tasks.add(location, task);
+    public void addTask(Task task) {
+        Tasks.add(task);
     }
 
     public void addTasks(List<Task> tasks) {

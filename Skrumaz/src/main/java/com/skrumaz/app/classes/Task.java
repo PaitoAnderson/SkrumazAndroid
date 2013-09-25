@@ -6,6 +6,26 @@ package com.skrumaz.app.classes;
  * This data class is used for storing tasks from user stories and defects
  */
 public class Task {
-    String FormattedID;
-    String Name;
+    private String Name;
+    private String FormattedID;
+
+    public Task(String name) {
+        this.Name = name;
+    }
+
+    public String getName() {
+        return this.Name;
+    }
+
+    public void setName(String name) {
+        this.Name = name;
+    }
+
+    public String getFormattedID() {
+        return this.FormattedID;
+    }
+
+    public void setFormattedID(String formattedID) {
+        this.FormattedID = formattedID;
+    }
 }

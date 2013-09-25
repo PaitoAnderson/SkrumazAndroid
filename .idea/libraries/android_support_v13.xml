@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="android-support-v13">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/Skrumaz/libs/UserVoiceSDK/libs/android-support-v13.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Skrumaz/build/exploded-bundles/SkrumazAndroidSkrumazLibsUserVoiceSDKUnspecified.aar/libs/android-support-v13.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
