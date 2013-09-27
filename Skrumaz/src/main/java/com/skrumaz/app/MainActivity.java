@@ -133,6 +133,8 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
             DefaultHttpClient httpClient = new DefaultHttpClient();
             HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current");
 
+            Log.d("MainActivity", "https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current");
+
             // Setup HTTP Headers / Authorization
             get.setHeader("Accept", "application/json");
             get.setHeader("Authorization", Preferences.getCredentials(getBaseContext()));
