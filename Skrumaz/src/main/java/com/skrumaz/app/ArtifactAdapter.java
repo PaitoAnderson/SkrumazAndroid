@@ -1,6 +1,7 @@
 package com.skrumaz.app;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -96,11 +97,52 @@ public class ArtifactAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.listrow_group, null);
         }
 
-        if (getChildrenCount(groupPosition) == 0) {
-            //convertView.setEnabled(false);
+        Artifact artifact = (Artifact) getGroup(groupPosition);
+
+        if (getChildrenCount(groupPosition) == 0) { }
+
+        int statusDrawable = R.drawable.dg;
+        if (artifact.isBlocked()) {
+            switch (artifact.getStatus())
+            {
+                case DEFINED:
+                    statusDrawable = R.drawable.dr;
+                    break;
+                case INPROGRESS:
+                    statusDrawable = R.drawable.pr;
+                    break;
+                case COMPLETED:
+                    statusDrawable = R.drawable.cr;
+                    break;
+                case ACCEPTED:
+                    statusDrawable = R.drawable.ar;
+                    break;
+            }
+        }
+        else
+        {
+            switch (artifact.getStatus())
+            {
+                case DEFINED:
+                    statusDrawable = R.drawable.dg;
+                    break;
+                case INPROGRESS:
+                    statusDrawable = R.drawable.pg;
+                    break;
+                case COMPLETED:
+                    statusDrawable = R.drawable.cg;
+                    break;
+                case ACCEPTED:
+                    statusDrawable = R.drawable.ag;
+                    break;
+            }
         }
 
-        Artifact artifact = (Artifact) getGroup(groupPosition);
+        // Set Status Icon
+        Drawable status = activity.getBaseContext().getResources().getDrawable(statusDrawable);
+        ((CheckedTextView) convertView).setCompoundDrawablesWithIntrinsicBounds(null, null, status, null);
+
+        // Set US/DE Name
         ((CheckedTextView) convertView).setText(artifact.getName());
         ((CheckedTextView) convertView).setChecked(isExpanded);
         return convertView;

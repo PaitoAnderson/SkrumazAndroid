@@ -15,6 +15,8 @@ public class Artifact {
     private String Name;
     private String Rank;
     private List<Task> Tasks = new ArrayList<Task>();
+    private Boolean Blocked;
+    private Status Status;
 
     @Override
     public String toString(){
@@ -71,5 +73,21 @@ public class Artifact {
 
     public void addTasks(List<Task> tasks) {
         Tasks.addAll(tasks);
+    }
+
+    public boolean isBlocked() {
+        return Blocked;
+    }
+
+    public void setBlocked(Boolean blocked) {
+        Blocked = blocked;
+    }
+
+    public Status getStatus() {
+        return Status;
+    }
+
+    public void setStatus(Status status) {
+        Status = status;
     }
 }

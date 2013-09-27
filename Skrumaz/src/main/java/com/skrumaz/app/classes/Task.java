@@ -8,6 +8,8 @@ package com.skrumaz.app.classes;
 public class Task {
     private String Name;
     private String FormattedID;
+    private Boolean Blocked;
+    private Status Status;
 
     public Task(String name) {
         this.Name = name;
@@ -28,4 +30,21 @@ public class Task {
     public void setFormattedID(String formattedID) {
         this.FormattedID = formattedID;
     }
+
+    public boolean isBlocked() {
+        return Blocked;
+    }
+
+    public void setBlocked(Boolean blocked) {
+        Blocked = blocked;
+    }
+
+    public Status getStatus() {
+        return Status;
+    }
+
+    public void setStatus(Status status) {
+        Status = status;
+    }
+
 }

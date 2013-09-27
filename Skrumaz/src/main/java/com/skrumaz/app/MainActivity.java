@@ -34,6 +34,7 @@ import java.util.TreeSet;
 
 import com.skrumaz.app.classes.Artifact;
 import com.skrumaz.app.classes.Iteration;
+import com.skrumaz.app.classes.Status;
 import com.skrumaz.app.classes.Task;
 import com.skrumaz.app.data.Preferences;
 import com.uservoice.uservoicesdk.Config;
@@ -198,9 +199,9 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
 
             // Setup HTTP Request
             DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(getBaseContext()) + "%22))&fetch=Tasks:summary[FormattedID;Name],Rank,Name,FormattedID&order=Rank");
+            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(getBaseContext()) + "%22))&fetch=Tasks:summary[FormattedID;Name;Blocked;State],Rank,Name,FormattedID,Blocked,ScheduleState&order=Rank");
 
-                 Log.d("MainActivity","https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(getBaseContext()) + "%22))&fetch=Tasks:summary[FormattedID;Name],Rank,Name,FormattedID&order=Rank");
+                 Log.d("MainActivity","https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(getBaseContext()) + "%22))&fetch=Tasks:summary[FormattedID;Name;Blocked;State],Rank,Name,FormattedID,Blocked,ScheduleState&order=Rank");
 
             // Setup HTTP Headers / Authorization
             get.setHeader("Accept", "application/json");
@@ -226,9 +227,11 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
                     for (int i = 0; i < userStoriesArray.length(); i++) {
 
                         // Create an expandable list item for each user story
-                        Artifact userStory = new Artifact(userStoriesArray.getJSONObject(i).getString("Name").toString());
-                        userStory.setRank(userStoriesArray.getJSONObject(i).getString("DragAndDropRank").toString());
-                        userStory.setFormattedID(userStoriesArray.getJSONObject(i).getString("FormattedID").toString());
+                        Artifact userStory = new Artifact(userStoriesArray.getJSONObject(i).getString("Name"));
+                        userStory.setRank(userStoriesArray.getJSONObject(i).getString("DragAndDropRank"));
+                        userStory.setFormattedID(userStoriesArray.getJSONObject(i).getString("FormattedID"));
+                        userStory.setBlocked(userStoriesArray.getJSONObject(i).getBoolean("Blocked"));
+                        userStory.setStatus(stringToStatus(userStoriesArray.getJSONObject(i).getString("ScheduleState")));
 
                         // Iterate though Tasks for User Story
                         for (int j = 0; j < userStoriesArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getInt("Count"); j++)
@@ -292,9 +295,9 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
 
             // Setup HTTP Request
             DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(getBaseContext()) + "%22))&fetch=Tasks:summary[FormattedID;Name],Rank,Name,FormattedID&order=Rank");
+            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(getBaseContext()) + "%22))&fetch=Tasks:summary[FormattedID;Name;Blocked;State],Rank,Name,FormattedID,Blocked,ScheduleState&order=Rank");
 
-                 Log.d("MainActivity","https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(getBaseContext()) + "%22))&fetch=Tasks:summary[FormattedID;Name],Rank,Name,FormattedID&order=Rank");
+                 Log.d("MainActivity","https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(getBaseContext()) + "%22))&fetch=Tasks:summary[FormattedID;Name;Blocked;State],Rank,Name,FormattedID,Blocked,ScheduleState  &order=Rank");
 
             // Setup HTTP Headers / Authorization
             get.setHeader("Accept", "application/json");
@@ -320,9 +323,11 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
                     for (int i = 0; i < defectsArray.length(); i++) {
 
                         // Create an expandable list item for each defect
-                        Artifact defect = new Artifact(defectsArray.getJSONObject(i).getString("Name").toString());
-                        defect.setRank(defectsArray.getJSONObject(i).getString("DragAndDropRank").toString());
-                        defect.setFormattedID(defectsArray.getJSONObject(i).getString("FormattedID").toString());
+                        Artifact defect = new Artifact(defectsArray.getJSONObject(i).getString("Name"));
+                        defect.setRank(defectsArray.getJSONObject(i).getString("DragAndDropRank"));
+                        defect.setFormattedID(defectsArray.getJSONObject(i).getString("FormattedID"));
+                        defect.setBlocked(defectsArray.getJSONObject(i).getBoolean("Blocked"));
+                        defect.setStatus(stringToStatus(defectsArray.getJSONObject(i).getString("ScheduleState")));
 
                         // Iterate though Tasks for Defect
                         for (int j = 0; j < defectsArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getInt("Count"); j++)
@@ -354,17 +359,19 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         }
     }
 
-    public static <K, V extends Comparable<? super V>> SortedSet<Map.Entry<K, V>> artifactSortMap(Map<K, V> map) {
-        SortedSet<Map.Entry<K, V>> sortedEntries = new TreeSet<Map.Entry<K, V>>(
-          new Comparator<Map.Entry<K, V>>() {
-              @Override
-              public int compare(Map.Entry<K, V> lhs, Map.Entry<K, V> rhs) {
-                  return lhs.getValue().compareTo(rhs.getValue());
-              }
-          }
-        );
-        sortedEntries.addAll(map.entrySet());
-        return sortedEntries;
+    public Status stringToStatus(String status) {
+        Status s1 = Status.DEFINED;
+
+        //When we move to Java SE 7 we can have our String Switch case ;)
+        if (status.equalsIgnoreCase("In-Progress")) {
+            s1 = Status.INPROGRESS;
+        } else if (status.equalsIgnoreCase("Completed")) {
+            s1 = Status.COMPLETED;
+        } else if (status.equalsIgnoreCase("Accepted")) {
+            s1 = Status.ACCEPTED;
+        }
+
+        return s1;
     }
 
     @Override
