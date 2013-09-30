@@ -44,16 +44,16 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 
 public class MainActivity extends Activity implements PullToRefreshAttacher.OnRefreshListener {
 
-    ExpandableListView listView;
-    LinearLayout processContainer;
-    TextView progressText;
-    ProgressBar progressSpinner;
-    ArtifactAdapter adapter;
-    Iteration iteration = new Iteration();
-    boolean continueRequests = true;
-    String breakingError = "";
+    private ExpandableListView listView;
+    private LinearLayout processContainer;
+    private TextView progressText;
+    private ProgressBar progressSpinner;
+    private ArtifactAdapter adapter;
+    private Iteration iteration = new Iteration();
+    private Boolean continueRequests = true;
+    private String breakingError = "";
 
-    List<Artifact> artifacts = new ArrayList<Artifact>();
+    private List<Artifact> artifacts = new ArrayList<Artifact>();
 
     private PullToRefreshAttacher mPullToRefreshAttacher;
 
@@ -79,6 +79,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         if(!Preferences.isLoggedIn(getBaseContext())) {
             Intent login = new Intent(this, Login.class);
             startActivity(login);
+            finish(); // Remove Activity from Stack
         } else {
             // Initiate API Requests
             populateExpandableListView();
@@ -98,6 +99,17 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         // Reset Errors Flag/Message
         continueRequests = true;
         breakingError = "";
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+        //state.putParcelable("artifacts", artifacts);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle state) {
+        super.onRestoreInstanceState(state);
     }
 
     @Override
@@ -256,7 +268,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
                 } else {
                     continueRequests = false;
                     breakingError = statusLine.getReasonPhrase();
-                    Log.d("MainActivity", "DE Error: " + statusLine.getReasonPhrase());
+                    Log.d("MainActivity", "US Error: " + statusLine.getReasonPhrase());
                 }
 
             } catch (UnsupportedEncodingException e) {
@@ -353,7 +365,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
                 } else {
                     continueRequests = false;
                     breakingError = statusLine.getReasonPhrase();
-                    Log.d("MainActivity", "US Error: " + statusLine.getReasonPhrase());
+                    Log.d("MainActivity", "DE Error: " + statusLine.getReasonPhrase());
                 }
 
             } catch (UnsupportedEncodingException e) {
@@ -369,7 +381,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
     public Status stringToStatus(String status) {
         Status s1 = Status.DEFINED;
 
-        //When we move to Java SE 7 we can have our String Switch case ;)
+        // When we move to Java SE 7 we can have our String Switch case ;)
         if (status.equalsIgnoreCase("In-Progress")) {
             s1 = Status.INPROGRESS;
         } else if (status.equalsIgnoreCase("Completed")) {
@@ -397,6 +409,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
                 populateExpandableListView();
                 break;
             case R.id.action_settings:
+                // Launch Setting Activity
                 Intent intent = new Intent(this, Settings.class);
                 startActivity(intent);
                 break;

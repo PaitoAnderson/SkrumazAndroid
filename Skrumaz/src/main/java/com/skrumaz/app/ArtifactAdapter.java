@@ -53,8 +53,7 @@ public class ArtifactAdapter extends BaseExpandableListAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(activity, children,
-                        Toast.LENGTH_SHORT).show();
+                //Toast.makeText(activity, children, Toast.LENGTH_SHORT).show();
             }
         });
         return convertView;

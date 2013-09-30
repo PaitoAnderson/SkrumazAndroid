@@ -19,6 +19,7 @@
         android:paddingBottom="4dp"
         android:textSize="14dp"
         android:textStyle="normal"
+        android:textIsSelectable="false"
         >
     </TextView>
 

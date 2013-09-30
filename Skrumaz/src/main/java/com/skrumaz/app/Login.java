@@ -31,11 +31,11 @@ import java.net.HttpURLConnection;
  */
 public class Login extends Activity {
 
-    ProgressDialog dialog;
-    EditText username;
-    EditText password;
-    Button login;
-    String errorInfo;
+    private ProgressDialog dialog;
+    private EditText username;
+    private EditText password;
+    private Button login;
+    private String errorInfo = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +123,7 @@ public class Login extends Activity {
                     // Sent to MainActivity
                     Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(mainActivity);
+                        finish(); // Remove Activity from Stack
                 } else {
                     // Things are bad!
                     Log.d("Login", "Things are bad!");
