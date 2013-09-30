@@ -18,9 +18,29 @@ public class Preferences {
         return "Basic " + Base64.encodeToString((prefs.getString("username", "") + ":" + prefs.getString("password", "")).getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
     }
 
+    // Set RallyDev Credentials
+    public static void setCredentials(Context context, String username, String password) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor prefsEditor = prefs.edit();
+        prefsEditor.putString("username", username);
+        prefsEditor.putString("password", password);
+        prefsEditor.commit();
+    }
+
     // Get RallyDev Username
     public static String getUsername(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         return prefs.getString("username", "");
+    }
+
+    public static boolean isLoggedIn(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        String username = prefs.getString("username", "");
+
+        if (username.length() > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

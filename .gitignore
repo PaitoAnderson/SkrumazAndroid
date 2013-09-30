@@ -21,3 +21,6 @@ local.properties
 .project
 .idea/workspace.xml
 .idea/tasks.xml
+
+# Android keys
+Android Keys.jks

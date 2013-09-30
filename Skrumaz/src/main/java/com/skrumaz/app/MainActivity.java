@@ -76,8 +76,13 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
         mPullToRefreshAttacher.addRefreshableView(listView, this);
 
-        // Initiate API Requests
-        populateExpandableListView();
+        if(!Preferences.isLoggedIn(getBaseContext())) {
+            Intent login = new Intent(this, Login.class);
+            startActivity(login);
+        } else {
+            // Initiate API Requests
+            populateExpandableListView();
+        }
     }
 
     protected void populateExpandableListView() {
