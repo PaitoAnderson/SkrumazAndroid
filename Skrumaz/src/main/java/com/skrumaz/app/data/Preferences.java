@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
 
+import java.sql.Date;
+
 /**
  * Created by Paito Anderson on 2013-09-22.
  */
@@ -42,5 +44,27 @@ public class Preferences {
         } else {
             return false;
         }
+    }
+
+    public static boolean isDataExpired(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        Date expiryDate = new Date(prefs.getLong("dataExpiry", 0));
+        Date currentDate = new Date(System.currentTimeMillis());
+
+        if (expiryDate.after(currentDate)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public static void setDataExpiry(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor prefsEditor = prefs.edit();
+        Long currentDate = System.currentTimeMillis();
+        currentDate = currentDate + (15*60*1000); //Add 15minutes to current time
+        prefsEditor.putLong("dataExpiry", currentDate);
+        prefsEditor.commit();
+
     }
 }

@@ -13,6 +13,15 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.skrumaz.app.classes.Artifact;
+import com.skrumaz.app.classes.Iteration;
+import com.skrumaz.app.classes.Task;
+import com.skrumaz.app.data.Database;
+import com.skrumaz.app.data.Preferences;
+import com.skrumaz.app.utils.StatusLookup;
+import com.uservoice.uservoicesdk.Config;
+import com.uservoice.uservoicesdk.UserVoice;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpGet;
@@ -26,19 +35,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import com.skrumaz.app.classes.Artifact;
-import com.skrumaz.app.classes.Iteration;
-import com.skrumaz.app.classes.Status;
-import com.skrumaz.app.classes.Task;
-import com.skrumaz.app.data.Preferences;
-import com.uservoice.uservoicesdk.Config;
-import com.uservoice.uservoicesdk.UserVoice;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 
@@ -82,40 +79,31 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
             finish(); // Remove Activity from Stack
         } else {
             // Initiate API Requests
-            populateExpandableListView();
+            populateExpandableListView(false);
         }
     }
 
-    protected void populateExpandableListView() {
-
-        // Get Current Iteration (This will trigger get User Stories and Defects after it completes)
-        new GetIteration().execute();
-
-        if (continueRequests) {
-            // We have added data too userStories
-            adapter.notifyDataSetChanged();
-        }
+    protected void populateExpandableListView(boolean forceRefesh) {
 
         // Reset Errors Flag/Message
         continueRequests = true;
         breakingError = "";
-    }
 
-    @Override
-    protected void onSaveInstanceState(Bundle state) {
-        super.onSaveInstanceState(state);
-        //state.putParcelable("artifacts", artifacts);
-    }
+        if (forceRefesh || Preferences.isDataExpired(getBaseContext())) {
+            // Get Current Iteration (This will trigger get User Stories and Defects after it completes)
+            new GetIteration().execute();
+        } else {
 
-    @Override
-    protected void onRestoreInstanceState(Bundle state) {
-        super.onRestoreInstanceState(state);
+            new GetDatabase().execute();
+        }
+
     }
 
     @Override
     public void onRefreshStarted(View view) {
-        populateExpandableListView();
+        populateExpandableListView(true);
     }
+
 
     class GetIteration extends AsyncTask<String, Integer, Boolean> {
         @Override
@@ -137,7 +125,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
                 progressSpinner.setVisibility(View.GONE);
                 progressText.setText(breakingError);
             } else {
-                //Continue Process
+                // Continue Process
                 new GetUserStories().execute();
             }
             super.onPostExecute(result);
@@ -206,7 +194,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
                 progressSpinner.setVisibility(View.GONE);
                 progressText.setText(breakingError);
             } else {
-                //Continue Process
+                // Continue Process
                 new GetDefects().execute();
             }
 
@@ -250,7 +238,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
                         userStory.setRank(userStoriesArray.getJSONObject(i).getString("DragAndDropRank"));
                         userStory.setFormattedID(userStoriesArray.getJSONObject(i).getString("FormattedID"));
                         userStory.setBlocked(userStoriesArray.getJSONObject(i).getBoolean("Blocked"));
-                        userStory.setStatus(stringToStatus(userStoriesArray.getJSONObject(i).getString("ScheduleState")));
+                        userStory.setStatus(StatusLookup.stringToStatus(userStoriesArray.getJSONObject(i).getString("ScheduleState")));
 
                         // Iterate though Tasks for User Story
                         for (int j = 0; j < userStoriesArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getInt("Count"); j++)
@@ -300,10 +288,10 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
                 progressText.setText(breakingError);
             }
 
-            //Sort by Rank
+            // Sort by Rank
             Collections.sort(artifacts, new Artifact.OrderByRank());
 
-            //Notify refresh finished
+            // Notify refresh finished
             mPullToRefreshAttacher.setRefreshComplete();
 
             super.onPostExecute(result);
@@ -346,7 +334,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
                         defect.setRank(defectsArray.getJSONObject(i).getString("DragAndDropRank"));
                         defect.setFormattedID(defectsArray.getJSONObject(i).getString("FormattedID"));
                         defect.setBlocked(defectsArray.getJSONObject(i).getBoolean("Blocked"));
-                        defect.setStatus(stringToStatus(defectsArray.getJSONObject(i).getString("ScheduleState")));
+                        defect.setStatus(StatusLookup.stringToStatus(defectsArray.getJSONObject(i).getString("ScheduleState")));
 
                         // Iterate though Tasks for Defect
                         for (int j = 0; j < defectsArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getInt("Count"); j++)
@@ -361,6 +349,14 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
                         // Add defect with Tasks to List
                         artifacts.add(defect);
                     }
+
+                    // Store artifacts in Database
+                    Database db = new Database(getBaseContext());
+                    db.storeArtifacts(artifacts);
+                    db.close();
+
+                    // Set data expiry date
+                    Preferences.setDataExpiry(getBaseContext());
 
                 } else {
                     continueRequests = false;
@@ -378,19 +374,46 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         }
     }
 
-    public Status stringToStatus(String status) {
-        Status s1 = Status.DEFINED;
+    class GetDatabase extends AsyncTask<String, Integer, Boolean> {
 
-        // When we move to Java SE 7 we can have our String Switch case ;)
-        if (status.equalsIgnoreCase("In-Progress")) {
-            s1 = Status.INPROGRESS;
-        } else if (status.equalsIgnoreCase("Completed")) {
-            s1 = Status.COMPLETED;
-        } else if (status.equalsIgnoreCase("Accepted")) {
-            s1 = Status.ACCEPTED;
+
+        @Override
+        protected void onPreExecute() {
+            // Reset Views / Spinner
+            artifacts.clear();
+            processContainer.setVisibility(View.VISIBLE);
+            progressSpinner.setVisibility(View.VISIBLE);
+            progressText.setVisibility(View.VISIBLE);
+            progressText.setText("Getting Stuff...");
+            listView.setVisibility(View.GONE);
+            super.onPreExecute();
         }
 
-        return s1;
+        @Override
+        protected void onPostExecute(Boolean result) {
+            processContainer.setVisibility(View.GONE);
+            listView.setVisibility(View.VISIBLE);
+
+            // Notify refresh finished
+            mPullToRefreshAttacher.setRefreshComplete();
+
+            // Notify Adapter of new data
+            adapter.notifyDataSetChanged();
+
+            super.onPostExecute(result);
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+
+            // Pull Artifacts and Task from SQLite
+            Database db = new Database(getBaseContext());
+            artifacts.clear();
+            artifacts.addAll(db.getArtifacts());
+            db.close();
+
+            return null;
+        }
     }
 
     @Override
@@ -406,7 +429,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         switch(item.getItemId()) {
             case R.id.action_refresh:
                 // Initiate API Requests
-                populateExpandableListView();
+                populateExpandableListView(true);
                 break;
             case R.id.action_settings:
                 // Launch Setting Activity
@@ -424,5 +447,5 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         }
         return super.onOptionsItemSelected(item);
     }
-    
+
 }

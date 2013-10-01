@@ -13,6 +13,11 @@ repositories {
 }
 
 android {
+    buildTypes {
+        debug {
+            packageNameSuffix ".dev"
+        }
+    }
     compileSdkVersion 18
     buildToolsVersion "18.1.0"
 

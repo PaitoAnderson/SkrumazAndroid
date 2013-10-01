@@ -123,7 +123,7 @@ public class Login extends Activity {
                     // Sent to MainActivity
                     Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(mainActivity);
-                        finish(); // Remove Activity from Stack
+                    finish(); // Remove Activity from Stack
                 } else {
                     // Things are bad!
                     Log.d("Login", "Things are bad!");
