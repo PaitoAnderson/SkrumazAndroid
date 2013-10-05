@@ -31,6 +31,22 @@ public class Artifact {
         }
     }
 
+    public static class OrderByState implements Comparator<Artifact> {
+
+        @Override
+        public int compare(Artifact o1, Artifact o2) {
+            return o1.getStatus().compareTo(o2.getStatus());
+        }
+    }
+
+    public static class OrderById implements Comparator<Artifact> {
+
+        @Override
+        public int compare(Artifact o1, Artifact o2) {
+            return o1.getFormattedID().compareTo(o2.getFormattedID());
+        }
+    }
+
     public Artifact(String name) {
         this.Name = name;
     }

@@ -2,16 +2,15 @@ package com.skrumaz.app;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckedTextView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.skrumaz.app.classes.Artifact;
+import com.skrumaz.app.data.Preferences;
 import com.skrumaz.app.utils.StatusLookup;
 
 import java.util.List;
@@ -33,7 +32,11 @@ public class ArtifactAdapter extends BaseExpandableListAdapter {
 
     @Override
     public String getChild(int groupPosition, int childPosition) {
-        return artifacts.get(groupPosition).getTask(childPosition).getName();
+        if (Preferences.showFormattedID(activity.getBaseContext())) {
+            return artifacts.get(groupPosition).getTask(childPosition).getFormattedID() + " - " + artifacts.get(groupPosition).getTask(childPosition).getName();
+        } else {
+            return artifacts.get(groupPosition).getTask(childPosition).getName();
+        }
     }
 
     @Override
@@ -106,7 +109,11 @@ public class ArtifactAdapter extends BaseExpandableListAdapter {
         ((CheckedTextView) convertView).setCompoundDrawablesWithIntrinsicBounds(null, null, status, null);
 
         // Set US/DE Name
-        ((CheckedTextView) convertView).setText(artifact.getName());
+        if (Preferences.showFormattedID(activity.getBaseContext())) {
+            ((CheckedTextView) convertView).setText(artifact.getFormattedID() + " - " + artifact.getName());
+        } else {
+            ((CheckedTextView) convertView).setText(artifact.getName());
+        }
         ((CheckedTextView) convertView).setChecked(isExpanded);
         return convertView;
     }

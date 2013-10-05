@@ -32,6 +32,15 @@ public class Settings extends PreferenceActivity {
         Preference appVersion = ((Preference) findPreference("PrefAppVersion"));
         appVersion.setSummary(appVersionString);
 
+        Preference showTeam = ((Preference) findPreference("showTeam"));
+        showTeam.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                Preferences.invalidateData(getBaseContext());
+                return true;
+            }
+        });
+
+
         // Add back button icon
         ActionBar actionbar = getActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);

@@ -72,6 +72,11 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         // Pull to Refresh Library
         mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
         mPullToRefreshAttacher.addRefreshableView(listView, this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         if(!Preferences.isLoggedIn(getBaseContext())) {
             Intent login = new Intent(this, Login.class);
@@ -206,9 +211,15 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
 
             // Setup HTTP Request
             DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(getBaseContext()) + "%22))&fetch=Tasks:summary[FormattedID;Name;Blocked;State],Rank,Name,FormattedID,Blocked,ScheduleState&order=Rank");
+            String whereQuery = "((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(getBaseContext()) + "%22))";
 
-                 Log.d("MainActivity","https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(getBaseContext()) + "%22))&fetch=Tasks:summary[FormattedID;Name;Blocked;State],Rank,Name,FormattedID,Blocked,ScheduleState&order=Rank");
+            if (Preferences.showAllOwners(getBaseContext())) {
+                whereQuery = "(Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)";
+            }
+
+            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name;Blocked;State],Rank,Name,FormattedID,Blocked,ScheduleState&order=Rank");
+
+                 Log.d("MainActivity","https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name;Blocked;State],Rank,Name,FormattedID,Blocked,ScheduleState&order=Rank");
 
             // Setup HTTP Headers / Authorization
             get.setHeader("Accept", "application/json");
@@ -299,6 +310,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
 
             // Notify refresh finished
             mPullToRefreshAttacher.setRefreshComplete();
+            adapter.notifyDataSetChanged();
 
             super.onPostExecute(result);
         }
@@ -308,9 +320,15 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
 
             // Setup HTTP Request
             DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(getBaseContext()) + "%22))&fetch=Tasks:summary[FormattedID;Name;Blocked;State],Rank,Name,FormattedID,Blocked,ScheduleState&order=Rank");
+            String whereQuery = "((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(getBaseContext()) + "%22))";
 
-                 Log.d("MainActivity","https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(getBaseContext()) + "%22))&fetch=Tasks:summary[FormattedID;Name;Blocked;State],Rank,Name,FormattedID,Blocked,ScheduleState  &order=Rank");
+            if (Preferences.showAllOwners(getBaseContext())) {
+                whereQuery = "(Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)";
+            }
+
+            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name;Blocked;State],Rank,Name,FormattedID,Blocked,ScheduleState&order=Rank");
+
+                 Log.d("MainActivity","https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name;Blocked;State],Rank,Name,FormattedID,Blocked,ScheduleState  &order=Rank");
 
             // Setup HTTP Headers / Authorization
             get.setHeader("Accept", "application/json");
@@ -411,6 +429,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
 
             // Notify refresh finished
             mPullToRefreshAttacher.setRefreshComplete();
+            adapter.notifyDataSetChanged();
 
             super.onPostExecute(result);
         }
@@ -443,6 +462,18 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
                 // Initiate API Requests
                 populateExpandableListView(true);
                 break;
+            case R.id.sort_rank:
+                Collections.sort(artifacts, new Artifact.OrderByRank());
+                adapter.notifyDataSetChanged();
+                break;
+            case R.id.sort_state:
+                Collections.sort(artifacts, new Artifact.OrderByState());
+                adapter.notifyDataSetChanged();
+                break;
+            case R.id.sort_id:
+                Collections.sort(artifacts, new Artifact.OrderById());
+                adapter.notifyDataSetChanged();
+                break;
             case R.id.action_settings:
                 // Launch Setting Activity
                 Intent intent = new Intent(this, Settings.class);
@@ -459,5 +490,4 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

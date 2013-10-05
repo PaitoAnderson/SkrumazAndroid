@@ -1,16 +1,36 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/action_refresh"
+
+    <item android:id="@+id/action_refresh"
+        android:orderInCategory="80"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_refresh"
+        android:title="@string/action_refresh"/>
+
+    <item android:id="@+id/action_sort"
         android:orderInCategory="90"
         android:showAsAction="always"
-        android:icon="@drawable/navigation_refresh"
-        android:title="@string/action_refresh"/>
+        android:icon="@drawable/ic_sort"
+        android:title="@string/action_sort">
+
+        <menu>
+            <item android:id="@+id/sort_rank"
+                android:title="Rank" />
+            <item android:id="@+id/sort_state"
+                android:title="State" />
+            <item android:id="@+id/sort_id"
+                android:title="ID" />
+        </menu>
+    </item>
+
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"
-        android:showAsAction="never" />
+        android:icon="@drawable/ic_settings"
+        android:showAsAction="ifRoom" />
+
     <item android:id="@+id/action_help"
         android:title="@string/action_help"
         android:orderInCategory="110"
-        android:showAsAction="never" />
+        android:icon="@drawable/ic_help"
+        android:showAsAction="ifRoom" />
 </menu>

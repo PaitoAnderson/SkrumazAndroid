@@ -35,6 +35,7 @@ public class Preferences {
         return prefs.getString("username", "");
     }
 
+    // Check if app is setup
     public static boolean isLoggedIn(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         String username = prefs.getString("username", "");
@@ -46,6 +47,7 @@ public class Preferences {
         }
     }
 
+    // Has the artifact data expired
     public static boolean isDataExpired(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         Date expiryDate = new Date(prefs.getLong("dataExpiry", 0));
@@ -58,6 +60,7 @@ public class Preferences {
         }
     }
 
+    // Set expiry date for the data that was just downloaded
     public static void setDataExpiry(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor prefsEditor = prefs.edit();
@@ -65,6 +68,24 @@ public class Preferences {
         currentDate = currentDate + (15*60*1000); //Add 15minutes to current time
         prefsEditor.putLong("dataExpiry", currentDate);
         prefsEditor.commit();
+    }
 
+    public static void invalidateData(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor prefsEditor = prefs.edit();
+        prefsEditor.putLong("dataExpiry", 0);
+        prefsEditor.commit();
+    }
+
+    // Show Formatted ID's with US/DE/TA's
+    public static boolean showFormattedID(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        return prefs.getBoolean("showIDs", false);
+    }
+
+    // Show Artifacts for all Owners in Iteration
+    public static boolean showAllOwners(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        return prefs.getBoolean("showTeam", false);
     }
 }
