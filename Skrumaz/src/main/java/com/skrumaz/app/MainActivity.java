@@ -281,15 +281,21 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         protected void onPostExecute(Boolean result) {
             if (continueRequests)
             {
-                processContainer.setVisibility(View.GONE);
-                listView.setVisibility(View.VISIBLE);
+                // If no items display empty state
+                if (artifacts.isEmpty()) {
+                    progressSpinner.setVisibility(View.GONE);
+                    progressText.setText("No Items in Current Iteration.");
+                } else {
+                    processContainer.setVisibility(View.GONE);
+                    listView.setVisibility(View.VISIBLE);
+
+                    // Sort by Rank
+                    Collections.sort(artifacts, new Artifact.OrderByRank());
+                }
             } else {
                 progressSpinner.setVisibility(View.GONE);
                 progressText.setText(breakingError);
             }
-
-            // Sort by Rank
-            Collections.sort(artifacts, new Artifact.OrderByRank());
 
             // Notify refresh finished
             mPullToRefreshAttacher.setRefreshComplete();
@@ -376,7 +382,6 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
 
     class GetDatabase extends AsyncTask<String, Integer, Boolean> {
 
-
         @Override
         protected void onPreExecute() {
             // Reset Views / Spinner
@@ -391,14 +396,21 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
 
         @Override
         protected void onPostExecute(Boolean result) {
-            processContainer.setVisibility(View.GONE);
-            listView.setVisibility(View.VISIBLE);
+
+            // If no items display empty state
+            if (artifacts.isEmpty()) {
+                progressSpinner.setVisibility(View.GONE);
+                progressText.setText("No Items in Current Iteration.");
+            } else {
+                processContainer.setVisibility(View.GONE);
+                listView.setVisibility(View.VISIBLE);
+
+                // Sort by Rank
+                Collections.sort(artifacts, new Artifact.OrderByRank());
+            }
 
             // Notify refresh finished
             mPullToRefreshAttacher.setRefreshComplete();
-
-            // Notify Adapter of new data
-            adapter.notifyDataSetChanged();
 
             super.onPostExecute(result);
         }
