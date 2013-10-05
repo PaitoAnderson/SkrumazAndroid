@@ -13,9 +13,20 @@ repositories {
 }
 
 android {
+    signingConfigs {
+        release {
+            storeFile file("../Android Keys.jks")
+            storePassword "Skrumaz"
+            keyAlias "com.skrumaz.app"
+            keyPassword "Skrumaz"
+        }
+    }
     buildTypes {
         debug {
             packageNameSuffix ".dev"
+        }
+        release {
+            signingConfig signingConfigs.release
         }
     }
     compileSdkVersion 18
