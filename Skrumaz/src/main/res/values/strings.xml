@@ -24,6 +24,16 @@
     <string name="pref_key_password">password</string>
     <string name="pref_summary_password">Set RallyDev Password</string>
 
+    <string name="pref_key_sort">defaultSort</string>
+    <string name="pref_title_sort">Set Default Sort</string>
+    <string name="pref_summary_sort">How should your iteration be sorted?</string>
+
+    <string-array name="pref_value_sort">
+        <item>Rank</item>
+        <item>State</item>
+        <item>ID</item>
+    </string-array>
+
     <string name="pref_title_ids">Show IDs</string>
     <string name="pref_key_ids">showIDs</string>
     <string name="pref_summary_ids">Show IDs for Stories, Defects and Tasks</string>

@@ -300,8 +300,8 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
                     processContainer.setVisibility(View.GONE);
                     listView.setVisibility(View.VISIBLE);
 
-                    // Sort by Rank
-                    Collections.sort(artifacts, new Artifact.OrderByRank());
+                    // Sort Artifacts
+                    sortByDefault();
                 }
             } else {
                 progressSpinner.setVisibility(View.GONE);
@@ -423,8 +423,8 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
                 processContainer.setVisibility(View.GONE);
                 listView.setVisibility(View.VISIBLE);
 
-                // Sort by Rank
-                Collections.sort(artifacts, new Artifact.OrderByRank());
+                // Sort Artifacts
+                sortByDefault();
             }
 
             // Notify refresh finished
@@ -489,5 +489,18 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    // Sort based on preference
+    public void sortByDefault() {
+        String defaultSort = Preferences.getDefaultSort(getBaseContext());
+
+        if (defaultSort.equalsIgnoreCase("rank")) {
+            Collections.sort(artifacts, new Artifact.OrderByRank());
+        } else if (defaultSort.equalsIgnoreCase("state")) {
+            Collections.sort(artifacts, new Artifact.OrderByState());
+        } else if (defaultSort.equalsIgnoreCase("id")) {
+            Collections.sort(artifacts, new Artifact.OrderById());
+        }
     }
 }

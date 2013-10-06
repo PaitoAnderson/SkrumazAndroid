@@ -70,11 +70,18 @@ public class Preferences {
         prefsEditor.commit();
     }
 
+    // Expire previously downloaded data
     public static void invalidateData(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor prefsEditor = prefs.edit();
         prefsEditor.putLong("dataExpiry", 0);
         prefsEditor.commit();
+    }
+
+    // Get Default Sort Order for Artifacts
+    public static String getDefaultSort(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        return prefs.getString("defaultSort", "rank");
     }
 
     // Show Formatted ID's with US/DE/TA's
@@ -88,4 +95,6 @@ public class Preferences {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         return prefs.getBoolean("showTeam", false);
     }
+
+
 }
