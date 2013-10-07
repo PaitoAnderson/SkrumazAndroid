@@ -1,5 +1,6 @@
 package com.skrumaz.app.classes;
 
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -17,6 +18,7 @@ public class Artifact {
     private List<Task> Tasks = new ArrayList<Task>();
     private Boolean Blocked;
     private Status Status;
+    private Date LastUpdate;
 
     @Override
     public String toString(){
@@ -105,5 +107,13 @@ public class Artifact {
 
     public void setStatus(Status status) {
         Status = status;
+    }
+
+    public Date getLastUpdate() {
+        return LastUpdate;
+    }
+
+    public void setLastUpdate(Date lastUpdate) {
+        LastUpdate = lastUpdate;
     }
 }
