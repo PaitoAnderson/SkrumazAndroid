@@ -37,7 +37,7 @@ public class Artifact {
 
         @Override
         public int compare(Artifact o1, Artifact o2) {
-            return o1.getStatus().compareTo(o2.getStatus());
+            return o2.getStatus().compareTo(o1.getStatus());
         }
     }
 
@@ -45,7 +45,15 @@ public class Artifact {
 
         @Override
         public int compare(Artifact o1, Artifact o2) {
-            return o1.getFormattedID().compareTo(o2.getFormattedID());
+            return o2.getFormattedID().compareTo(o1.getFormattedID());
+        }
+    }
+
+    public static class OrderByModified implements Comparator<Artifact> {
+
+        @Override
+        public int compare(Artifact o1, Artifact o2) {
+            return o2.getLastUpdate().compareTo(o1.getLastUpdate());
         }
     }
 

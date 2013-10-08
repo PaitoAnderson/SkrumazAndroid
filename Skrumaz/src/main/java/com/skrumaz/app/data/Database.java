@@ -11,6 +11,7 @@ import com.skrumaz.app.classes.Artifact;
 import com.skrumaz.app.classes.Task;
 import com.skrumaz.app.utils.StatusLookup;
 
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class Database extends SQLiteOpenHelper {
 
     // Database Setup
     private static final String DATABASE_NAME = "Skrumaz.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Database Tables
     private static final String TABLE_ARTIFACTS = "Artifacts";
@@ -37,15 +38,16 @@ public class Database extends SQLiteOpenHelper {
     private static final String KEY_BLOCKED = "Blocked";
     private static final String KEY_RANK = "Rank";
     private static final String KEY_STATUS = "Status";
+    private static final String KEY_MODIFIED_DATE = "ModifiedDate";
 
     // Database Create SQL
     private static final String CREATE_TABLE_ARTIFACTS = "CREATE TABLE " + TABLE_ARTIFACTS +
             "(" + KEY_FORMATTED_ID + " VARCHAR(15) PRIMARY KEY, " + KEY_TITLE + " TEXT, " +
-            KEY_BLOCKED + " BOOLEAN, " + KEY_RANK + " VARCHAR(65), " + KEY_STATUS + " VARCHAR(12))";
+            KEY_BLOCKED + " BOOLEAN, " + KEY_RANK + " VARCHAR(65), " + KEY_STATUS + " VARCHAR(12), " + KEY_MODIFIED_DATE + " LONG)";
 
     private static final String CREATE_TABLE_TASKS = "CREATE TABLE " + TABLE_TASKS +
             "(" + KEY_FORMATTED_ID + " VARCHAR(15) PRIMARY KEY, " + KEY_PARENT_FORMATTED_ID + " VARCHAR(15), " + KEY_TITLE + " TEXT, " +
-            KEY_BLOCKED + " BOOLEAN, " + KEY_STATUS + " VARCHAR(12))";
+            KEY_BLOCKED + " BOOLEAN, " + KEY_STATUS + " VARCHAR(12), " + KEY_MODIFIED_DATE + " LONG)";
 
     // Default Constructor
     public Database(Context context) {
@@ -95,6 +97,7 @@ public class Database extends SQLiteOpenHelper {
             artifactValues.put(KEY_BLOCKED, artifact.isBlocked());
             artifactValues.put(KEY_RANK, artifact.getRank());
             artifactValues.put(KEY_STATUS, StatusLookup.statusToString(artifact.getStatus()));
+            artifactValues.put(KEY_MODIFIED_DATE, artifact.getLastUpdate().getTime());
 
             // Insert Row
             db.insert(TABLE_ARTIFACTS, null, artifactValues);
@@ -109,6 +112,7 @@ public class Database extends SQLiteOpenHelper {
                 taskValues.put(KEY_TITLE, task.getName());
                 //taskValues.put(KEY_BLOCKED, task.isBlocked());
                 //taskValues.put(KEY_STATUS, StatusLookup.statusToString(task.getStatus()));
+                //taskValues.put(KEY_MODIFIED_DATE, task.getLastUpdate().getTime());
 
                 // Insert Row
                 db.insert(TABLE_TASKS, null, taskValues);
@@ -130,7 +134,7 @@ public class Database extends SQLiteOpenHelper {
 
         // Populate artifacts from Database
         Cursor cursor = db.query(TABLE_ARTIFACTS + " Order BY Rank ASC",
-                new String[] { "*" }, null, null, null, null, null);
+                new String[] { "*" }, null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {
                 Artifact artifact = new Artifact(cursor.getString(1));
@@ -138,6 +142,7 @@ public class Database extends SQLiteOpenHelper {
                 artifact.setBlocked(cursor.getInt(2)>0);
                 artifact.setRank(cursor.getString(3));
                 artifact.setStatus(StatusLookup.stringToStatus(cursor.getString(4)));
+                artifact.setLastUpdate(new Date(cursor.getLong(5)));
 
                 Cursor cursor1 = db.query(TABLE_TASKS + " WHERE (" + KEY_PARENT_FORMATTED_ID + " = '" + artifact.getFormattedID() + "')",
                         new String[] { "*" }, null, null, null, null, null);

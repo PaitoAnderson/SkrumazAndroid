@@ -32,6 +32,7 @@
         <item>Rank</item>
         <item>State</item>
         <item>ID</item>
+        <item>Modified</item>
     </string-array>
 
     <string name="pref_title_ids">Show IDs</string>

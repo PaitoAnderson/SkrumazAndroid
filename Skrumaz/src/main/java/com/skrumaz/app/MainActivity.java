@@ -477,6 +477,10 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
                 Collections.sort(artifacts, new Artifact.OrderById());
                 adapter.notifyDataSetChanged();
                 break;
+            case R.id.sort_modified:
+                Collections.sort(artifacts, new Artifact.OrderByModified());
+                adapter.notifyDataSetChanged();
+                break;
             case R.id.action_settings:
                 // Launch Setting Activity
                 Intent intent = new Intent(this, Settings.class);
@@ -504,6 +508,8 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
             Collections.sort(artifacts, new Artifact.OrderByState());
         } else if (defaultSort.equalsIgnoreCase("id")) {
             Collections.sort(artifacts, new Artifact.OrderById());
+        } else if (defaultSort.equalsIgnoreCase("modified")) {
+            Collections.sort(artifacts, new Artifact.OrderByModified());
         }
     }
 }
