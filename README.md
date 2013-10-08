@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/PaitoAnderson/SkrumazAndroid.png?label=ready)](https://waffle.io/PaitoAnderson/SkrumazAndroid)  
 SkrumazAndroid
 ==============
 
