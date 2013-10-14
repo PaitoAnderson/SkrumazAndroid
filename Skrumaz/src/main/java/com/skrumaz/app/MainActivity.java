@@ -49,6 +49,8 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
     private ArtifactAdapter adapter;
     private Iteration iteration = new Iteration();
     private Boolean continueRequests = true;
+    private Boolean gotStories = false;
+    private Boolean gotDefects = false;
     private String breakingError = "";
 
     private List<Artifact> artifacts = new ArrayList<Artifact>();
@@ -121,6 +123,8 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
             progressText.setVisibility(View.VISIBLE);
             progressText.setText("Getting Current Iteration...");
             listView.setVisibility(View.GONE);
+            gotStories = false;
+            gotDefects = false;
             super.onPreExecute();
         }
 
@@ -131,8 +135,9 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
                 progressSpinner.setVisibility(View.GONE);
                 progressText.setText(breakingError);
             } else {
-                // Continue Process
+                // Get User Stories and Defects
                 new GetUserStories().execute();
+                new GetDefects().execute();
             }
             super.onPostExecute(result);
         }
@@ -189,7 +194,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         @Override
         protected void onPreExecute() {
             // Update Text
-            progressText.setText("Getting User Stories...");
+            progressText.setText("Getting Items...");
             super.onPreExecute();
         }
 
@@ -200,8 +205,11 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
                 progressSpinner.setVisibility(View.GONE);
                 progressText.setText(breakingError);
             } else {
-                // Continue Process
-                new GetDefects().execute();
+                gotStories = true;
+            }
+
+            if (gotDefects) {
+                finishLoading();
             }
 
             super.onPostExecute(result);
@@ -283,36 +291,20 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
     }
 
     class GetDefects extends AsyncTask<String, Integer, Boolean> {
-        @Override
-        protected void onPreExecute() {
-            // Update Text
-            progressText.setText("Getting Defects...");
-            super.onPreExecute();
-        }
 
         @Override
         protected void onPostExecute(Boolean result) {
-            if (continueRequests)
-            {
-                // If no items display empty state
-                if (artifacts.isEmpty()) {
-                    progressSpinner.setVisibility(View.GONE);
-                    progressText.setText("No Items in Current Iteration.");
-                } else {
-                    processContainer.setVisibility(View.GONE);
-                    listView.setVisibility(View.VISIBLE);
 
-                    // Sort Artifacts
-                    sortByDefault();
-                }
-            } else {
+            if (!continueRequests) {
                 progressSpinner.setVisibility(View.GONE);
                 progressText.setText(breakingError);
+            } else {
+                gotDefects = true;
             }
 
-            // Notify refresh finished
-            mPullToRefreshAttacher.setRefreshComplete();
-            adapter.notifyDataSetChanged();
+            if (gotStories) {
+                finishLoading();
+            }
 
             super.onPostExecute(result);
         }
@@ -448,6 +440,27 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
 
             return null;
         }
+    }
+
+    public void finishLoading() {
+        if (continueRequests) {
+            // If no items display empty state
+            if (artifacts.isEmpty()) {
+                progressSpinner.setVisibility(View.GONE);
+                progressText.setText("No Items in Current Iteration.");
+            } else {
+                processContainer.setVisibility(View.GONE);
+                listView.setVisibility(View.VISIBLE);
+
+                // Sort Artifacts
+                sortByDefault();
+            }
+        }
+
+        // Notify refresh finished
+        mPullToRefreshAttacher.setRefreshComplete();
+        adapter.notifyDataSetChanged();
+
     }
 
     @Override
