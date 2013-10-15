@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.CheckedTextView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.skrumaz.app.classes.Artifact;
@@ -23,6 +23,8 @@ public class ArtifactAdapter extends BaseExpandableListAdapter {
     private final List<Artifact> artifacts;
     public LayoutInflater inflater;
     public Activity activity;
+    private TextView artifactName;
+    private ImageView artifactState;
 
     public ArtifactAdapter(Activity act, List<Artifact> artifacts) {
         activity = act;
@@ -52,7 +54,7 @@ public class ArtifactAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.listrow_details, null);
         }
-        text = (TextView) convertView.findViewById(R.id.textView1);
+        text = (TextView) convertView.findViewById(R.id.textViewS);
         text.setText(children);
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,21 +102,30 @@ public class ArtifactAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.listrow_group, null);
         }
 
+        artifactState = (ImageView) convertView.findViewById(R.id.imageViewH);
+        artifactName = (TextView) convertView.findViewById(R.id.textViewH);
+
         Artifact artifact = (Artifact) getGroup(groupPosition);
 
-        if (getChildrenCount(groupPosition) == 0) { }
+        if (getChildrenCount(groupPosition) == 0) {
+            //artifactState.setVisibility(View.INVISIBLE);
+            artifactState.setImageResource(R.drawable.navigation_clear);
+        } else {
+            //artifactState.setVisibility(View.VISIBLE);
+            artifactState.setImageResource(isExpanded ? R.drawable.navigation_collapse : R.drawable.navigation_expand);
+        }
 
         // Set Status Icon
         Drawable status = activity.getBaseContext().getResources().getDrawable(StatusLookup.statusToRes(artifact.isBlocked(), artifact.getStatus()));
-        ((CheckedTextView) convertView).setCompoundDrawablesWithIntrinsicBounds(null, null, status, null);
+        artifactName.setCompoundDrawablesWithIntrinsicBounds(null, null, status, null);
 
         // Set US/DE Name
         if (Preferences.showFormattedID(activity.getBaseContext())) {
-            ((CheckedTextView) convertView).setText(artifact.getFormattedID() + " - " + artifact.getName());
+            artifactName.setText(artifact.getFormattedID() + " - " + artifact.getName());
         } else {
-            ((CheckedTextView) convertView).setText(artifact.getName());
+            artifactName.setText(artifact.getName());
         }
-        ((CheckedTextView) convertView).setChecked(isExpanded);
+        //((CheckedTextView) convertView).setChecked(isExpanded);
         return convertView;
     }
 

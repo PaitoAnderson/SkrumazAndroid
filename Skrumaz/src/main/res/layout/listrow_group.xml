@@ -1,18 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/textView1"
-    android:layout_width="wrap_content"
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:layout_marginLeft="8dp"
-    android:gravity="left"
-    android:paddingLeft="32dp"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="0dp"
     android:paddingRight="10dp"
     android:paddingTop="6dp"
-    android:paddingBottom="6dp"
-    android:text="Test"
-    android:textSize="16dp"
-    android:textAlignment="textEnd"
-    android:textStyle="bold" />
+    android:paddingBottom="6dp" >
 
-    <!--android:drawableRight="@drawable/ag"-->
+    <ImageView
+        android:id="@+id/imageViewH"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        android:layout_gravity="center_vertical"
+        android:scaleType="centerInside" />
+
+    <TextView
+        android:id="@+id/textViewH"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:gravity="left"
+        android:textStyle="bold"
+        />
+
+</LinearLayout>

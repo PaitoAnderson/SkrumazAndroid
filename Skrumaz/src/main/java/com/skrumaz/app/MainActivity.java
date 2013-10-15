@@ -70,7 +70,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         listView.setAdapter(adapter);
 
         // Disable Group Indicator
-        //listView.setGroupIndicator(null);
+        listView.setGroupIndicator(null);
 
         // Pull to Refresh Library
         mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
