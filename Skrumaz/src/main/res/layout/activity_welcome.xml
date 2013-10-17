@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary_color">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/app_name"
+        android:id="@+id/app_name"
+        android:layout_gravity="center"
+        android:textSize="60sp"
+        android:textColor="@android:color/white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:layout_marginBottom="80dp"
+        android:gravity="center|bottom"
+        android:orientation="vertical" >
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:text="@string/rally_software"
+            android:textAllCaps="true"
+            android:id="@+id/rally_software"
+            android:background="#114333"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pivotal_labs"
+            android:textAllCaps="true"
+            android:id="@+id/pivotal_labs"
+            android:background="#114333"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+</LinearLayout>

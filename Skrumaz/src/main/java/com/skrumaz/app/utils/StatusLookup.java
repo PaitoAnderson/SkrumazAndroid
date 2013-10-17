@@ -11,7 +11,7 @@ public class StatusLookup {
     public static Status stringToStatus(String status) {
         // When we move to Java SE 7 we can have our String Switch case ;)
         if (status.equalsIgnoreCase("In-Progress")) {
-            return Status.INPROGRESS;
+            return Status.IN_PROGRESS;
         } else if (status.equalsIgnoreCase("Completed")) {
             return Status.COMPLETED;
         } else if (status.equalsIgnoreCase("Accepted")) {
@@ -24,7 +24,7 @@ public class StatusLookup {
     public static String statusToString(Status status) {
         switch (status)
         {
-            case INPROGRESS:
+            case IN_PROGRESS:
                 return "In-Progress";
             case COMPLETED:
                 return "Completed";
@@ -40,7 +40,7 @@ public class StatusLookup {
         if (blocked) {
             switch (status)
             {
-                case INPROGRESS:
+                case IN_PROGRESS:
                     return R.drawable.pr;
                 case COMPLETED:
                     return R.drawable.cr;
@@ -54,7 +54,7 @@ public class StatusLookup {
         {
             switch (status)
             {
-                case INPROGRESS:
+                case IN_PROGRESS:
                     return R.drawable.pg;
                 case COMPLETED:
                     return R.drawable.cg;

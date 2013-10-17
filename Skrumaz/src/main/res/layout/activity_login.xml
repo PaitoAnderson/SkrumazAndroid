@@ -24,27 +24,26 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textEmailAddress"
-        android:id="@+id/rallydev_username"
+        android:id="@+id/input_username"
         android:layout_gravity="center"
-        android:layout_marginBottom="20dp"
-        android:hint="@string/input_hint_username" />
+        android:layout_marginBottom="20dp" />
 
     <EditText
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPassword"
-        android:id="@+id/rallydev_password"
+        android:id="@+id/input_password"
         android:layout_gravity="center"
         android:layout_marginBottom="20dp"
-        android:hint="@string/input_hint_password"
         android:imeOptions="actionDone"
-        android:imeActionLabel="@string/ime_action_login" />
+        android:imeActionLabel="@string/button_login" />
 
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_login"
+        android:textAllCaps="true"
         android:id="@+id/login_button"
         android:background="@drawable/button_login"
         android:textColor="@color/background_color"

@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.skrumaz.app.classes.Service;
 import com.skrumaz.app.data.Preferences;
 
 import org.apache.http.HttpResponse;
@@ -34,6 +35,7 @@ public class Login extends Activity {
     private ProgressDialog dialog;
     private EditText username;
     private EditText password;
+    private Service service;
     private Button login;
     private String errorInfo = "";
 
@@ -43,9 +45,23 @@ public class Login extends Activity {
         setContentView(R.layout.activity_login);
 
         // Find all elements on the page
-        username = (EditText) findViewById(R.id.rallydev_username);
-        password = (EditText) findViewById(R.id.rallydev_password);
+        username = (EditText) findViewById(R.id.input_username);
+        password = (EditText) findViewById(R.id.input_password);
         login = (Button) findViewById(R.id.login_button);
+
+        // Setup for Service
+        service = Preferences.getService(getBaseContext());
+        switch (service)
+        {
+            case RALLY_DEV:
+                username.setHint(R.string.input_rally_username);
+                password.setHint(R.string.input_rally_password);
+                break;
+            case PIVOTAL_TRACKER:
+                username.setHint(R.string.input_pivotal_username);
+                password.setHint(R.string.input_pivotal_password);
+                break;
+        }
 
         // Fix textPasswords default font to match textEmailAddress
         password.setTypeface(Typeface.DEFAULT);

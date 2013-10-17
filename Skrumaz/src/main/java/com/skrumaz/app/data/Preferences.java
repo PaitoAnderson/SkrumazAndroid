@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
 
+import com.skrumaz.app.classes.Service;
+
 import java.sql.Date;
 
 /**
@@ -94,6 +96,18 @@ public class Preferences {
     public static boolean showAllOwners(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         return prefs.getBoolean("showTeam", false);
+    }
+
+    public static void setService(Context context, Service service) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor prefsEditor = prefs.edit();
+        prefsEditor.putString("service", service.toString());
+        prefsEditor.commit();
+    }
+
+    public static Service getService(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        return Service.toService(prefs.getString("service", Service.RALLY_DEV.toString()));
     }
 
 
