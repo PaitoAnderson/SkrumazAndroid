@@ -1,10 +1,10 @@
 package com.skrumaz.app;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,26 +14,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.skrumaz.app.classes.Artifact;
-import com.skrumaz.app.classes.Iteration;
-import com.skrumaz.app.classes.Task;
-import com.skrumaz.app.data.Database;
+import com.skrumaz.app.classes.Service;
 import com.skrumaz.app.data.Preferences;
-import com.skrumaz.app.utils.StatusLookup;
+import com.skrumaz.app.data.Store;
+import com.skrumaz.app.data.WebServices;
 import com.uservoice.uservoicesdk.Config;
 import com.uservoice.uservoicesdk.UserVoice;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,11 +34,10 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
     private TextView progressText;
     private ProgressBar progressSpinner;
     private ArtifactAdapter adapter;
-    private Iteration iteration = new Iteration();
     private Boolean continueRequests = true;
-    private Boolean gotStories = false;
-    private Boolean gotDefects = false;
     private String breakingError = "";
+    private Service service;
+    private Context mContext;
 
     private List<Artifact> artifacts = new ArrayList<Artifact>();
 
@@ -69,6 +55,12 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         adapter = new ArtifactAdapter(this, artifacts);
         listView.setAdapter(adapter);
 
+        // Set Context variable to self
+        mContext = this;
+
+        // Get Service Used
+        service = Preferences.getService(getBaseContext());
+
         // Disable Group Indicator
         listView.setGroupIndicator(null);
 
@@ -82,8 +74,8 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         super.onResume();
 
         if(!Preferences.isLoggedIn(getBaseContext())) {
-            Intent login = new Intent(this, Login.class);
-            startActivity(login);
+            Intent welcome = new Intent(this, Welcome.class);
+            startActivity(welcome);
             finish(); // Remove Activity from Stack
         } else {
             // Initiate API Requests
@@ -91,18 +83,16 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         }
     }
 
-    protected void populateExpandableListView(boolean forceRefesh) {
+    protected void populateExpandableListView(boolean forceRefresh) {
 
         // Reset Errors Flag/Message
         continueRequests = true;
         breakingError = "";
 
-        if (forceRefesh || Preferences.isDataExpired(getBaseContext())) {
-            // Get Current Iteration (This will trigger get User Stories and Defects after it completes)
-            new GetIteration().execute();
+        if (forceRefresh || Preferences.isDataExpired(getBaseContext())) {
+            new GetService().execute();
         } else {
-
-            new GetDatabase().execute();
+            new GetStore().execute();
         }
 
     }
@@ -112,19 +102,13 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         populateExpandableListView(true);
     }
 
+    class GetService extends AsyncTask<String, Integer, Boolean> {
 
-    class GetIteration extends AsyncTask<String, Integer, Boolean> {
         @Override
         protected void onPreExecute() {
-            // Reset Views / Spinner
-            artifacts.clear();
-            processContainer.setVisibility(View.VISIBLE);
-            progressSpinner.setVisibility(View.VISIBLE);
-            progressText.setVisibility(View.VISIBLE);
-            progressText.setText("Getting Current Iteration...");
-            listView.setVisibility(View.GONE);
-            gotStories = false;
-            gotDefects = false;
+
+            startLoading();
+
             super.onPreExecute();
         }
 
@@ -134,83 +118,9 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
             {
                 progressSpinner.setVisibility(View.GONE);
                 progressText.setText(breakingError);
-            } else {
-                // Get User Stories and Defects
-                new GetUserStories().execute();
-                new GetDefects().execute();
-            }
-            super.onPostExecute(result);
-        }
-
-        @Override
-        protected Boolean doInBackground(String... params) {
-
-            // Setup HTTP Request
-            DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current");
-
-            Log.d("MainActivity", "https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current");
-
-            // Setup HTTP Headers / Authorization
-            get.setHeader("Accept", "application/json");
-            get.setHeader("Authorization", Preferences.getCredentials(getBaseContext()));
-            try {
-                // Make HTTP Request
-                HttpResponse response = httpClient.execute(get);
-                StatusLine statusLine = response.getStatusLine();
-                if (statusLine.getStatusCode() == HttpURLConnection.HTTP_OK) {
-
-                    // Parse JSON Response
-                    BufferedReader streamReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-                    StringBuilder responseStrBuilder = new StringBuilder();
-                    String inputStr;
-                    while ((inputStr = streamReader.readLine()) != null) {
-                        responseStrBuilder.append(inputStr);
-                    }
-                    JSONObject jsonIteration = new JSONObject(responseStrBuilder.toString());
-
-                    // Get Iteration Name and Reference
-                    iteration.setOid(jsonIteration.getJSONObject("Iteration").getString("ObjectID").toString());
-                    iteration.setName(jsonIteration.getJSONObject("Iteration").getString("Name").toString());
-
-                    Log.i("MainActivity", "Iteration: " + iteration.getName());
-                } else {
-                    continueRequests = false;
-                    breakingError = statusLine.getReasonPhrase();
-                    Log.d("MainActivity", "GI Error: " + statusLine.getReasonPhrase());
-                }
-
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
             }
 
-            return null;
-        }
-    }
-
-    class GetUserStories extends AsyncTask<String, Integer, Boolean> {
-        @Override
-        protected void onPreExecute() {
-            // Update Text
-            progressText.setText("Getting Items...");
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if (!continueRequests)
-            {
-                progressSpinner.setVisibility(View.GONE);
-                progressText.setText(breakingError);
-            } else {
-                gotStories = true;
-            }
-
-            if (gotDefects) {
-                finishLoading();
-            }
+            finishLoading();
 
             super.onPostExecute(result);
         }
@@ -218,192 +128,19 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         @Override
         protected Boolean doInBackground(String... params) {
 
-            // Setup HTTP Request
-            DefaultHttpClient httpClient = new DefaultHttpClient();
-            String whereQuery = "((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(getBaseContext()) + "%22))";
-
-            if (Preferences.showAllOwners(getBaseContext())) {
-                whereQuery = "(Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)";
-            }
-
-            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate");
-
-                 Log.d("MainActivity","https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate&pretty=true");
-
-            // Setup HTTP Headers / Authorization
-            get.setHeader("Accept", "application/json");
-            get.setHeader("Authorization", Preferences.getCredentials(getBaseContext()));
-            try {
-                // Make HTTP Request
-                HttpResponse response = httpClient.execute(get);
-                StatusLine statusLine = response.getStatusLine();
-                if (statusLine.getStatusCode() == HttpURLConnection.HTTP_OK) {
-
-                    // Parse JSON Response
-                    BufferedReader streamReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-                    StringBuilder responseStrBuilder = new StringBuilder();
-                    String inputStr;
-                    while ((inputStr = streamReader.readLine()) != null) {
-                        responseStrBuilder.append(inputStr);
-                    }
-
-                    // Get array of User Stories in Iteration for this user
-                    JSONArray userStoriesArray = new JSONObject(responseStrBuilder.toString()).getJSONObject("QueryResult").getJSONArray("Results");
-
-                    // Iterate though User Stories
-                    for (int i = 0; i < userStoriesArray.length(); i++) {
-
-                        // Create an expandable list item for each user story
-                        Artifact userStory = new Artifact(userStoriesArray.getJSONObject(i).getString("_refObjectName"));
-                        userStory.setRank(userStoriesArray.getJSONObject(i).getString("DragAndDropRank"));
-                        userStory.setFormattedID(userStoriesArray.getJSONObject(i).getString("FormattedID"));
-                        userStory.setBlocked(userStoriesArray.getJSONObject(i).getBoolean("Blocked"));
-                        userStory.setStatus(StatusLookup.stringToStatus(userStoriesArray.getJSONObject(i).getString("ScheduleState")));
-                        userStory.setLastUpdate(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(userStoriesArray.getJSONObject(i).getString("LastUpdateDate")));
-
-                        // Iterate though Tasks for User Story
-                        for (int j = 0; j < userStoriesArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getInt("Count"); j++)
-                        {
-                            Task task = new Task(userStoriesArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getJSONObject("Name").names().getString(j));
-                            task.setFormattedID(userStoriesArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getJSONObject("FormattedID").names().getString(j));
-
-                            // Add Tasks as children
-                            userStory.addTask(task);
-                        }
-
-                        artifacts.add(userStory);
-                    }
-
-                } else {
-                    continueRequests = false;
-                    breakingError = statusLine.getReasonPhrase();
-                    Log.d("MainActivity", "US Error: " + statusLine.getReasonPhrase());
-                }
-
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            artifacts.addAll(WebServices.GetItems(service, mContext));
 
             return null;
         }
     }
 
-    class GetDefects extends AsyncTask<String, Integer, Boolean> {
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-
-            if (!continueRequests) {
-                progressSpinner.setVisibility(View.GONE);
-                progressText.setText(breakingError);
-            } else {
-                gotDefects = true;
-            }
-
-            if (gotStories) {
-                finishLoading();
-            }
-
-            super.onPostExecute(result);
-        }
-
-        @Override
-        protected Boolean doInBackground(String... params) {
-
-            // Setup HTTP Request
-            DefaultHttpClient httpClient = new DefaultHttpClient();
-            String whereQuery = "((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(getBaseContext()) + "%22))";
-
-            if (Preferences.showAllOwners(getBaseContext())) {
-                whereQuery = "(Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)";
-            }
-
-            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate");
-
-                 Log.d("MainActivity","https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate&pretty=true");
-
-            // Setup HTTP Headers / Authorization
-            get.setHeader("Accept", "application/json");
-            get.setHeader("Authorization", Preferences.getCredentials(getBaseContext()));
-            try {
-                // Make HTTP Request
-                HttpResponse response = httpClient.execute(get);
-                StatusLine statusLine = response.getStatusLine();
-                if (statusLine.getStatusCode() == HttpURLConnection.HTTP_OK) {
-
-                    // Parse JSON Response
-                    BufferedReader streamReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-                    StringBuilder responseStrBuilder = new StringBuilder();
-                    String inputStr;
-                    while ((inputStr = streamReader.readLine()) != null) {
-                        responseStrBuilder.append(inputStr);
-                    }
-
-                    // Get array of User Stories in Iteration for this user
-                    JSONArray defectsArray = new JSONObject(responseStrBuilder.toString()).getJSONObject("QueryResult").getJSONArray("Results");
-
-                    // Iterate though Defects
-                    for (int i = 0; i < defectsArray.length(); i++) {
-
-                        // Create an expandable list item for each defect
-                        Artifact defect = new Artifact(defectsArray.getJSONObject(i).getString("_refObjectName"));
-                        defect.setRank(defectsArray.getJSONObject(i).getString("DragAndDropRank"));
-                        defect.setFormattedID(defectsArray.getJSONObject(i).getString("FormattedID"));
-                        defect.setBlocked(defectsArray.getJSONObject(i).getBoolean("Blocked"));
-                        defect.setStatus(StatusLookup.stringToStatus(defectsArray.getJSONObject(i).getString("ScheduleState")));
-                        defect.setLastUpdate(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(defectsArray.getJSONObject(i).getString("LastUpdateDate")));
-
-                        // Iterate though Tasks for Defect
-                        for (int j = 0; j < defectsArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getInt("Count"); j++)
-                        {
-                            Task task = new Task(defectsArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getJSONObject("Name").names().getString(j));
-                            task.setFormattedID(defectsArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getJSONObject("FormattedID").names().getString(j));
-
-                            // Add Tasks as children
-                            defect.addTask(task);
-                        }
-
-                        // Add defect with Tasks to List
-                        artifacts.add(defect);
-                    }
-
-                    // Store artifacts in Database
-                    Database db = new Database(getBaseContext());
-                    db.storeArtifacts(artifacts);
-                    db.close();
-
-                    // Set data expiry date
-                    Preferences.setDataExpiry(getBaseContext());
-
-                } else {
-                    continueRequests = false;
-                    breakingError = statusLine.getReasonPhrase();
-                    Log.d("MainActivity", "DE Error: " + statusLine.getReasonPhrase());
-                }
-
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-    }
-
-    class GetDatabase extends AsyncTask<String, Integer, Boolean> {
+    class GetStore extends AsyncTask<String, Integer, Boolean> {
 
         @Override
         protected void onPreExecute() {
-            // Reset Views / Spinner
-            artifacts.clear();
-            processContainer.setVisibility(View.VISIBLE);
-            progressSpinner.setVisibility(View.VISIBLE);
-            progressText.setVisibility(View.VISIBLE);
-            progressText.setText("Getting Stuff...");
-            listView.setVisibility(View.GONE);
+
+            startLoading();
+
             super.onPreExecute();
         }
 
@@ -433,13 +170,23 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         protected Boolean doInBackground(String... params) {
 
             // Pull Artifacts and Task from SQLite
-            Database db = new Database(getBaseContext());
+            Store db = new Store(getBaseContext());
             artifacts.clear();
             artifacts.addAll(db.getArtifacts());
             db.close();
 
             return null;
         }
+    }
+
+    public void startLoading() {
+        // Reset Views / Spinner
+        artifacts.clear();
+        processContainer.setVisibility(View.VISIBLE);
+        progressSpinner.setVisibility(View.VISIBLE);
+        progressText.setVisibility(View.VISIBLE);
+        progressText.setText("Getting Items...");
+        listView.setVisibility(View.GONE);
     }
 
     public void finishLoading() {
@@ -468,6 +215,16 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+      //  Menu sortMenu = (Menu) menu.getItem(R.id.sort_menu);
+
+        //sortMenu.add(0,R.id.sort_id,0,"ID");
+
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -524,5 +281,10 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         } else if (defaultSort.equalsIgnoreCase("modified")) {
             Collections.sort(artifacts, new Artifact.OrderByModified());
         }
+    }
+
+    public void SetError(Boolean error, String errorMsg) {
+        this.continueRequests = error;
+        this.breakingError = errorMsg;
     }
 }

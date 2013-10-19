@@ -1,6 +1,9 @@
 package com.skrumaz.app;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -29,7 +32,7 @@ public class Settings extends PreferenceActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        Preference appVersion = ((Preference) findPreference("PrefAppVersion"));
+        Preference appVersion = ((Preference) findPreference("appVersion"));
         appVersion.setSummary(appVersionString);
 
         Preference showTeam = ((Preference) findPreference("showTeam"));
@@ -40,6 +43,41 @@ public class Settings extends PreferenceActivity {
             }
         });
 
+        Preference username = ((Preference) findPreference("username"));
+        username.setSummary(Preferences.getUsername(getBaseContext()));
+
+        Preference resetApp = ((Preference) findPreference("resetApp"));
+        resetApp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(Settings.this);
+                builder.setTitle("Reset Application");
+                builder.setMessage("Are you sure you want to reset Skrumaz?").setCancelable(false)
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                                // Call Reset Function
+                                Preferences.resetApplication(getBaseContext());
+
+                                // Dismiss Dialog
+                                dialog.dismiss();
+
+                                // Sent to Login
+                                Intent welcome = new Intent(getApplicationContext(), Welcome.class);
+                                startActivity(welcome);
+                                finish(); // Remove Activity from Stack
+
+                            }
+                        }).show();
+
+                return true;
+            }
+        });
 
         // Add back button icon
         ActionBar actionbar = getActionBar();

@@ -2,11 +2,11 @@
 <PreferenceScreen android:layout_width="fill_parent" android:layout_height="fill_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="@string/pref_configuration">
-        <EditTextPreference android:title="@string/pref_title_username" android:summary="@string/pref_summary_username" android:key="@string/pref_key_username" />
-        <EditTextPreference android:title="@string/pref_title_password" android:summary="@string/pref_summary_password" android:inputType="textPassword" android:password="true" android:key="@string/pref_key_password" />
+        <Preference android:title="@string/pref_title_username" android:key="@string/pref_key_username" />
         <ListPreference android:title="@string/pref_title_sort" android:summary="@string/pref_summary_sort" android:key="@string/pref_key_sort" android:entries="@array/pref_value_sort" android:entryValues="@array/pref_value_sort" android:defaultValue="Rank"/>
         <CheckBoxPreference android:title="@string/pref_title_ids" android:summary="@string/pref_summary_ids" android:key="@string/pref_key_ids" android:defaultValue="false" />
         <CheckBoxPreference android:title="@string/pref_title_team" android:summary="@string/pref_summary_team" android:key="@string/pref_key_team" android:defaultValue="false" />
+        <Preference android:title="@string/pref_title_reset" android:summary="@string/pref_summary_reset" android:key="@string/pref_key_reset" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_about">

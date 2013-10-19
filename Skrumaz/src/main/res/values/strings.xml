@@ -22,15 +22,10 @@
 
     <string name="pref_title_username">Username</string>
     <string name="pref_key_username">username</string>
-    <string name="pref_summary_username">Set RallyDev Username</string>
-
-    <string name="pref_title_password">Password</string>
-    <string name="pref_key_password">password</string>
-    <string name="pref_summary_password">Set RallyDev Password</string>
 
     <string name="pref_key_sort">defaultSort</string>
     <string name="pref_title_sort">Set Default Sort</string>
-    <string name="pref_summary_sort">How should your iteration be sorted?</string>
+    <string name="pref_summary_sort">How should your items be sorted?</string>
 
     <string-array name="pref_value_sort">
         <item>Rank</item>
@@ -45,10 +40,14 @@
 
     <string name="pref_title_team">Beyond Me</string>
     <string name="pref_key_team">showTeam</string>
-    <string name="pref_summary_team">Show everything in the current iteration</string>
+    <string name="pref_summary_team">Show items even if your aren\'t the owner</string>
+
+    <string name="pref_title_reset">Reset Application</string>
+    <string name="pref_key_reset">resetApp</string>
+    <string name="pref_summary_reset">Password Changed? Switching Agile Apps?</string>
 
     <string name="pref_title_app_version">Version</string>
-    <string name="pref_key_app_version">PrefAppVersion</string>
+    <string name="pref_key_app_version">appVersion</string>
     <string name="pref_summary_app_version">1.0</string>
 
 

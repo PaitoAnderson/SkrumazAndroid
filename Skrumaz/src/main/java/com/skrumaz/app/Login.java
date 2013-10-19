@@ -24,7 +24,10 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 
 /**
@@ -87,7 +90,14 @@ public class Login extends Activity {
                 new GetUser().execute();
             };
         });
+    }
 
+    @Override
+    public void onBackPressed() {
+        // Sent to Welcome
+        Intent welcome = new Intent(getApplicationContext(), Welcome.class);
+        startActivity(welcome);
+        finish(); // Remove Activity from Stack
     }
 
     class GetUser extends AsyncTask<String, Integer, Boolean> {
@@ -117,9 +127,18 @@ public class Login extends Activity {
         protected Boolean doInBackground(String... params) {
             // Setup HTTP Request
             DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/user");
+            HttpGet get;
 
-            Log.d("Login", "https://rally1.rallydev.com/slm/webservice/v2.0/user");
+            switch (service)
+            {
+                case PIVOTAL_TRACKER:
+                    get = new HttpGet("https://www.pivotaltracker.com/services/v5/me");
+                    Log.d("Login", "https://www.pivotaltracker.com/services/v5/me");
+                    break;
+                default: // RALLY_DEV
+                    get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/user");
+                    Log.d("Login", "https://rally1.rallydev.com/slm/webservice/v2.0/user");
+            }
 
             // Setup HTTP Headers / Authorization
             get.setHeader("Accept", "application/json");
@@ -133,8 +152,28 @@ public class Login extends Activity {
                     // Things are good!
                     Log.d("Login", "Things are good!");
 
+                    String passwordString = password.getText().toString();
+
+                    if (service == Service.PIVOTAL_TRACKER)
+                    {
+                        Log.d("Login","Did make it here...");
+                        // Parse JSON Response
+                        BufferedReader streamReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+                        StringBuilder responseStrBuilder = new StringBuilder();
+                        String inputStr;
+                        while ((inputStr = streamReader.readLine()) != null) {
+                            responseStrBuilder.append(inputStr);
+                        }
+
+                        // Get auth token from request and save as password
+                        passwordString = new JSONObject(responseStrBuilder.toString()).getString("api_token");
+
+                        Log.d("Login", responseStrBuilder.toString());
+                        Log.d("Login", "Token: " + passwordString);
+                    }
+
                     // Store Credentials
-                    Preferences.setCredentials(getBaseContext(), username.getText().toString(), password.getText().toString());
+                    Preferences.setCredentials(getBaseContext(), username.getText().toString(), passwordString);
 
                     // Sent to MainActivity
                     Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);

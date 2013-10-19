@@ -17,9 +17,18 @@ public class Preferences {
     public final static String PREFS_NAME = "skrumaz_prefs";
 
     // Get RallyDev Credentials
-    public static String getCredentials(Context context) {
+    public static String getCredentials(Context context, Service service) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        return "Basic " + Base64.encodeToString((prefs.getString("username", "") + ":" + prefs.getString("password", "")).getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
+
+        switch (service)
+        {
+            case PIVOTAL_TRACKER:
+                return prefs.getString("password", "");
+            default: //RALLY_DEV
+                return "Basic " + Base64.encodeToString((prefs.getString("username", "") + ":" + prefs.getString("password", "")).getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
+        }
+
+
     }
 
     // Set RallyDev Credentials
@@ -83,7 +92,7 @@ public class Preferences {
     // Get Default Sort Order for Artifacts
     public static String getDefaultSort(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        return prefs.getString("defaultSort", "rank");
+        return prefs.getString("defaultSort", "Rank");
     }
 
     // Show Formatted ID's with US/DE/TA's
@@ -110,5 +119,16 @@ public class Preferences {
         return Service.toService(prefs.getString("service", Service.RALLY_DEV.toString()));
     }
 
+    public static void resetApplication(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor prefsEditor = prefs.edit();
+        prefsEditor.putString("defaultSort", "Rank");
+        prefsEditor.putBoolean("showIDs", false);
+        prefsEditor.putBoolean("showTeam", false);
+        prefsEditor.putLong("dataExpiry", 0);
+        prefsEditor.putString("username", "");
+        prefsEditor.putString("password", "");
+        prefsEditor.commit();
+    }
 
 }

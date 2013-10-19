@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by Paito Anderson on 2013-09-30.
  */
-public class Database extends SQLiteOpenHelper {
+public class Store extends SQLiteOpenHelper {
 
     // TAG for logging
     private static final String TAG = "DATABASE";
@@ -50,7 +50,7 @@ public class Database extends SQLiteOpenHelper {
             KEY_BLOCKED + " BOOLEAN, " + KEY_STATUS + " VARCHAR(12), " + KEY_MODIFIED_DATE + " LONG)";
 
     // Default Constructor
-    public Database(Context context) {
+    public Store(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

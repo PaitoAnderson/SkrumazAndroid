@@ -12,7 +12,7 @@
         android:icon="@drawable/ic_sort"
         android:title="@string/action_sort">
 
-        <menu>
+        <menu android:id="@+id/sort_menu">
             <item android:id="@+id/sort_rank"
                 android:title="Rank" />
             <item android:id="@+id/sort_state"
