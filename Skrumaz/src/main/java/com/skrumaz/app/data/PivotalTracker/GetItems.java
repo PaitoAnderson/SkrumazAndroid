@@ -33,6 +33,8 @@ public class GetItems {
 
     public List<Artifact> FetchItems(Context context) {
 
+        ((MainActivity)context).SetProgress("Getting Items...");
+
         // Setup HTTP Request
         DefaultHttpClient httpClient = new DefaultHttpClient();
 

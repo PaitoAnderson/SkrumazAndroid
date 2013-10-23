@@ -37,6 +37,8 @@ public class GetItems {
 
     public List<Artifact> FetchItems(Context context) {
 
+        ((MainActivity)context).SetProgress("Getting Current Iteration...");
+
         // Setup HTTP Request
         DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current");
@@ -94,6 +96,9 @@ public class GetItems {
     }
 
     public void GetUserStories(Context context) {
+
+        ((MainActivity)context).SetProgress("Getting User Stories...");
+
         // Setup HTTP Request
         DefaultHttpClient httpClient = new DefaultHttpClient();
         String whereQuery = "((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(context) + "%22))";
@@ -164,6 +169,9 @@ public class GetItems {
     }
 
     public void GetDefects(Context context) {
+
+        ((MainActivity)context).SetProgress("Getting Defects...");
+
         // Setup HTTP Request
         DefaultHttpClient httpClient = new DefaultHttpClient();
         String whereQuery = "((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(context) + "%22))";

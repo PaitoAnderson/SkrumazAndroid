@@ -59,7 +59,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         mContext = this;
 
         // Get Service Used
-        service = Preferences.getService(getBaseContext());
+        service = Preferences.getService(mContext);
 
         // Disable Group Indicator
         listView.setGroupIndicator(null);
@@ -73,7 +73,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
     protected void onResume() {
         super.onResume();
 
-        if(!Preferences.isLoggedIn(getBaseContext())) {
+        if(!Preferences.isLoggedIn(mContext)) {
             Intent welcome = new Intent(this, Welcome.class);
             startActivity(welcome);
             finish(); // Remove Activity from Stack
@@ -89,7 +89,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         continueRequests = true;
         breakingError = "";
 
-        if (forceRefresh || Preferences.isDataExpired(getBaseContext())) {
+        if (forceRefresh || Preferences.isDataExpired(mContext)) {
             new GetService().execute();
         } else {
             new GetStore().execute();
@@ -169,8 +169,8 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         @Override
         protected Boolean doInBackground(String... params) {
 
-            // Pull Artifacts and Task from SQLite
-            Store db = new Store(getBaseContext());
+            // Pull Artifacts and Tasks from SQLite
+            Store db = new Store(mContext);
             artifacts.clear();
             artifacts.addAll(db.getArtifacts());
             db.close();
@@ -184,8 +184,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         artifacts.clear();
         processContainer.setVisibility(View.VISIBLE);
         progressSpinner.setVisibility(View.VISIBLE);
-        progressText.setVisibility(View.VISIBLE);
-        progressText.setText("Getting Items...");
+        progressText.setVisibility(View.VISIBLE); // Text set using SetProgress()
         listView.setVisibility(View.GONE);
     }
 
@@ -270,7 +269,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
 
     // Sort based on preference
     public void sortByDefault() {
-        String defaultSort = Preferences.getDefaultSort(getBaseContext());
+        String defaultSort = Preferences.getDefaultSort(mContext);
 
         if (defaultSort.equalsIgnoreCase("rank")) {
             Collections.sort(artifacts, new Artifact.OrderByRank());
@@ -283,7 +282,15 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         }
     }
 
-    public void SetError(Boolean error, String errorMsg) {
+    public void SetProgress(final String processMsg) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                progressText.setText(processMsg);
+            }
+        });
+    }
+
+    public void SetError(final Boolean error, final String errorMsg) {
         this.continueRequests = error;
         this.breakingError = errorMsg;
     }
