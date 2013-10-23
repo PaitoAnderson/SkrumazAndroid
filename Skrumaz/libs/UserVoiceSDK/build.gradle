@@ -9,6 +9,10 @@ buildscript {
 
 apply plugin: 'android-library'
 
+repositories {
+    mavenCentral();
+}
+
 android {
     compileSdkVersion 18
     buildToolsVersion "18.1.1"
@@ -24,6 +28,7 @@ android {
             java.srcDirs = ['src']
             resources.srcDirs = ['src']
             aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
         }
@@ -31,13 +36,6 @@ android {
 }
 
 dependencies {
-    compile('com.android.support:support-v4:13.0.0');
-
-    compile files('libs/commons-codec-1.8.jar');
-    compile files('libs/signpost-commonshttp4-1.2.1.2.jar');
-    compile files('libs/signpost-core-1.2.1.2.jar');
-
-    //compile('commons-codec:commons-codec:1.8');
-    //compile('oauth.signpost:signpost-commonshttp4:1.2.1.2');
-    //compile('oauth.signpost:signpost-core:1.2.1.2');
+    compile('com.android.support:support-v4:18.0.+');
+    compile('oauth.signpost:signpost-commonshttp4:1.2.1.2');
 }

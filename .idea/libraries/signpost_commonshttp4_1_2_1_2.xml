@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="signpost-commonshttp4-1.2.1.2">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/Skrumaz/libs/UserVoiceSDK/libs/signpost-commonshttp4-1.2.1.2.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/oauth.signpost/signpost-commonshttp4/1.2.1.2/jar/731e05de30cfeb1f41d417f886277f9597fe0f36/signpost-commonshttp4-1.2.1.2.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
