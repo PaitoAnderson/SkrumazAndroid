@@ -184,7 +184,8 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         artifacts.clear();
         processContainer.setVisibility(View.VISIBLE);
         progressSpinner.setVisibility(View.VISIBLE);
-        progressText.setVisibility(View.VISIBLE); // Text set using SetProgress()
+        progressText.setVisibility(View.VISIBLE);
+        progressText.setText("Getting Items..."); // Text updated using SetProgress()
         listView.setVisibility(View.GONE);
     }
 
