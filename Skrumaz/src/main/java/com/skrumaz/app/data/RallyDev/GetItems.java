@@ -139,7 +139,7 @@ public class GetItems {
                     userStory.setRank(userStoriesArray.getJSONObject(i).getString("DragAndDropRank"));
                     userStory.setFormattedID(userStoriesArray.getJSONObject(i).getString("FormattedID"));
                     userStory.setBlocked(userStoriesArray.getJSONObject(i).getBoolean("Blocked"));
-                    userStory.setStatus(StatusLookup.stringToStatus(userStoriesArray.getJSONObject(i).getString("ScheduleState")));
+                    userStory.setStatus(StatusLookup.stringToStatus(userStoriesArray.getJSONObject(i).getString("ScheduleState"),Service.RALLY_DEV));
                     userStory.setLastUpdate(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(userStoriesArray.getJSONObject(i).getString("LastUpdateDate")));
 
                     // Iterate though Tasks for User Story
@@ -212,7 +212,7 @@ public class GetItems {
                     defect.setRank(defectsArray.getJSONObject(i).getString("DragAndDropRank"));
                     defect.setFormattedID(defectsArray.getJSONObject(i).getString("FormattedID"));
                     defect.setBlocked(defectsArray.getJSONObject(i).getBoolean("Blocked"));
-                    defect.setStatus(StatusLookup.stringToStatus(defectsArray.getJSONObject(i).getString("ScheduleState")));
+                    defect.setStatus(StatusLookup.stringToStatus(defectsArray.getJSONObject(i).getString("ScheduleState"),Service.RALLY_DEV));
                     defect.setLastUpdate(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(defectsArray.getJSONObject(i).getString("LastUpdateDate")));
 
                     // Iterate though Tasks for Defect

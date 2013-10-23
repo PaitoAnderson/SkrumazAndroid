@@ -172,7 +172,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
             // Pull Artifacts and Tasks from SQLite
             Store db = new Store(mContext);
             artifacts.clear();
-            artifacts.addAll(db.getArtifacts());
+            artifacts.addAll(db.getArtifacts(service));
             db.close();
 
             return null;

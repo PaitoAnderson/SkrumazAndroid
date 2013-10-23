@@ -9,6 +9,7 @@ import com.skrumaz.app.classes.Service;
 import com.skrumaz.app.classes.Task;
 import com.skrumaz.app.data.Preferences;
 import com.skrumaz.app.data.Store;
+import com.skrumaz.app.utils.StatusLookup;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -72,7 +73,7 @@ public class GetItems {
                     artifact.setFormattedID(myWork.getJSONObject(i).getString("id"));
                     artifact.setLastUpdate(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(myWork.getJSONObject(i).getString("updated_at")));
                     artifact.setBlocked(false); // Support coming end of year
-                    artifact.setStatus(com.skrumaz.app.classes.Status.DEFINED); //TODO: FIX THIS!
+                    artifact.setStatus(StatusLookup.stringToStatus(myWork.getJSONObject(i).getString("current_state"), Service.PIVOTAL_TRACKER));
                     artifact.setRank(Integer.toString(i)); // Downloaded by Rank
 
                     //Log.d("MainActivity", "Set: " + artifact.getName() + " Rank: " + Integer.toString(i));

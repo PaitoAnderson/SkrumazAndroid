@@ -8,11 +8,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.skrumaz.app.classes.Artifact;
+import com.skrumaz.app.classes.Service;
 import com.skrumaz.app.classes.Task;
 import com.skrumaz.app.utils.StatusLookup;
 
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -126,7 +127,7 @@ public class Store extends SQLiteOpenHelper {
     /*
      * Pull all Artifacts / Tasks from the database and put them in a usable list
      */
-    public List<Artifact> getArtifacts() {
+    public List<Artifact> getArtifacts(Service service) {
         List<Artifact> artifacts = new ArrayList<Artifact>();
 
         // Open Database connection
@@ -141,7 +142,7 @@ public class Store extends SQLiteOpenHelper {
                 artifact.setFormattedID(cursor.getString(0));
                 artifact.setBlocked(cursor.getInt(2)>0);
                 artifact.setRank(cursor.getString(3));
-                artifact.setStatus(StatusLookup.stringToStatus(cursor.getString(4)));
+                artifact.setStatus(StatusLookup.stringToStatus(cursor.getString(4), service));
                 artifact.setLastUpdate(new Date(cursor.getLong(5)));
 
                 Cursor cursor1 = db.query(TABLE_TASKS + " WHERE (" + KEY_PARENT_FORMATTED_ID + " = '" + artifact.getFormattedID() + "')",
