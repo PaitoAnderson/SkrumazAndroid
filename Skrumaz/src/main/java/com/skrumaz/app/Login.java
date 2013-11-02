@@ -1,5 +1,6 @@
 package com.skrumaz.app;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -90,13 +92,31 @@ public class Login extends Activity {
                 new GetUser().execute();
             };
         });
+
+        // Add back button icon
+        ActionBar actionbar = getActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setTitle("Login");
     }
 
     @Override
     public void onBackPressed() {
+        returnToWelcome();
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                returnToWelcome();
+                return true;
+        }
+        return false;
+    }
+
+    private void returnToWelcome() {
         // Sent to Welcome
-        Intent welcome = new Intent(getApplicationContext(), Welcome.class);
-        startActivity(welcome);
+        startActivity(new Intent(getApplicationContext(), Welcome.class));
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.fade_out);
         finish(); // Remove Activity from Stack
     }
 

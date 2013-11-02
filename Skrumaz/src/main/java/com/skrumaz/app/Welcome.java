@@ -48,8 +48,8 @@ public class Welcome extends Activity {
         Preferences.setService(getBaseContext(), service);
 
         // Sent to Login
-        Intent login = new Intent(getApplicationContext(), Login.class);
-        startActivity(login);
+        startActivity(new Intent(getApplicationContext(), Login.class));
+        overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
         finish(); // Remove Activity from Stack
     }
 }
