@@ -45,8 +45,6 @@
         android:text="@string/button_login"
         android:textAllCaps="true"
         android:id="@+id/login_button"
-        android:background="@drawable/button_login"
-        android:textColor="@color/background_color"
         android:textStyle="bold" />
 
 </LinearLayout>

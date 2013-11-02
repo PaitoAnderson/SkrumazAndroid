@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import uk.co.senab.actionbarpulltorefresh.library.DefaultHeaderTransformer;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 
 public class MainActivity extends Activity implements PullToRefreshAttacher.OnRefreshListener {
@@ -64,9 +65,13 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         // Disable Group Indicator
         listView.setGroupIndicator(null);
 
-        // Pull to Refresh Library
+        // Pull to Refresh Library - Initialize
         mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
         mPullToRefreshAttacher.addRefreshableView(listView, this);
+
+        // Pull to Refresh Library - Set ProgressBar color.
+        DefaultHeaderTransformer transformer = ((DefaultHeaderTransformer)mPullToRefreshAttacher.getHeaderTransformer());
+        transformer.setProgressBarColor(getResources().getColor(R.color.accent_color));
     }
 
     @Override
