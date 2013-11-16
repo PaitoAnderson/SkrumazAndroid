@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
 
-import com.skrumaz.app.classes.Service;
-
 import java.sql.Date;
 
 /**
@@ -17,18 +15,9 @@ public class Preferences {
     public final static String PREFS_NAME = "skrumaz_prefs";
 
     // Get RallyDev Credentials
-    public static String getCredentials(Context context, Service service) {
+    public static String getCredentials(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-
-        switch (service)
-        {
-            case PIVOTAL_TRACKER:
-                return prefs.getString("password", "");
-            default: //RALLY_DEV
-                return "Basic " + Base64.encodeToString((prefs.getString("username", "") + ":" + prefs.getString("password", "")).getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
-        }
-
-
+        return "Basic " + Base64.encodeToString((prefs.getString("username", "") + ":" + prefs.getString("password", "")).getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
     }
 
     // Set RallyDev Credentials
@@ -105,18 +94,6 @@ public class Preferences {
     public static boolean showAllOwners(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         return prefs.getBoolean("showTeam", false);
-    }
-
-    public static void setService(Context context, Service service) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.putString("service", service.toString());
-        prefsEditor.commit();
-    }
-
-    public static Service getService(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        return Service.toService(prefs.getString("service", Service.RALLY_DEV.toString()));
     }
 
     public static void resetApplication(Context context) {

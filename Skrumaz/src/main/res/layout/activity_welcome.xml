@@ -3,45 +3,43 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/primary_color">
+    android:layout_height="match_parent" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/app_name"
-        android:id="@+id/app_name"
-        android:layout_gravity="center"
-        android:textSize="60sp"
-        android:textColor="@android:color/white" />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1"
-        android:layout_marginBottom="80dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:paddingBottom="20dp"
         android:gravity="center|bottom"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:background="@color/primary_color" >
+
+        <com.viewpagerindicator.CirclePageIndicator
+            android:id="@+id/indicator"
+            android:padding="10dip"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            />
 
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:layout_marginBottom="1dp"
-            android:text="@string/rally_software"
+            android:text="@string/button_login"
             android:textAllCaps="true"
             android:id="@+id/rally_software"
-            android:background="#114333"
-            android:textColor="@android:color/white" />
+            android:background="@drawable/btn_default_rounded"
+            android:textColor="#262626"
+            android:textStyle="bold" />
 
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/pivotal_labs"
-            android:textAllCaps="true"
-            android:id="@+id/pivotal_labs"
-            android:background="#114333"
-            android:textColor="@android:color/white" />
     </LinearLayout>
 </LinearLayout>

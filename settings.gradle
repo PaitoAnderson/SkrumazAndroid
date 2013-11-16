@@ -1,1 +1,1 @@
-include ':Skrumaz', ':Skrumaz:libs:UserVoiceSDK'
+include ':Skrumaz:libs:ViewPageIndicator', ':Skrumaz:libs:UserVoiceSDK', ':Skrumaz'

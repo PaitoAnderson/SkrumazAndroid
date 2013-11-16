@@ -14,7 +14,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.skrumaz.app.classes.Artifact;
-import com.skrumaz.app.classes.Service;
 import com.skrumaz.app.data.Preferences;
 import com.skrumaz.app.data.Store;
 import com.skrumaz.app.data.WebServices;
@@ -25,10 +24,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.DefaultHeaderTransformer;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
-public class MainActivity extends Activity implements PullToRefreshAttacher.OnRefreshListener {
+public class MainActivity extends Activity implements OnRefreshListener {
 
     private ExpandableListView listView;
     private LinearLayout processContainer;
@@ -37,12 +38,11 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
     private ArtifactAdapter adapter;
     private Boolean continueRequests = true;
     private String breakingError = "";
-    private Service service;
     private Context mContext;
 
     private List<Artifact> artifacts = new ArrayList<Artifact>();
 
-    private PullToRefreshAttacher mPullToRefreshAttacher;
+    private PullToRefreshLayout mPullToRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,18 +59,18 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         // Set Context variable to self
         mContext = this;
 
-        // Get Service Used
-        service = Preferences.getService(mContext);
-
         // Disable Group Indicator
         listView.setGroupIndicator(null);
 
         // Pull to Refresh Library - Initialize
-        mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
-        mPullToRefreshAttacher.addRefreshableView(listView, this);
+        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
+        ActionBarPullToRefresh.from(this)
+                .allChildrenArePullable()
+                .listener(this)
+                .setup(mPullToRefreshLayout);
 
         // Pull to Refresh Library - Set ProgressBar color.
-        DefaultHeaderTransformer transformer = ((DefaultHeaderTransformer)mPullToRefreshAttacher.getHeaderTransformer());
+        DefaultHeaderTransformer transformer = ((DefaultHeaderTransformer)mPullToRefreshLayout.getHeaderTransformer());
         transformer.setProgressBarColor(getResources().getColor(R.color.accent_color));
     }
 
@@ -133,7 +133,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         @Override
         protected Boolean doInBackground(String... params) {
 
-            artifacts.addAll(WebServices.GetItems(service, mContext));
+            artifacts.addAll(WebServices.GetItems(mContext));
 
             return null;
         }
@@ -165,7 +165,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
             }
 
             // Notify refresh finished
-            mPullToRefreshAttacher.setRefreshComplete();
+            mPullToRefreshLayout.setRefreshComplete();
             adapter.notifyDataSetChanged();
 
             super.onPostExecute(result);
@@ -177,7 +177,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
             // Pull Artifacts and Tasks from SQLite
             Store db = new Store(mContext);
             artifacts.clear();
-            artifacts.addAll(db.getArtifacts(service));
+            artifacts.addAll(db.getArtifacts());
             db.close();
 
             return null;
@@ -210,7 +210,7 @@ public class MainActivity extends Activity implements PullToRefreshAttacher.OnRe
         }
 
         // Notify refresh finished
-        mPullToRefreshAttacher.setRefreshComplete();
+        mPullToRefreshLayout.setRefreshComplete();
         adapter.notifyDataSetChanged();
 
     }

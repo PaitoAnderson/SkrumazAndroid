@@ -5,9 +5,7 @@
 
     <string name="input_rally_username">Rally Username</string>
     <string name="input_rally_password">Rally Password</string>
-    <string name="input_pivotal_username">Pivotal Username</string>
-    <string name="input_pivotal_password">Pivotal Password</string>
-    <string name="button_login">Login</string>
+    <string name="button_login">Rally Login</string>
 
     <string name="action_refresh">Refresh</string>
     <string name="action_sort">Sort</string>
@@ -15,7 +13,6 @@
     <string name="action_help">Help</string>
 
     <string name="rally_software">Rally Software</string>
-    <string name="pivotal_labs">Pivotal Labs</string>
 
     <string name="pref_configuration">Configuration</string>
     <string name="pref_about">About</string>
