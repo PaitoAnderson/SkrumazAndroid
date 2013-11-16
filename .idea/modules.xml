@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/Skrumaz/Skrumaz.iml" filepath="$PROJECT_DIR$/Skrumaz/Skrumaz.iml" />
       <module fileurl="file://$PROJECT_DIR$/SkrumazAndroid.iml" filepath="$PROJECT_DIR$/SkrumazAndroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/Skrumaz/libs/UserVoiceSDK/UserVoiceSDK.iml" filepath="$PROJECT_DIR$/Skrumaz/libs/UserVoiceSDK/UserVoiceSDK.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Skrumaz/libs/libs.iml" filepath="$PROJECT_DIR$/Skrumaz/libs/libs.iml" />
     </modules>
   </component>
 </project>
