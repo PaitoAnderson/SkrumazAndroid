@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.skrumaz.app.classes.Artifact;
 import com.skrumaz.app.data.Preferences;
 import com.skrumaz.app.data.Store;
-import com.skrumaz.app.data.WebServices;
+import com.skrumaz.app.data.WebServices.GetItems;
 import com.uservoice.uservoicesdk.Config;
 import com.uservoice.uservoicesdk.UserVoice;
 
@@ -29,7 +29,7 @@ import uk.co.senab.actionbarpulltorefresh.library.DefaultHeaderTransformer;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
-public class MainActivity extends Activity implements OnRefreshListener {
+public class ArtifactList extends Activity implements OnRefreshListener {
 
     private ExpandableListView listView;
     private LinearLayout processContainer;
@@ -133,7 +133,7 @@ public class MainActivity extends Activity implements OnRefreshListener {
         @Override
         protected Boolean doInBackground(String... params) {
 
-            artifacts.addAll(WebServices.GetItems(mContext));
+            artifacts.addAll(new GetItems().FetchItems(mContext));
 
             return null;
         }

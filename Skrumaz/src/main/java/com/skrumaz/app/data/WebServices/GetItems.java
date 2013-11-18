@@ -1,9 +1,9 @@
-package com.skrumaz.app.data.RallyDev;
+package com.skrumaz.app.data.WebServices;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.skrumaz.app.MainActivity;
+import com.skrumaz.app.ArtifactList;
 import com.skrumaz.app.classes.Artifact;
 import com.skrumaz.app.classes.Iteration;
 import com.skrumaz.app.classes.Task;
@@ -36,7 +36,7 @@ public class GetItems {
 
     public List<Artifact> FetchItems(Context context) {
 
-        ((MainActivity)context).SetProgress("Getting Current Iteration...");
+        ((ArtifactList)context).SetProgress("Getting Current Iteration...");
 
         // Setup HTTP Request
         DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -81,7 +81,7 @@ public class GetItems {
                 Preferences.setDataExpiry(context);
 
             } else {
-                ((MainActivity)context).SetError(false, statusLine.getReasonPhrase());
+                ((ArtifactList)context).SetError(false, statusLine.getReasonPhrase());
                 Log.e("GetItems", "GI Error: " + statusLine.getReasonPhrase());
             }
 
@@ -96,7 +96,7 @@ public class GetItems {
 
     public void GetUserStories(Context context) {
 
-        ((MainActivity)context).SetProgress("Getting User Stories...");
+        ((ArtifactList)context).SetProgress("Getting User Stories...");
 
         // Setup HTTP Request
         DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -155,7 +155,7 @@ public class GetItems {
                 }
 
             } else {
-                ((MainActivity)context).SetError(false, statusLine.getReasonPhrase());
+                ((ArtifactList)context).SetError(false, statusLine.getReasonPhrase());
                 Log.d("GetItems", "US Error: " + statusLine.getReasonPhrase());
             }
 
@@ -169,7 +169,7 @@ public class GetItems {
 
     public void GetDefects(Context context) {
 
-        ((MainActivity)context).SetProgress("Getting Defects...");
+        ((ArtifactList)context).SetProgress("Getting Defects...");
 
         // Setup HTTP Request
         DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -181,7 +181,7 @@ public class GetItems {
 
         HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate");
 
-        Log.d("MainActivity","https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate&pretty=true");
+        Log.d("ArtifactList","https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate&pretty=true");
 
         // Setup HTTP Headers / Authorization
         get.setHeader("Accept", "application/json");
@@ -229,7 +229,7 @@ public class GetItems {
                 }
 
             } else {
-                ((MainActivity)context).SetError(false, statusLine.getReasonPhrase());
+                ((ArtifactList)context).SetError(false, statusLine.getReasonPhrase());
                 Log.d("GetItems", "DE Error: " + statusLine.getReasonPhrase());
             }
 

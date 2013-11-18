@@ -150,8 +150,8 @@ public class Login extends Activity {
                     // Store Credentials
                     Preferences.setCredentials(getBaseContext(), username.getText().toString(), password.getText().toString());
 
-                    // Sent to MainActivity
-                    Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                    // Sent to ArtifactList
+                    Intent mainActivity = new Intent(getApplicationContext(), ArtifactList.class);
                     startActivity(mainActivity);
                     finish(); // Remove Activity from Stack
                 } else {
