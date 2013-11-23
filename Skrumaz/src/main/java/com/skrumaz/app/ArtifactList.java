@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.skrumaz.app.classes.Artifact;
 import com.skrumaz.app.data.Preferences;
 import com.skrumaz.app.data.Store;
-import com.skrumaz.app.data.WebServices.GetItems;
+import com.skrumaz.app.data.WebServices.GetArtifacts;
 import com.uservoice.uservoicesdk.Config;
 import com.uservoice.uservoicesdk.UserVoice;
 
@@ -94,12 +94,12 @@ public class ArtifactList extends Activity implements OnRefreshListener {
         continueRequests = true;
         breakingError = "";
 
-        if (forceRefresh || Preferences.isDataExpired(mContext)) {
+        Store db = new Store(getBaseContext());
+        if (forceRefresh || db.isValidArtifacts(Preferences.getIterationID(getBaseContext()))) {
             new GetService().execute();
         } else {
             new GetStore().execute();
         }
-
     }
 
     @Override
@@ -133,7 +133,7 @@ public class ArtifactList extends Activity implements OnRefreshListener {
         @Override
         protected Boolean doInBackground(String... params) {
 
-            artifacts.addAll(new GetItems().FetchItems(mContext));
+            artifacts.addAll(new GetArtifacts().FetchItems(mContext));
 
             return null;
         }

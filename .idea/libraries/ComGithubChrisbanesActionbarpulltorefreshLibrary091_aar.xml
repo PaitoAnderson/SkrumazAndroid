@@ -2,6 +2,7 @@
   <library name="ComGithubChrisbanesActionbarpulltorefreshLibrary091.aar">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/Skrumaz/build/exploded-bundles/ComGithubChrisbanesActionbarpulltorefreshLibrary091.aar/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/Skrumaz/build/exploded-bundles/ComGithubChrisbanesActionbarpulltorefreshLibrary091.aar/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

@@ -6,14 +6,14 @@ package com.skrumaz.app.classes;
  * Note: This should be refactored as it's currently RallyDev specific
  */
 public class Iteration {
-    private String Oid;
+    private Long Oid;
     private String Name;
 
-    public String getOid() {
+    public Long getOid() {
         return Oid;
     }
 
-    public void setOid(String oid) {
+    public void setOid(Long oid) {
         this.Oid = oid;
     }
 

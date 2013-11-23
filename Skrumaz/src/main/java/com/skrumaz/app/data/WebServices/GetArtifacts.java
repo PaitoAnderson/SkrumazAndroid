@@ -29,66 +29,87 @@ import java.util.List;
 /**
  * Created by Paito Anderson on 10/19/2013.
  */
-public class GetItems {
+public class GetArtifacts {
 
     List<Artifact> artifacts = new ArrayList<Artifact>();
     private Iteration iteration = new Iteration();
 
     public List<Artifact> FetchItems(Context context) {
 
-        ((ArtifactList)context).SetProgress("Getting Current Iteration...");
+        // Get IterationId to use
+        Long IterationId = Preferences.getIterationID(context);
 
-        // Setup HTTP Request
-        DefaultHttpClient httpClient = new DefaultHttpClient();
-        HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current");
+        // Is IterationId available? If not, get current.
+        if (IterationId > 0) {
 
-        Log.d("GetItems", "https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current");
+            // Set IterationId to use
+            iteration.setOid(IterationId);
 
-        // Setup HTTP Headers / Authorization
-        get.setHeader("Accept", "application/json");
-        get.setHeader("Authorization", Preferences.getCredentials(context));
-        try {
-            // Make HTTP Request
-            HttpResponse response = httpClient.execute(get);
-            StatusLine statusLine = response.getStatusLine();
-            if (statusLine.getStatusCode() == HttpURLConnection.HTTP_OK) {
+            // Get US/DE's
+            GetUserStories(context);
+            GetDefects(context);
 
-                // Parse JSON Response
-                BufferedReader streamReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-                StringBuilder responseStrBuilder = new StringBuilder();
-                String inputStr;
-                while ((inputStr = streamReader.readLine()) != null) {
-                    responseStrBuilder.append(inputStr);
+            // Store items in Database
+            Store db = new Store(context);
+            db.storeArtifacts(artifacts);
+            db.close();
+        } else {
+
+            // Update Main View with status
+            ((ArtifactList)context).SetProgress("Getting Current Iteration...");
+
+            // Setup HTTP Request
+            DefaultHttpClient httpClient = new DefaultHttpClient();
+            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current");
+
+            Log.d("GetItems", "https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current");
+
+            // Setup HTTP Headers / Authorization
+            get.setHeader("Accept", "application/json");
+            get.setHeader("Authorization", Preferences.getCredentials(context));
+            try {
+                // Make HTTP Request
+                HttpResponse response = httpClient.execute(get);
+                StatusLine statusLine = response.getStatusLine();
+                if (statusLine.getStatusCode() == HttpURLConnection.HTTP_OK) {
+
+                    // Parse JSON Response
+                    BufferedReader streamReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+                    StringBuilder responseStrBuilder = new StringBuilder();
+                    String inputStr;
+                    while ((inputStr = streamReader.readLine()) != null) {
+                        responseStrBuilder.append(inputStr);
+                    }
+                    JSONObject jsonIteration = new JSONObject(responseStrBuilder.toString());
+
+                    // Get Iteration Name and Reference
+                    iteration.setOid(Long.parseLong(jsonIteration.getJSONObject("Iteration").getString("ObjectID")));
+                    iteration.setName(jsonIteration.getJSONObject("Iteration").getString("Name").toString());
+
+                    Log.i("GetItems", "Iteration: " + iteration.getName());
+
+                    // Get US/DE's
+                    GetUserStories(context);
+                    GetDefects(context);
+
+                    // Store items in Database
+                    Store db = new Store(context);
+                    db.storeArtifacts(artifacts);
+                    db.close();
+
+                    // Set Iteration to use to current iteration
+                    Preferences.setIterationID(context, iteration.getOid());
+
+                } else {
+                    ((ArtifactList)context).SetError(false, statusLine.getReasonPhrase());
+                    Log.e("GetItems", "GI Error: " + statusLine.getReasonPhrase());
                 }
-                JSONObject jsonIteration = new JSONObject(responseStrBuilder.toString());
 
-                // Get Iteration Name and Reference
-                iteration.setOid(jsonIteration.getJSONObject("Iteration").getString("ObjectID").toString());
-                iteration.setName(jsonIteration.getJSONObject("Iteration").getString("Name").toString());
-
-                Log.i("GetItems", "Iteration: " + iteration.getName());
-
-                // Get US/DE's
-                GetUserStories(context);
-                GetDefects(context);
-
-                // Store items in Database
-                Store db = new Store(context);
-                db.storeArtifacts(artifacts);
-                db.close();
-
-                // Set data expiry date
-                Preferences.setDataExpiry(context);
-
-            } else {
-                ((ArtifactList)context).SetError(false, statusLine.getReasonPhrase());
-                Log.e("GetItems", "GI Error: " + statusLine.getReasonPhrase());
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         return artifacts;
@@ -140,6 +161,7 @@ public class GetItems {
                     userStory.setBlocked(userStoriesArray.getJSONObject(i).getBoolean("Blocked"));
                     userStory.setStatus(StatusLookup.stringToStatus(userStoriesArray.getJSONObject(i).getString("ScheduleState")));
                     userStory.setLastUpdate(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(userStoriesArray.getJSONObject(i).getString("LastUpdateDate")));
+                    userStory.setIteration(iteration.getOid());
 
                     // Iterate though Tasks for User Story
                     for (int j = 0; j < userStoriesArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getInt("Count"); j++)
@@ -181,7 +203,7 @@ public class GetItems {
 
         HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate");
 
-        Log.d("ArtifactList","https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate&pretty=true");
+             Log.d("ArtifactList","https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate&pretty=true");
 
         // Setup HTTP Headers / Authorization
         get.setHeader("Accept", "application/json");
@@ -213,6 +235,7 @@ public class GetItems {
                     defect.setBlocked(defectsArray.getJSONObject(i).getBoolean("Blocked"));
                     defect.setStatus(StatusLookup.stringToStatus(defectsArray.getJSONObject(i).getString("ScheduleState")));
                     defect.setLastUpdate(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(defectsArray.getJSONObject(i).getString("LastUpdateDate")));
+                    defect.setIteration(iteration.getOid());
 
                     // Iterate though Tasks for Defect
                     for (int j = 0; j < defectsArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getInt("Count"); j++)

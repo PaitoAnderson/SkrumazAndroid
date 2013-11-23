@@ -10,7 +10,7 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
  */
 public class IterationList extends Activity implements OnRefreshListener {
 
-    
+
     @Override
     public void onRefreshStarted(View view) {
 

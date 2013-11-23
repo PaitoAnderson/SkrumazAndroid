@@ -11,6 +11,7 @@ import android.preference.PreferenceActivity;
 import android.view.MenuItem;
 
 import com.skrumaz.app.data.Preferences;
+import com.skrumaz.app.data.Store;
 
 /**
  * Created by Paito Anderson on 2013-09-22.
@@ -38,7 +39,8 @@ public class Settings extends PreferenceActivity {
         Preference showTeam = ((Preference) findPreference("showTeam"));
         showTeam.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
-                Preferences.invalidateData(getBaseContext());
+                Store db = new Store(getBaseContext());
+                db.invalidArtifacts();
                 return true;
             }
         });

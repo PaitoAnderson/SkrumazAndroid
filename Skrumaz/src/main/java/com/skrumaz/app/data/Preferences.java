@@ -47,13 +47,35 @@ public class Preferences {
         }
     }
 
-    // Has the artifact data expired
-    public static boolean isDataExpired(Context context) {
+    // Get Iteration ID to use
+    public static long getIterationID(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        Date expiryDate = new Date(prefs.getLong("dataExpiry", 0));
-        Date currentDate = new Date(System.currentTimeMillis());
+        Long iteration = prefs.getLong("useIteration", 0);
+        Date iterationTime = new Date(prefs.getLong("useIterationTime", 0));
 
-        if (expiryDate.after(currentDate)) {
+        if (iterationTime.after(new Date(System.currentTimeMillis()))) {
+            return iteration;
+        } else {
+            return 0;
+        }
+    }
+
+    // Set Iteration ID to use
+    public static void setIterationID(Context context, long IterationId) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor prefsEditor = prefs.edit();
+        prefsEditor.putLong("useIteration", IterationId);
+        Long currentDate = System.currentTimeMillis() + (20*60*60*1000); //Add 20hours to current time
+        prefsEditor.putLong("useIterationTime", currentDate);
+        prefsEditor.commit();
+    }
+
+    // Has the artifact data expired
+    public static boolean isDataExpired(Context context, String item) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        Date expiryDate = new Date(prefs.getLong("de-" + item, 0));
+
+        if (expiryDate.after(new Date(System.currentTimeMillis()))) {
             return false;
         } else {
             return true;
@@ -61,20 +83,19 @@ public class Preferences {
     }
 
     // Set expiry date for the data that was just downloaded
-    public static void setDataExpiry(Context context) {
+    public static void setDataExpiry(Context context, String item) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor prefsEditor = prefs.edit();
-        Long currentDate = System.currentTimeMillis();
-        currentDate = currentDate + (15*60*1000); //Add 15minutes to current time
-        prefsEditor.putLong("dataExpiry", currentDate);
+        Long currentDate = System.currentTimeMillis() + (15*60*1000); //Add 15minutes to current time
+        prefsEditor.putLong("de-" + item, currentDate);
         prefsEditor.commit();
     }
 
     // Expire previously downloaded data
-    public static void invalidateData(Context context) {
+    public static void invalidateData(Context context, String item) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.putLong("dataExpiry", 0);
+        prefsEditor.putLong("de-" + item, 0);
         prefsEditor.commit();
     }
 

@@ -24,6 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Welcome" android:theme="@android:style/Theme.Holo.Light.NoActionBar" android:screenOrientation="portrait" />
+        <activity android:name=".IterationList" />
         <activity android:name=".Login" />
         <activity android:name=".Settings" />
 
