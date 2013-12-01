@@ -34,6 +34,8 @@
 
         <item name="android:listChoiceBackgroundIndicator">@drawable/list_selector_holo_light</item>
 
+        <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemTheme</item>
+
     </style>
 
     <!-- Custom styles. -->
@@ -62,17 +64,23 @@
     </style>
     <style name="SpinnerItemTheme" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
         <item name="android:textColor">@android:color/white</item>
+        <item name="android:divider">@android:color/white</item>
     </style>
-    <style name="PopupMenuTheme" parent="@android:style/Widget.Holo.ListPopupWindow">
+    <style name="PopupMenuTheme" parent="@android:style/Widget.Holo.Light.ListPopupWindow">
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_example</item>
     </style>
-    <style name="ActionBarWidgetTheme" parent="@android:style/Theme.Holo">
+    <style name="ActionBarWidgetTheme" parent="@android:style/Theme.Holo.Light">
         <item name="android:popupMenuStyle">@style/PopupMenuTheme</item>
         <item name="android:textColor">@android:color/black</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListViewTheme</item>
     </style>
     <style name="DropDownListViewTheme" parent="@android:style/Widget.Holo.Light.ListView.DropDown">
         <item name="android:listSelector">@drawable/list_selector_holo_light</item>
+        <item name="android:divider">@android:color/white</item>
+    </style>
+    <style name="SpinnerDropDownItemTheme" parent="android:Widget.Holo.Light.DropDownItem.Spinner">
+        <item name="android:background">@drawable/spinner_selector_holo_light</item>
+        <item name="android:divider">@android:color/white</item>
     </style>
 
 </resources>

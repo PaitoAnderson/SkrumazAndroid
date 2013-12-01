@@ -12,7 +12,7 @@
         android:id="@+id/textViewS"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:text="Test"
         android:textSize="16sp"
         android:textStyle="bold"

@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.skrumaz.app.classes.Artifact;
+import com.skrumaz.app.classes.Iteration;
 import com.skrumaz.app.classes.Task;
 import com.skrumaz.app.data.Database;
 import com.skrumaz.app.utils.StatusLookup;
@@ -26,7 +27,7 @@ public class Artifacts extends Database {
     /*
      * Store all Artifacts in list with tasks
      */
-    public void storeArtifacts(List<Artifact> artifacts) {
+    public void storeArtifacts(List<Artifact> artifacts, Iteration iteration) {
 
         // Open Database connection
         SQLiteDatabase db = this.getWritableDatabase();
@@ -42,13 +43,14 @@ public class Artifacts extends Database {
         int rows = 0;
         try {
             // Update Record
-            rows = db.update(Table.ITERATIONS, iterationValues, Field.ITERATION_ID + " = " + artifacts.get(0).getIteration(), null);
+            rows = db.update(Table.ITERATIONS, iterationValues, Field.ITERATION_ID + " = " + iteration.getOid(), null);
         }
 
         finally {
             if (rows == 0) {
                 // Insert record
-                iterationValues.put(Field.ITERATION_ID, artifacts.get(0).getIteration());
+                iterationValues.put(Field.ITERATION_ID, iteration.getOid());
+                iterationValues.put(Field.TITLE, iteration.getName());
                 db.insert(Table.ITERATIONS, null, iterationValues);
             }
         }
@@ -59,7 +61,7 @@ public class Artifacts extends Database {
             // Setup Values for Artifact
             ContentValues artifactValues = new ContentValues();
             artifactValues.put(Field.FORMATTED_ID, artifact.getFormattedID());
-            artifactValues.put(Field.ITERATION_ID, artifact.getIteration());
+            artifactValues.put(Field.ITERATION_ID, iteration.getOid());
             artifactValues.put(Field.TITLE, artifact.getName());
             artifactValues.put(Field.BLOCKED, artifact.isBlocked());
             artifactValues.put(Field.RANK, artifact.getRank());
@@ -106,7 +108,6 @@ public class Artifacts extends Database {
             do {
                 Artifact artifact = new Artifact(cursor.getString(2));
                 artifact.setFormattedID(cursor.getString(0));
-                artifact.setIteration(cursor.getLong(1));
                 artifact.setBlocked(cursor.getInt(3)>0);
                 artifact.setRank(cursor.getString(4));
                 artifact.setStatus(StatusLookup.stringToStatus(cursor.getString(5)));
@@ -149,7 +150,7 @@ public class Artifacts extends Database {
         Date currentDate = new Date(System.currentTimeMillis());
 
         // Get Refresh Date
-        Cursor cursor = db.query(Table.ITERATIONS + " WHERE (" + Field.ITERATION_ID + " = " + iterationId + ")",
+        Cursor cursor = db.query(Table.ITERATIONS + " WHERE " + Field.ITERATION_ID + " = " + iterationId,
                 new String[] { "*" }, null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {

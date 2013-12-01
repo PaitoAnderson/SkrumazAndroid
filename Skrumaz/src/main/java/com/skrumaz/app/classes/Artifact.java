@@ -19,7 +19,6 @@ public class Artifact {
     private Boolean Blocked;
     private Status Status;
     private Date LastUpdate;
-    private Long Iteration;
 
     @Override
     public String toString(){
@@ -124,13 +123,5 @@ public class Artifact {
 
     public void setLastUpdate(Date lastUpdate) {
         LastUpdate = lastUpdate;
-    }
-
-    public Long getIteration() {
-        return Iteration;
-    }
-
-    public void setIteration(Long iteration) {
-        Iteration = iteration;
     }
 }

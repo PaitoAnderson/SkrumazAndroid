@@ -51,7 +51,7 @@ public class GetArtifacts {
 
             // Store items in Database
             Artifacts db = new Artifacts(context);
-            db.storeArtifacts(artifacts);
+            db.storeArtifacts(artifacts, iteration);
             db.close();
         } else {
 
@@ -94,7 +94,7 @@ public class GetArtifacts {
 
                     // Store items in Database
                     Artifacts db = new Artifacts(context);
-                    db.storeArtifacts(artifacts);
+                    db.storeArtifacts(artifacts, iteration);
                     db.close();
 
                     // Set Iteration to use to current iteration
@@ -161,7 +161,6 @@ public class GetArtifacts {
                     userStory.setBlocked(userStoriesArray.getJSONObject(i).getBoolean("Blocked"));
                     userStory.setStatus(StatusLookup.stringToStatus(userStoriesArray.getJSONObject(i).getString("ScheduleState")));
                     userStory.setLastUpdate(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(userStoriesArray.getJSONObject(i).getString("LastUpdateDate")));
-                    userStory.setIteration(iteration.getOid());
 
                     // Iterate though Tasks for User Story
                     for (int j = 0; j < userStoriesArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getInt("Count"); j++)
@@ -234,7 +233,6 @@ public class GetArtifacts {
                     defect.setBlocked(defectsArray.getJSONObject(i).getBoolean("Blocked"));
                     defect.setStatus(StatusLookup.stringToStatus(defectsArray.getJSONObject(i).getString("ScheduleState")));
                     defect.setLastUpdate(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(defectsArray.getJSONObject(i).getString("LastUpdateDate")));
-                    defect.setIteration(iteration.getOid());
 
                     // Iterate though Tasks for Defect
                     for (int j = 0; j < defectsArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getInt("Count"); j++)

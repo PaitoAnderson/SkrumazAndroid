@@ -82,7 +82,7 @@ public class Iterations extends Database {
         SQLiteDatabase db = this.getReadableDatabase();
 
         // Populate artifacts from Database
-        Cursor cursor = db.query(Table.ITERATIONS + " Order BY " + Field.ITERATION_ID + " DESC",
+        Cursor cursor = db.query(Table.ITERATIONS + " WHERE " + Field.PROJECT_ID + " = " + projectId + " Order BY " + Field.ITERATION_ID + " DESC",
                 new String[] { "*" }, null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {
@@ -113,7 +113,7 @@ public class Iterations extends Database {
         Date currentDate = new Date(System.currentTimeMillis());
 
         // Get Refresh Date
-        Cursor cursor = db.query(Table.PROJECTS + " WHERE (" + Field.PROJECT_ID + " = " + projectId + ")",
+        Cursor cursor = db.query(Table.PROJECTS + " WHERE " + Field.PROJECT_ID + " = " + projectId,
                 new String[] { "*" }, null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {
