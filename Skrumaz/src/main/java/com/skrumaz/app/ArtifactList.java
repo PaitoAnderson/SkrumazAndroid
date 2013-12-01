@@ -1,5 +1,6 @@
 package com.skrumaz.app;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,8 +16,8 @@ import android.widget.TextView;
 
 import com.skrumaz.app.classes.Artifact;
 import com.skrumaz.app.data.Preferences;
-import com.skrumaz.app.data.Store;
-import com.skrumaz.app.data.WebServices.GetArtifacts;
+import com.skrumaz.app.data.Store.Artifacts;
+import com.skrumaz.app.data.WebService.GetArtifacts;
 import com.uservoice.uservoicesdk.Config;
 import com.uservoice.uservoicesdk.UserVoice;
 
@@ -47,7 +48,7 @@ public class ArtifactList extends Activity implements OnRefreshListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_artifact_list);
 
         listView = (ExpandableListView) findViewById(R.id.listContainer);
         processContainer = (LinearLayout) findViewById(R.id.processContainer);
@@ -68,6 +69,10 @@ public class ArtifactList extends Activity implements OnRefreshListener {
                 .allChildrenArePullable()
                 .listener(this)
                 .setup(mPullToRefreshLayout);
+
+        // Add back button icon
+        ActionBar actionbar = getActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
 
         // Pull to Refresh Library - Set ProgressBar color.
         DefaultHeaderTransformer transformer = ((DefaultHeaderTransformer)mPullToRefreshLayout.getHeaderTransformer());
@@ -94,8 +99,8 @@ public class ArtifactList extends Activity implements OnRefreshListener {
         continueRequests = true;
         breakingError = "";
 
-        Store db = new Store(getBaseContext());
-        if (forceRefresh || db.isValidArtifacts(Preferences.getIterationID(getBaseContext()))) {
+        Artifacts db = new Artifacts(getBaseContext());
+        if (forceRefresh || db.isValidArtifacts(Preferences.getIterationId(getBaseContext(), true))) {
             new GetService().execute();
         } else {
             new GetStore().execute();
@@ -175,7 +180,7 @@ public class ArtifactList extends Activity implements OnRefreshListener {
         protected Boolean doInBackground(String... params) {
 
             // Pull Artifacts and Tasks from SQLite
-            Store db = new Store(mContext);
+            Artifacts db = new Artifacts(mContext);
             artifacts.clear();
             artifacts.addAll(db.getArtifacts());
             db.close();
@@ -212,7 +217,6 @@ public class ArtifactList extends Activity implements OnRefreshListener {
         // Notify refresh finished
         mPullToRefreshLayout.setRefreshComplete();
         adapter.notifyDataSetChanged();
-
     }
 
     @Override
@@ -223,19 +227,14 @@ public class ArtifactList extends Activity implements OnRefreshListener {
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-
-      //  Menu sortMenu = (Menu) menu.getItem(R.id.sort_menu);
-
-        //sortMenu.add(0,R.id.sort_id,0,"ID");
-
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action buttons
         switch(item.getItemId()) {
+            case android.R.id.home:
+                // Sent to Iteration List
+                startActivity(new Intent(getApplicationContext(), IterationList.class));
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.fade_out);
+                break;
             case R.id.action_refresh:
                 // Initiate API Requests
                 populateExpandableListView(true);

@@ -1,4 +1,4 @@
-package com.skrumaz.app.data.WebServices;
+package com.skrumaz.app.data.WebService;
 
 import android.content.Context;
 import android.util.Log;
@@ -8,7 +8,7 @@ import com.skrumaz.app.classes.Artifact;
 import com.skrumaz.app.classes.Iteration;
 import com.skrumaz.app.classes.Task;
 import com.skrumaz.app.data.Preferences;
-import com.skrumaz.app.data.Store;
+import com.skrumaz.app.data.Store.Artifacts;
 import com.skrumaz.app.utils.StatusLookup;
 
 import org.apache.http.HttpResponse;
@@ -37,7 +37,7 @@ public class GetArtifacts {
     public List<Artifact> FetchItems(Context context) {
 
         // Get IterationId to use
-        Long IterationId = Preferences.getIterationID(context);
+        Long IterationId = Preferences.getIterationId(context, false);
 
         // Is IterationId available? If not, get current.
         if (IterationId > 0) {
@@ -50,7 +50,7 @@ public class GetArtifacts {
             GetDefects(context);
 
             // Store items in Database
-            Store db = new Store(context);
+            Artifacts db = new Artifacts(context);
             db.storeArtifacts(artifacts);
             db.close();
         } else {
@@ -62,7 +62,7 @@ public class GetArtifacts {
             DefaultHttpClient httpClient = new DefaultHttpClient();
             HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current");
 
-            Log.d("GetItems", "https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current");
+                Log.d("GetArtifacts", "https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current?pretty=true");
 
             // Setup HTTP Headers / Authorization
             get.setHeader("Accept", "application/json");
@@ -86,23 +86,23 @@ public class GetArtifacts {
                     iteration.setOid(Long.parseLong(jsonIteration.getJSONObject("Iteration").getString("ObjectID")));
                     iteration.setName(jsonIteration.getJSONObject("Iteration").getString("Name").toString());
 
-                    Log.i("GetItems", "Iteration: " + iteration.getName());
+                    Log.i("GetArtifacts", "Iteration: " + iteration.getName());
 
                     // Get US/DE's
                     GetUserStories(context);
                     GetDefects(context);
 
                     // Store items in Database
-                    Store db = new Store(context);
+                    Artifacts db = new Artifacts(context);
                     db.storeArtifacts(artifacts);
                     db.close();
 
                     // Set Iteration to use to current iteration
-                    Preferences.setIterationID(context, iteration.getOid());
+                    Preferences.setIterationId(context, iteration.getOid());
 
                 } else {
                     ((ArtifactList)context).SetError(false, statusLine.getReasonPhrase());
-                    Log.e("GetItems", "GI Error: " + statusLine.getReasonPhrase());
+                    Log.e("GetArtifacts", "GI Error: " + statusLine.getReasonPhrase());
                 }
 
             } catch (UnsupportedEncodingException e) {
@@ -129,7 +129,7 @@ public class GetArtifacts {
 
         HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate");
 
-                 Log.d("GetItems","https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate&pretty=true");
+             Log.d("GetArtifacts","https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate&pretty=true");
 
         // Setup HTTP Headers / Authorization
         get.setHeader("Accept", "application/json");
@@ -178,7 +178,7 @@ public class GetArtifacts {
 
             } else {
                 ((ArtifactList)context).SetError(false, statusLine.getReasonPhrase());
-                Log.d("GetItems", "US Error: " + statusLine.getReasonPhrase());
+                Log.d("GetArtifacts", "US Error: " + statusLine.getReasonPhrase());
             }
 
         } catch (UnsupportedEncodingException e) {
@@ -186,7 +186,6 @@ public class GetArtifacts {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public void GetDefects(Context context) {
@@ -203,7 +202,7 @@ public class GetArtifacts {
 
         HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate");
 
-             Log.d("ArtifactList","https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate&pretty=true");
+             Log.d("GetArtifacts","https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate&pretty=true");
 
         // Setup HTTP Headers / Authorization
         get.setHeader("Accept", "application/json");
@@ -253,7 +252,7 @@ public class GetArtifacts {
 
             } else {
                 ((ArtifactList)context).SetError(false, statusLine.getReasonPhrase());
-                Log.d("GetItems", "DE Error: " + statusLine.getReasonPhrase());
+                Log.d("GetArtifacts", "DE Error: " + statusLine.getReasonPhrase());
             }
 
         } catch (UnsupportedEncodingException e) {
@@ -261,6 +260,5 @@ public class GetArtifacts {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }

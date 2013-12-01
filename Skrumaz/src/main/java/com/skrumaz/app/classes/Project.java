@@ -1,9 +1,9 @@
 package com.skrumaz.app.classes;
 
 /**
- * Created by Paito Anderson on 2013-09-24.
+ * Created by Paito Anderson on 11/28/2013.
  */
-public class Iteration {
+public class Project {
     private Long Oid;
     private String Name;
 

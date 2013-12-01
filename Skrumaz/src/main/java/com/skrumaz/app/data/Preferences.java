@@ -48,10 +48,41 @@ public class Preferences {
     }
 
     // Get Iteration ID to use
-    public static long getIterationID(Context context) {
+    public static long getProjectId(Context context, boolean force) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        Long project = prefs.getLong("useProject", 0);
+        Date projectTime = new Date(prefs.getLong("useProjectTime", 0));
+
+        if (force) {
+            return project;
+        }
+
+        if (projectTime.after(new Date(System.currentTimeMillis()))) {
+            return project;
+        } else {
+            return 0;
+        }
+    }
+
+    // Set Iteration ID to use
+    public static void setProjectId(Context context, long projectId) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor prefsEditor = prefs.edit();
+        prefsEditor.putLong("useProject", projectId);
+        Long currentDate = System.currentTimeMillis() + (20*60*60*1000); //Add 20hours to current time
+        prefsEditor.putLong("useProjectTime", currentDate);
+        prefsEditor.commit();
+    }
+
+    // Get Iteration ID to use
+    public static long getIterationId(Context context, boolean force) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         Long iteration = prefs.getLong("useIteration", 0);
         Date iterationTime = new Date(prefs.getLong("useIterationTime", 0));
+
+        if (force) {
+            return iteration;
+        }
 
         if (iterationTime.after(new Date(System.currentTimeMillis()))) {
             return iteration;
@@ -61,10 +92,10 @@ public class Preferences {
     }
 
     // Set Iteration ID to use
-    public static void setIterationID(Context context, long IterationId) {
+    public static void setIterationId(Context context, long iterationId) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.putLong("useIteration", IterationId);
+        prefsEditor.putLong("useIteration", iterationId);
         Long currentDate = System.currentTimeMillis() + (20*60*60*1000); //Add 20hours to current time
         prefsEditor.putLong("useIterationTime", currentDate);
         prefsEditor.commit();

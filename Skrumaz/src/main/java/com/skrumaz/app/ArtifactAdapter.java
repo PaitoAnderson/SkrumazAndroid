@@ -17,6 +17,8 @@ import java.util.List;
 
 /**
  * Created by Paito Anderson on 2013-09-21.
+ *
+ * Handles the display for User Stories and Defects in an Iteration
  */
 public class ArtifactAdapter extends BaseExpandableListAdapter {
 
@@ -56,12 +58,12 @@ public class ArtifactAdapter extends BaseExpandableListAdapter {
         }
         text = (TextView) convertView.findViewById(R.id.textViewS);
         text.setText(children);
-        convertView.setOnClickListener(new View.OnClickListener() {
+        /*convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(activity, children, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, children, Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
         return convertView;
     }
 
