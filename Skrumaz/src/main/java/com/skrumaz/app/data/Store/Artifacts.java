@@ -33,8 +33,10 @@ public class Artifacts extends Database {
         SQLiteDatabase db = this.getWritableDatabase();
 
         // Clear Database in Preparation for new data
-        db.execSQL("DELETE FROM " + Table.ARTIFACTS);
-        db.execSQL("DELETE FROM " + Table.TASKS);
+        String whereIn = "SELECT " + Field.FORMATTED_ID + " FROM " + Table.ARTIFACTS + " WHERE " + Field.ITERATION_ID + " = " + iteration.getOid();
+
+        db.execSQL("DELETE FROM " + Table.TASKS + " WHERE " + Field.PARENT_FORMATTED_ID + " IN (" + whereIn + ");");
+        db.execSQL("DELETE FROM " + Table.ARTIFACTS + " WHERE " + Field.ITERATION_ID + " = " + iteration.getOid() + ";");
 
         // Update Iteration Refresh Date
         ContentValues iterationValues = new ContentValues();
@@ -95,14 +97,14 @@ public class Artifacts extends Database {
     /*
      * Pull all Artifacts / Tasks from the database and put them in a usable list
      */
-    public List<Artifact> getArtifacts() {
+    public List<Artifact> getArtifacts(Long iterationId) {
         List<Artifact> artifacts = new ArrayList<Artifact>();
 
         // Open Database connection
         SQLiteDatabase db = this.getReadableDatabase();
 
         // Populate artifacts from Database
-        Cursor cursor = db.query(Table.ARTIFACTS + " Order BY " + Field.RANK + " ASC",
+        Cursor cursor = db.query(Table.ARTIFACTS + " WHERE (" + Field.ITERATION_ID + " = " + iterationId + ") Order BY " + Field.RANK + " ASC",
                 new String[] { "*" }, null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {

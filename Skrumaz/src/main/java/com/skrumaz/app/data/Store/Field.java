@@ -16,4 +16,5 @@ public class Field {
     public static final String STATUS = "Status";
     public static final String MODIFIED_DATE = "ModifiedDate";
     public static final String REFRESH_DATE = "RefreshDate";
+    public static final String UPDATED = "Updated";
 }

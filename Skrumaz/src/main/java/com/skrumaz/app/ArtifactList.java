@@ -182,7 +182,7 @@ public class ArtifactList extends Activity implements OnRefreshListener {
             // Pull Artifacts and Tasks from SQLite
             Artifacts db = new Artifacts(mContext);
             artifacts.clear();
-            artifacts.addAll(db.getArtifacts());
+            artifacts.addAll(db.getArtifacts(Preferences.getIterationId(getBaseContext(), true)));
             db.close();
 
             return null;

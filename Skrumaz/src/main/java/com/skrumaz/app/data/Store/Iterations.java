@@ -45,14 +45,17 @@ public class Iterations extends Database {
             }
         }
 
-        // Iterate though all artifacts (US/DE)
+        db.execSQL("UPDATE " + Table.ITERATIONS + " SET " + Field.UPDATED + " = 'N' WHERE " + Field.PROJECT_ID + " = " + project.getOid());
+
+        // Iterate though all iterations
         for (Iteration iteration : iterations) {
 
-            // Setup Values for Artifact
+            // Setup Values for Iteration
             ContentValues iterationValues = new ContentValues();
 
             iterationValues.put(Field.TITLE, iteration.getName());
             iterationValues.put(Field.PROJECT_ID, project.getOid());
+            iterationValues.put(Field.UPDATED, "Y");
 
             // Try Update then Insert
             rows = 0;
@@ -68,6 +71,9 @@ public class Iterations extends Database {
             }
         }
 
+        // Delete any iteration in this project that weren't updated (prevents deleted iterations from showing up)
+        db.execSQL("DELETE FROM " + Table.ITERATIONS + " WHERE (" + Field.UPDATED + " = 'N') AND (" + Field.PROJECT_ID + " = " + project.getOid() + ")");
+
         // Close database connection
         db.releaseReference();
     }
@@ -81,7 +87,7 @@ public class Iterations extends Database {
         // Open Database connection
         SQLiteDatabase db = this.getReadableDatabase();
 
-        // Populate artifacts from Database
+        // Populate iterations from Database
         Cursor cursor = db.query(Table.ITERATIONS + " WHERE " + Field.PROJECT_ID + " = " + projectId + " Order BY " + Field.ITERATION_ID + " DESC",
                 new String[] { "*" }, null, null, null, null, null, null);
         if (cursor.moveToFirst()) {

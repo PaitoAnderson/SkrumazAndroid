@@ -8,16 +8,18 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.skrumaz.app.classes.Iteration;
+import com.skrumaz.app.classes.Project;
 import com.skrumaz.app.data.Preferences;
 import com.skrumaz.app.data.Store.Iterations;
+import com.skrumaz.app.data.Store.Projects;
 import com.skrumaz.app.data.WebService.GetIterations;
+import com.skrumaz.app.data.WebService.GetProjects;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +38,15 @@ public class IterationList extends Activity implements OnRefreshListener, Action
     private LinearLayout processContainer;
     private TextView progressText;
     private ProgressBar progressSpinner;
-    private IterationAdapter adapter;
+    private IterationAdapter iterationAdapter;
+    private ProjectAdapter projectAdapter;
     private Boolean continueRequests = true;
     private String breakingError = "";
     private Context mContext;
+    private boolean noProjects = false;
 
     private List<Iteration> iterations = new ArrayList<Iteration>();
+    private List<Project> dropdownValues;
 
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 
@@ -56,28 +61,37 @@ public class IterationList extends Activity implements OnRefreshListener, Action
         processContainer = (LinearLayout) findViewById(R.id.processContainer);
         progressText = (TextView) findViewById(R.id.progressText);
         progressSpinner = (ProgressBar) findViewById(R.id.progressSpinner);
-        adapter = new IterationAdapter(this, iterations);
-        listView.setAdapter(adapter);
+        iterationAdapter = new IterationAdapter(this, iterations);
+        listView.setAdapter(iterationAdapter);
 
         // Set Context variable to self
         mContext = this;
 
+        // Set Projects from Store
+        Projects db = new Projects(mContext);
+        dropdownValues = db.getProjects();
+        db.close();
+
+        if (dropdownValues.isEmpty()) {
+            noProjects = true;
+            Project temp = new Project();
+            temp.setName("Loading...");
+            temp.setOid(Long.valueOf(0));
+            dropdownValues.add(temp);
+        }
         //Add spinner to select Workspace / Project from
         final ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-        final String[] dropdownValues = { "Project 1", "Project 2", "Project 3"};
-
         // Specify a SpinnerAdapter to populate the dropdown list.
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(actionBar.getThemedContext(),
-                R.layout.spinner_item, android.R.id.text1,
-                dropdownValues);
-
-        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        projectAdapter = new ProjectAdapter(actionBar.getThemedContext(), R.layout.spinner_item, R.id.projectName, dropdownValues);
+        projectAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
 
         // Set up the dropdown list navigation in the action bar.
-        actionBar.setListNavigationCallbacks(adapter, this);
+        actionBar.setListNavigationCallbacks(projectAdapter, this);
+
+        updateActionbarSpinner();
 
         // Pull to Refresh Library - Initialize
         mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
@@ -96,7 +110,7 @@ public class IterationList extends Activity implements OnRefreshListener, Action
         super.onResume();
 
         // Initiate API Requests
-        populateListView(false);
+        //populateListView(false);
     }
 
     @Override
@@ -126,6 +140,13 @@ public class IterationList extends Activity implements OnRefreshListener, Action
     @Override
     public boolean onNavigationItemSelected(int position, long id) {
 
+        if (!dropdownValues.isEmpty()) {
+            if (!dropdownValues.get(position).getOid().equals(0)) {
+                Preferences.setProjectId(mContext, dropdownValues.get(position).getOid());
+            }
+        }
+
+        populateListView(false);
 
         return true;
     }
@@ -136,6 +157,9 @@ public class IterationList extends Activity implements OnRefreshListener, Action
             new GetService().execute();
         } else {
             new GetStore().execute();
+        }
+        if (forceRefresh || noProjects) {
+            new GetWorkspace().execute();
         }
     }
 
@@ -195,7 +219,7 @@ public class IterationList extends Activity implements OnRefreshListener, Action
 
             // Notify refresh finished
             mPullToRefreshLayout.setRefreshComplete();
-            adapter.notifyDataSetChanged();
+            iterationAdapter.notifyDataSetChanged();
 
             super.onPostExecute(result);
         }
@@ -208,6 +232,29 @@ public class IterationList extends Activity implements OnRefreshListener, Action
             iterations.clear();
             iterations.addAll(db.getIterations(Preferences.getProjectId(getBaseContext(), true)));
             db.close();
+
+            return null;
+        }
+    }
+
+    class GetWorkspace extends AsyncTask<String, Integer, Boolean> {
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            projectAdapter.notifyDataSetChanged();
+
+            updateActionbarSpinner();
+
+            super.onPostExecute(result);
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+
+            // Replace list of items without breaking notifyDataSetChanged()
+            List<Project> newList = new GetProjects().FetchItems(mContext);
+            dropdownValues.clear();
+            dropdownValues.addAll(newList);
 
             return null;
         }
@@ -237,7 +284,7 @@ public class IterationList extends Activity implements OnRefreshListener, Action
 
         // Notify refresh finished
         mPullToRefreshLayout.setRefreshComplete();
-        adapter.notifyDataSetChanged();
+        iterationAdapter.notifyDataSetChanged();
     }
 
 
@@ -267,5 +314,14 @@ public class IterationList extends Activity implements OnRefreshListener, Action
         // Serialize the current dropdown position.
         outState.putInt(STATE_SELECTED_NAVIGATION_ITEM, getActionBar()
                 .getSelectedNavigationIndex());
+    }
+
+    private void updateActionbarSpinner() {
+        final ActionBar actionBar = getActionBar();
+        Long currentProject = Preferences.getProjectId(mContext, true);
+        if (currentProject > 0) {
+            int currentPosition = Project.findOid(dropdownValues, currentProject);
+            actionBar.setSelectedNavigationItem(currentPosition);
+        }
     }
 }
