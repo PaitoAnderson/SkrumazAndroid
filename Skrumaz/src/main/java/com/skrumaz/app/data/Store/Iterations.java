@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.skrumaz.app.classes.Iteration;
 import com.skrumaz.app.classes.Project;
 import com.skrumaz.app.data.Database;
+import com.skrumaz.app.utils.IterationStatusLookup;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,6 +56,7 @@ public class Iterations extends Database {
 
             iterationValues.put(Field.TITLE, iteration.getName());
             iterationValues.put(Field.PROJECT_ID, project.getOid());
+            iterationValues.put(Field.ITERATION_STATUS, IterationStatusLookup.iterationStatusToString(iteration.getIterationStatus()));
             iterationValues.put(Field.UPDATED, "Y");
 
             // Try Update then Insert

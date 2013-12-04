@@ -6,6 +6,7 @@ package com.skrumaz.app.classes;
 public class Iteration {
     private Long Oid;
     private String Name;
+    private IterationStatus IterationStatus;
 
     public Long getOid() {
         return Oid;
@@ -21,5 +22,13 @@ public class Iteration {
 
     public void setName(String name) {
         this.Name = name;
+    }
+
+    public IterationStatus getIterationStatus() {
+        return IterationStatus;
+    }
+
+    public void setIterationStatus(IterationStatus iterationStatus) {
+        IterationStatus = iterationStatus;
     }
 }

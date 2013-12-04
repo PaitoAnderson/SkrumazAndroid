@@ -9,6 +9,7 @@ import com.skrumaz.app.classes.Iteration;
 import com.skrumaz.app.classes.Task;
 import com.skrumaz.app.data.Preferences;
 import com.skrumaz.app.data.Store.Artifacts;
+import com.skrumaz.app.utils.IterationStatusLookup;
 import com.skrumaz.app.utils.StatusLookup;
 
 import org.apache.http.HttpResponse;
@@ -60,9 +61,9 @@ public class GetArtifacts {
 
             // Setup HTTP Request
             DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current");
+            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current?fetch=Iteration,ObjectID,Name,State");
 
-                Log.d("GetArtifacts", "https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current?pretty=true");
+                Log.d("GetArtifacts", "https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current?fetch=Iteration,ObjectID,Name,State&pretty=true");
 
             // Setup HTTP Headers / Authorization
             get.setHeader("Accept", "application/json");
@@ -85,6 +86,7 @@ public class GetArtifacts {
                     // Get Iteration Name and Reference
                     iteration.setOid(Long.parseLong(jsonIteration.getJSONObject("Iteration").getString("ObjectID")));
                     iteration.setName(jsonIteration.getJSONObject("Iteration").getString("Name").toString());
+                    iteration.setIterationStatus(IterationStatusLookup.stringToIterationStatus(jsonIteration.getJSONObject("Iteration").getString("State")));
 
                     Log.i("GetArtifacts", "Iteration: " + iteration.getName());
 

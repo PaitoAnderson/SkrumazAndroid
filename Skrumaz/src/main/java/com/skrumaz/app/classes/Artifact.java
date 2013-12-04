@@ -11,7 +11,6 @@ import java.util.List;
  * This data class is used for storing user stories and defects
  */
 public class Artifact {
-
     private String FormattedID;
     private String Name;
     private String Rank;

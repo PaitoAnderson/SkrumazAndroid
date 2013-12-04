@@ -8,6 +8,7 @@ import com.skrumaz.app.classes.Iteration;
 import com.skrumaz.app.classes.Project;
 import com.skrumaz.app.data.Preferences;
 import com.skrumaz.app.data.Store.Iterations;
+import com.skrumaz.app.utils.IterationStatusLookup;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -121,9 +122,9 @@ public class GetIterations {
         // Setup HTTP Request
         DefaultHttpClient httpClient = new DefaultHttpClient();
 
-        HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/project/" + project.getOid() + "/Iterations?fetch=ObjectID,Name&order=ObjectID%20desc");
+        HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/project/" + project.getOid() + "/Iterations?fetch=ObjectID,Name,State&order=ObjectID%20desc");
 
-        Log.d("GetIterations","https://rally1.rallydev.com/slm/webservice/v2.0/project/" + project.getOid() + "/Iterations?fetch=ObjectID,Name&order=ObjectID%20desc&pretty=true");
+        Log.d("GetIterations","https://rally1.rallydev.com/slm/webservice/v2.0/project/" + project.getOid() + "/Iterations?fetch=ObjectID,Name,State&order=ObjectID%20desc&pretty=true");
 
         // Setup HTTP Headers / Authorization
         get.setHeader("Accept", "application/json");
@@ -151,6 +152,7 @@ public class GetIterations {
                     Iteration iteration = new Iteration();
                     iteration.setOid(Long.parseLong(iterationArray.getJSONObject(i).getString("ObjectID")));
                     iteration.setName(iterationArray.getJSONObject(i).getString("Name"));
+                    iteration.setIterationStatus(IterationStatusLookup.stringToIterationStatus(iterationArray.getJSONObject(i).getString("State")));
 
                     // Add iteration to list
                     iterations.add(iteration);

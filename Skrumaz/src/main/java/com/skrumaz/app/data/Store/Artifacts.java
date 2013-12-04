@@ -9,6 +9,7 @@ import com.skrumaz.app.classes.Artifact;
 import com.skrumaz.app.classes.Iteration;
 import com.skrumaz.app.classes.Task;
 import com.skrumaz.app.data.Database;
+import com.skrumaz.app.utils.IterationStatusLookup;
 import com.skrumaz.app.utils.StatusLookup;
 
 import java.util.ArrayList;
@@ -53,7 +54,8 @@ public class Artifacts extends Database {
                 // Insert record
                 iterationValues.put(Field.ITERATION_ID, iteration.getOid());
                 iterationValues.put(Field.TITLE, iteration.getName());
-                db.insert(Table.ITERATIONS, null, iterationValues);
+                iterationValues.put(Field.ITERATION_STATUS, IterationStatusLookup.iterationStatusToString(iteration.getIterationStatus()));
+                        db.insert(Table.ITERATIONS, null, iterationValues);
             }
         }
 
