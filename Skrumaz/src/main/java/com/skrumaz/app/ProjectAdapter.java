@@ -54,4 +54,20 @@ public class ProjectAdapter extends ArrayAdapter<Project> {
 
         return text;
     }
+
+    @Override
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+        final Project project = getItem(position);
+
+        if  (convertView == null) {
+            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = layoutInflater.inflate(R.layout.spinner_dropdown_item, parent, false);
+        }
+
+        TextView projectName = (TextView) convertView.findViewById(R.id.projectName);
+
+        projectName.setText(project.getName());
+
+        return convertView;
+    }
 }

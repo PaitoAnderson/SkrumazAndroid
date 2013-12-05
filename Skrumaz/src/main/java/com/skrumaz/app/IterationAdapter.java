@@ -6,10 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.skrumaz.app.classes.Iteration;
 import com.skrumaz.app.data.Preferences;
+import com.skrumaz.app.utils.IterationStatusLookup;
 
 import java.util.List;
 
@@ -52,12 +54,14 @@ public class IterationAdapter extends BaseAdapter {
 
         final Iteration iteration = getItem(position);
 
-        TextView text = null;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.listrow_iteration, null);
         }
-        text = (TextView) convertView.findViewById(R.id.textViewS);
-        text.setText(iteration.getName());
+        ImageView iterationStatus = (ImageView) convertView.findViewById(R.id.iterationStatus);
+        TextView iterationName = (TextView) convertView.findViewById(R.id.iterationName);
+
+        iterationName.setText(iteration.getName());
+        iterationStatus.setImageResource(IterationStatusLookup.iterationStatusToRes(iteration.getIterationStatus()));
 
         // Respond to clicking
         convertView.setOnClickListener(new View.OnClickListener() {

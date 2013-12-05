@@ -98,6 +98,7 @@ public class Iterations extends Database {
                 Iteration iteration = new Iteration();
                 iteration.setName(cursor.getString(2));
                 iteration.setOid(cursor.getLong(0));
+                iteration.setIterationStatus(IterationStatusLookup.stringToIterationStatus(cursor.getString(4)));
                 iterations.add(iteration);
 
             } while (cursor.moveToNext());

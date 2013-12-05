@@ -86,7 +86,6 @@ public class IterationList extends Activity implements OnRefreshListener, Action
 
         // Specify a SpinnerAdapter to populate the dropdown list.
         projectAdapter = new ProjectAdapter(actionBar.getThemedContext(), R.layout.spinner_item, R.id.projectName, dropdownValues);
-        projectAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
 
         // Set up the dropdown list navigation in the action bar.
         actionBar.setListNavigationCallbacks(projectAdapter, this);
@@ -303,6 +302,7 @@ public class IterationList extends Activity implements OnRefreshListener, Action
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
         // Restore the previously serialized current dropdown position.
         if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
             getActionBar().setSelectedNavigationItem(savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
@@ -314,6 +314,7 @@ public class IterationList extends Activity implements OnRefreshListener, Action
         // Serialize the current dropdown position.
         outState.putInt(STATE_SELECTED_NAVIGATION_ITEM, getActionBar()
                 .getSelectedNavigationIndex());
+        super.onSaveInstanceState(outState);
     }
 
     private void updateActionbarSpinner() {

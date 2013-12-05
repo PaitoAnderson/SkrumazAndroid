@@ -1,5 +1,6 @@
 package com.skrumaz.app.utils;
 
+import com.skrumaz.app.R;
 import com.skrumaz.app.classes.IterationStatus;
 
 /**
@@ -32,6 +33,20 @@ public class IterationStatusLookup {
                 return "Accepted";
             default:
                 return "Planning";
+        }
+    }
+
+    public static int iterationStatusToRes(IterationStatus status) {
+        switch (status)
+        {
+            case RD_PLANNED:
+                return R.drawable.pg;
+            case RD_COMMITTED:
+                return R.drawable.cg;
+            case RD_ACCEPTED:
+                return R.drawable.ag;
+            default:
+                return R.drawable.pg;
         }
     }
 }
