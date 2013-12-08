@@ -28,10 +28,10 @@ public class ArtifactAdapter extends BaseExpandableListAdapter {
     private TextView artifactName;
     private ImageView artifactState;
 
-    public ArtifactAdapter(Activity act, List<Artifact> artifacts) {
-        activity = act;
+    public ArtifactAdapter(Activity activity, List<Artifact> artifacts) {
+        this.activity = activity;
         this.artifacts = artifacts;
-        inflater = act.getLayoutInflater();
+        this.inflater = activity.getLayoutInflater();
     }
 
     @Override
@@ -58,10 +58,12 @@ public class ArtifactAdapter extends BaseExpandableListAdapter {
         }
         text = (TextView) convertView.findViewById(R.id.textViewS);
         text.setText(children);
+
+        // On Click Task
         /*convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(activity, children, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Show Details", Toast.LENGTH_SHORT).show();
             }
         });*/
         return convertView;
@@ -110,12 +112,27 @@ public class ArtifactAdapter extends BaseExpandableListAdapter {
         Artifact artifact = (Artifact) getGroup(groupPosition);
 
         if (getChildrenCount(groupPosition) == 0) {
-            //artifactState.setVisibility(View.INVISIBLE);
             artifactState.setImageResource(R.drawable.navigation_clear);
+
+            // On Click with no tasks
+            /*convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(activity, "Show Details", Toast.LENGTH_SHORT).show();
+                }
+            });*/
         } else {
-            //artifactState.setVisibility(View.VISIBLE);
             artifactState.setImageResource(isExpanded ? R.drawable.navigation_collapse : R.drawable.navigation_expand);
         }
+
+        // On Long Click
+        /*convertView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(activity, "Show Details", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });*/
 
         // Set Status Icon
         Drawable status = activity.getBaseContext().getResources().getDrawable(StatusLookup.statusToRes(artifact.isBlocked(), artifact.getStatus()));
@@ -127,7 +144,6 @@ public class ArtifactAdapter extends BaseExpandableListAdapter {
         } else {
             artifactName.setText(artifact.getName());
         }
-        //((CheckedTextView) convertView).setChecked(isExpanded);
         return convertView;
     }
 
@@ -139,5 +155,6 @@ public class ArtifactAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return false;
+        // return true;
     }
 }
