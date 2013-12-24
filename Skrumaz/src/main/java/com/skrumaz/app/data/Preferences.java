@@ -157,6 +157,9 @@ public class Preferences {
         prefsEditor.putLong("dataExpiry", 0);
         prefsEditor.putString("username", "");
         prefsEditor.putString("password", "");
+
+        // TODO: Empty Database
+
         prefsEditor.commit();
     }
 
