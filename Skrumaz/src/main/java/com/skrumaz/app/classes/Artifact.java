@@ -48,6 +48,14 @@ public class Artifact {
         }
     }
 
+    public static class OrderByName implements Comparator<Artifact> {
+
+        @Override
+        public int compare(Artifact o1, Artifact o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
+    }
+
     public static class OrderByModified implements Comparator<Artifact> {
 
         @Override

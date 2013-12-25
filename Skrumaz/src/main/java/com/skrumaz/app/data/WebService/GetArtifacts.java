@@ -123,15 +123,17 @@ public class GetArtifacts {
 
         // Setup HTTP Request
         DefaultHttpClient httpClient = new DefaultHttpClient();
+        String fetchOwner = "";
         String whereQuery = "((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(context) + "%22))";
 
         if (Preferences.showAllOwners(context)) {
+            fetchOwner = ",Owner";
             whereQuery = "(Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)";
         }
 
-        HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate");
+        HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate" + fetchOwner);
 
-             Log.d("GetArtifacts","https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate&pretty=true");
+             Log.d("GetArtifacts","https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate" + fetchOwner + "&pretty=true");
 
         // Setup HTTP Headers / Authorization
         get.setHeader("Accept", "application/json");
@@ -174,6 +176,11 @@ public class GetArtifacts {
                         userStory.addTask(task);
                     }
 
+                    // Update story with Owner name
+                    if (fetchOwner.length() > 0) {
+                        userStory.setName(userStoriesArray.getJSONObject(i).getJSONObject("Owner").getString("_refObjectName") + " - " + userStory.getName());
+                    }
+
                     artifacts.add(userStory);
                 }
 
@@ -195,15 +202,17 @@ public class GetArtifacts {
 
         // Setup HTTP Request
         DefaultHttpClient httpClient = new DefaultHttpClient();
+        String fetchOwner = "";
         String whereQuery = "((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(context) + "%22))";
 
         if (Preferences.showAllOwners(context)) {
+            fetchOwner = ",Owner";
             whereQuery = "(Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)";
         }
 
-        HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate");
+        HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate" + fetchOwner);
 
-             Log.d("GetArtifacts","https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate&pretty=true");
+             Log.d("GetArtifacts","https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate" + fetchOwner + "&pretty=true");
 
         // Setup HTTP Headers / Authorization
         get.setHeader("Accept", "application/json");
@@ -244,6 +253,11 @@ public class GetArtifacts {
 
                         // Add Tasks as children
                         defect.addTask(task);
+                    }
+
+                    // Update story with Owner name
+                    if (fetchOwner.length() > 0) {
+                        defect.setName(defectsArray.getJSONObject(i).getJSONObject("Owner").getString("_refObjectName") + " - " + defect.getName());
                     }
 
                     // Add defect with Tasks to List

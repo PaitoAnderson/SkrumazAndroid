@@ -251,6 +251,10 @@ public class ArtifactList extends Activity implements OnRefreshListener {
                 Collections.sort(artifacts, new Artifact.OrderById());
                 adapter.notifyDataSetChanged();
                 break;
+            case R.id.sort_name:
+                Collections.sort(artifacts, new Artifact.OrderByName());
+                adapter.notifyDataSetChanged();
+                break;
             case R.id.sort_modified:
                 Collections.sort(artifacts, new Artifact.OrderByModified());
                 adapter.notifyDataSetChanged();
@@ -282,6 +286,8 @@ public class ArtifactList extends Activity implements OnRefreshListener {
             Collections.sort(artifacts, new Artifact.OrderByState());
         } else if (defaultSort.equalsIgnoreCase("id")) {
             Collections.sort(artifacts, new Artifact.OrderById());
+        } else if (defaultSort.equalsIgnoreCase("name")) {
+            Collections.sort(artifacts, new Artifact.OrderByName());
         } else if (defaultSort.equalsIgnoreCase("modified")) {
             Collections.sort(artifacts, new Artifact.OrderByModified());
         }

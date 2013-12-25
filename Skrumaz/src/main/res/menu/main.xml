@@ -19,6 +19,8 @@
                 android:title="State" />
             <item android:id="@+id/sort_id"
                 android:title="ID" />
+            <item android:id="@+id/sort_name"
+                android:title="Name" />
             <item android:id="@+id/sort_modified"
                 android:title="Modified" />
         </menu>
