@@ -23,6 +23,11 @@ public class IterationStatusLookup {
     }
 
     public static String iterationStatusToString(IterationStatus status) {
+
+        if (status == null) {
+            return "Planning";
+        }
+
         switch (status)
         {
             case RD_PLANNED:

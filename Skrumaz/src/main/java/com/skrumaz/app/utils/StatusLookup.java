@@ -25,6 +25,11 @@ public class StatusLookup {
     }
 
     public static String statusToString(Status status) {
+
+        if (status == null) {
+            return "Defined";
+        }
+
         switch (status)
         {
             case RD_DEFINED:

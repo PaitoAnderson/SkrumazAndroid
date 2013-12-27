@@ -64,6 +64,14 @@ public class Database extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
                 + newVersion + ", which will destroy all old data");
+        emptyDatabase(db);
+    }
+
+    public void emptyDatabasePref() {
+        emptyDatabase(this.getWritableDatabase());
+    }
+
+    private void emptyDatabase(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS " + Table.PROJECTS);
         db.execSQL("DROP TABLE IF EXISTS " + Table.ITERATIONS);
         db.execSQL("DROP TABLE IF EXISTS " + Table.ARTIFACTS);

@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.skrumaz.app.tutorial.FragmentPagerAdapter;
 import com.skrumaz.app.tutorial.Images;
 import com.viewpagerindicator.CirclePageIndicator;
@@ -68,5 +69,17 @@ public class Welcome extends FragmentActivity {
             indicator.setFillColor(0xFFFFFFFF);
             indicator.setStrokeWidth(0);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance(this).activityStop(this);
     }
 }

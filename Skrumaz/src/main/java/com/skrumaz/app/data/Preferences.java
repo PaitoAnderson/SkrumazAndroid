@@ -101,35 +101,6 @@ public class Preferences {
         prefsEditor.commit();
     }
 
-    // Has the artifact data expired
-    public static boolean isDataExpired(Context context, String item) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        Date expiryDate = new Date(prefs.getLong("de-" + item, 0));
-
-        if (expiryDate.after(new Date(System.currentTimeMillis()))) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    // Set expiry date for the data that was just downloaded
-    public static void setDataExpiry(Context context, String item) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        SharedPreferences.Editor prefsEditor = prefs.edit();
-        Long currentDate = System.currentTimeMillis() + (15*60*1000); //Add 15minutes to current time
-        prefsEditor.putLong("de-" + item, currentDate);
-        prefsEditor.commit();
-    }
-
-    // Expire previously downloaded data
-    public static void invalidateData(Context context, String item) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.putLong("de-" + item, 0);
-        prefsEditor.commit();
-    }
-
     // Get Default Sort Order for Artifacts
     public static String getDefaultSort(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
@@ -158,7 +129,10 @@ public class Preferences {
         prefsEditor.putString("username", "");
         prefsEditor.putString("password", "");
 
-        // TODO: Empty Database
+        // Empty Database
+        Database db = new Database(context);
+        db.emptyDatabasePref();
+        db.close();
 
         prefsEditor.commit();
     }
