@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.skrumaz.app.data.Preferences;
 
 import org.apache.http.HttpResponse;
@@ -82,6 +83,8 @@ public class Login extends Activity {
         ActionBar actionbar = getActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setTitle("Login");
+
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -172,4 +175,15 @@ public class Login extends Activity {
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance(this).activityStop(this);
+    }
 }

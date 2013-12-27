@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.skrumaz.app.classes.Artifact;
 import com.skrumaz.app.data.Preferences;
 import com.skrumaz.app.data.Store.Artifacts;
@@ -304,5 +305,17 @@ public class ArtifactList extends Activity implements OnRefreshListener {
     public void SetError(final Boolean error, final String errorMsg) {
         this.continueRequests = error;
         this.breakingError = errorMsg;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance(this).activityStop(this);
     }
 }

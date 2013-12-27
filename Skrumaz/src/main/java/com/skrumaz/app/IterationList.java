@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.skrumaz.app.classes.Iteration;
 import com.skrumaz.app.classes.Project;
 import com.skrumaz.app.data.Preferences;
@@ -324,5 +325,17 @@ public class IterationList extends Activity implements OnRefreshListener, Action
             int currentPosition = Project.findOid(dropdownValues, currentProject);
             actionBar.setSelectedNavigationItem(currentPosition);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance(this).activityStop(this);
     }
 }

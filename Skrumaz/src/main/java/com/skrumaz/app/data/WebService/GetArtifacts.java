@@ -255,7 +255,7 @@ public class GetArtifacts {
                         defect.addTask(task);
                     }
 
-                    // Update story with Owner name
+                    // Update defect with Owner name
                     if (fetchOwner.length() > 0) {
                         defect.setName(defectsArray.getJSONObject(i).getJSONObject("Owner").getString("_refObjectName") + " - " + defect.getName());
                     }
