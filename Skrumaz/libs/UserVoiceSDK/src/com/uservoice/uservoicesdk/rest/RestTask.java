@@ -8,14 +8,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import android.content.Context;
-import android.net.http.AndroidHttpClient;
 import oauth.signpost.OAuthConsumer;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -30,6 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.net.Uri;
+import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 
 import com.uservoice.uservoicesdk.Session;
@@ -56,6 +54,7 @@ public class RestTask extends AsyncTask<String, String, RestResult> {
 
     @Override
     protected RestResult doInBackground(String... args) {
+        AndroidHttpClient client = null;
         try {
             request = createRequest();
             if (isCancelled())
@@ -70,7 +69,7 @@ public class RestTask extends AsyncTask<String, String, RestResult> {
             }
             request.setHeader("Accept-Language", Locale.getDefault().getLanguage());
             request.setHeader("API-Client", String.format("uservoice-android-%s", UserVoice.getVersion()));
-            AndroidHttpClient client = AndroidHttpClient.newInstance(String.format("uservoice-android-%s", UserVoice.getVersion()), Session.getInstance().getContext());
+            client = AndroidHttpClient.newInstance(String.format("uservoice-android-%s", UserVoice.getVersion()), Session.getInstance().getContext());
             if (isCancelled())
                 throw new InterruptedException();
             // TODO it would be nice to find a way to abort the request on cancellation
@@ -81,12 +80,15 @@ public class RestTask extends AsyncTask<String, String, RestResult> {
             StatusLine responseStatus = response.getStatusLine();
             int statusCode = responseStatus != null ? responseStatus.getStatusCode() : 0;
             String body = responseEntity != null ? EntityUtils.toString(responseEntity) : null;
-            client.close();
             if (isCancelled())
                 throw new InterruptedException();
             return new RestResult(statusCode, new JSONObject(body));
         } catch (Exception e) {
             return new RestResult(e);
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 

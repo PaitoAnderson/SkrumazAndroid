@@ -3,6 +3,7 @@ package com.skrumaz.app.data.Store;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.skrumaz.app.classes.Artifact;
@@ -73,7 +74,11 @@ public class Artifacts extends Database {
             artifactValues.put(Field.MODIFIED_DATE, artifact.getLastUpdate().getTime());
 
             // Insert Row
-            db.insert(Table.ARTIFACTS, null, artifactValues);
+            try {
+                db.insertOrThrow(Table.ARTIFACTS, null, artifactValues);
+            } catch (SQLiteConstraintException e) {
+                db.update(Table.ARTIFACTS, artifactValues, Field.FORMATTED_ID + " = '" + artifact.getFormattedID() + "'", null);
+            }
 
             // Iterate though all tasks for this artifact (TA)
             for (Task task : artifact.getTasks()) {
@@ -88,7 +93,11 @@ public class Artifacts extends Database {
                 //taskValues.put(Field.MODIFIED_DATE, task.getLastUpdate().getTime());
 
                 // Insert Row
-                db.insert(Table.TASKS, null, taskValues);
+                try {
+                    db.insertOrThrow(Table.TASKS, null, taskValues);
+                } catch (SQLiteConstraintException e) {
+                    db.update(Table.TASKS, taskValues, Field.FORMATTED_ID + " = '" + task.getFormattedID() + "'", null);
+                }
             }
         }
 
