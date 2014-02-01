@@ -1,12 +1,42 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@color/primary_color"
+    style="@style/FrameLayoutTheme">
+
+    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ptr_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/background_light" >
+
+        <ExpandableListView
+            android:id="@+id/listContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="#00000000"
+            android:dividerHeight="0dp"
+            android:fadingEdge="none"
+            android:persistentDrawingCache="scrolling"
+            android:smoothScrollbar="false"
+            android:padding="0dp"
+            android:layout_margin="0dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true">
+        </ExpandableListView>
+
+    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
 
     <LinearLayout
         android:id="@+id/processContainer"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:background="@android:color/background_light"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="visible" >
@@ -33,31 +63,4 @@
 
     </LinearLayout>
 
-    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/ptr_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ExpandableListView
-            android:id="@+id/listContainer"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:cacheColorHint="@android:color/transparent"
-            android:divider="#00000000"
-            android:dividerHeight="0dp"
-            android:fadingEdge="none"
-            android:persistentDrawingCache="scrolling"
-            android:smoothScrollbar="false"
-            android:padding="0dp"
-            android:layout_margin="0dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true">
-        </ExpandableListView>
-
-    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
-
-</RelativeLayout>
+</FrameLayout>

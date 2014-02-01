@@ -1,0 +1,22 @@
+<resources>
+
+    <!-- All API v19 customizations can go here. -->
+    <style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+    <style name="PreferencesTheme" parent="AppTheme">
+        <item name="android:windowBackground">@color/primary_color</item>
+        <item name="android:listViewStyle">@style/ListViewTheme</item>
+        <item name="android:fitsSystemWindows">true</item>
+    </style>
+
+    <style name="HelpTheme" parent="AppTheme">
+        <item name="android:windowTranslucentStatus">false</item>
+    </style>
+
+    <style name="FrameLayoutTheme">
+        <item name="android:fitsSystemWindows">true</item>
+    </style>
+
+</resources>

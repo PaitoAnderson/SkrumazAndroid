@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.skrumaz.app"
-    android:versionCode="034"
-    android:versionName="0.3.4" >
+    android:versionCode="035"
+    android:versionName="0.3.5" >
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -25,16 +25,17 @@
             </intent-filter>
         </activity>
         <activity android:name=".Welcome" android:theme="@android:style/Theme.Holo.Light.NoActionBar" android:screenOrientation="portrait" />
-        <activity android:name=".IterationList" />
         <activity android:name=".Login" />
-        <activity android:name=".Settings" />
+        <activity android:name=".IterationList" />
+        <activity android:name=".CreateHierarchicalRequirement" android:screenOrientation="portrait" />
+        <activity android:name=".Settings" android:theme="@style/PreferencesTheme" />
 
-        <activity android:name="com.uservoice.uservoicesdk.activity.PortalActivity" />
-        <activity android:name="com.uservoice.uservoicesdk.activity.ForumActivity" />
-        <activity android:name="com.uservoice.uservoicesdk.activity.ArticleActivity" android:hardwareAccelerated="true" />
-        <activity android:name="com.uservoice.uservoicesdk.activity.TopicActivity" />
-        <activity android:name="com.uservoice.uservoicesdk.activity.ContactActivity" android:hardwareAccelerated="true" />
-        <activity android:name="com.uservoice.uservoicesdk.activity.PostIdeaActivity" android:hardwareAccelerated="true" />
+        <activity android:name="com.uservoice.uservoicesdk.activity.PortalActivity" android:theme="@style/HelpTheme" />
+        <activity android:name="com.uservoice.uservoicesdk.activity.ForumActivity" android:theme="@style/HelpTheme" />
+        <activity android:name="com.uservoice.uservoicesdk.activity.ArticleActivity" android:hardwareAccelerated="true" android:theme="@style/HelpTheme" />
+        <activity android:name="com.uservoice.uservoicesdk.activity.TopicActivity" android:theme="@style/HelpTheme" />
+        <activity android:name="com.uservoice.uservoicesdk.activity.ContactActivity" android:hardwareAccelerated="true" android:theme="@style/HelpTheme" />
+        <activity android:name="com.uservoice.uservoicesdk.activity.PostIdeaActivity" android:hardwareAccelerated="true" android:theme="@style/HelpTheme" />
 
     </application>
 

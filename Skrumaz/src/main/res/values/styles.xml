@@ -1,8 +1,16 @@
 <resources>
 
-    <!-- Application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <!-- All customizations can go here. -->
+    <!-- Application theme -->
+    <style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
 
         <item name="android:actionBarStyle">@style/ActionBarTheme</item>
 
@@ -35,8 +43,13 @@
         <item name="android:listChoiceBackgroundIndicator">@drawable/list_selector_holo_light</item>
 
         <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemTheme</item>
-
     </style>
+
+    <style name="PreferencesTheme" parent="AppTheme" />
+
+    <style name="HelpTheme" parent="AppTheme" />
+
+    <style name="FrameLayoutTheme" />
 
     <!-- Custom styles. -->
     <style name="ActionBarTheme" parent="@android:style/Widget.Holo.Light.ActionBar">
@@ -57,6 +70,7 @@
         <item name="android:button">@drawable/btn_check_holo_light</item>
     </style>
     <style name="ListViewTheme" parent="android:Widget.ListView">
+        <item name="android:background">@android:color/background_light</item>
         <item name="android:listSelector">@drawable/list_selector_holo_light</item>
     </style>
     <style name="ListViewTheme.White" parent="android:Widget.ListView.White">
