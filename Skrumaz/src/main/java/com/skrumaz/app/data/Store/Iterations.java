@@ -143,7 +143,7 @@ public class Iterations extends Database {
     public void invalidIterations() {
 
         // Open Database connection
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
 
         // Update Refresh Date
         ContentValues iterationValues = new ContentValues();

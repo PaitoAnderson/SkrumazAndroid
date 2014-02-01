@@ -1,6 +1,5 @@
 package com.skrumaz.app;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +12,7 @@ import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.skrumaz.app.classes.Artifact;
@@ -72,8 +72,7 @@ public class ArtifactList extends Activity implements OnRefreshListener {
                 .setup(mPullToRefreshLayout);
 
         // Add back button icon
-        ActionBar actionbar = getActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Pull to Refresh Library - Set ProgressBar color.
         DefaultHeaderTransformer transformer = ((DefaultHeaderTransformer)mPullToRefreshLayout.getHeaderTransformer());
@@ -223,7 +222,7 @@ public class ArtifactList extends Activity implements OnRefreshListener {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.artifact, menu);
         return true;
     }
 
@@ -236,9 +235,10 @@ public class ArtifactList extends Activity implements OnRefreshListener {
                 startActivity(new Intent(getApplicationContext(), IterationList.class));
                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.fade_out);
                 break;
-            case R.id.action_refresh:
-                // Initiate API Requests
-                populateExpandableListView(true);
+            case R.id.create_hierarchical_requirement:
+                // Create User Story
+                startActivity(new Intent(this, CreateHierarchicalRequirement.class));
+                overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
                 break;
             case R.id.sort_rank:
                 Collections.sort(artifacts, new Artifact.OrderByRank());
@@ -260,10 +260,14 @@ public class ArtifactList extends Activity implements OnRefreshListener {
                 Collections.sort(artifacts, new Artifact.OrderByModified());
                 adapter.notifyDataSetChanged();
                 break;
+            case R.id.action_refresh:
+                // Initiate API Requests
+                Toast.makeText(mContext, "Tip: You can swipe down to refresh.", Toast.LENGTH_LONG).show();
+                populateExpandableListView(true);
+                break;
             case R.id.action_settings:
                 // Launch Setting Activity
-                Intent intent = new Intent(this, Settings.class);
-                startActivity(intent);
+                startActivity(new Intent(this, Settings.class));
                 break;
             case R.id.action_help:
                 // UserVoice library

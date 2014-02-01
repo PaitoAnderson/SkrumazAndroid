@@ -1,16 +1,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/action_refresh"
-        android:orderInCategory="80"
+    <item android:id="@+id/create_hierarchical_requirement"
+        android:title="@string/action_create"
+        android:orderInCategory="70"
+        android:icon="@drawable/ic_create"
         android:showAsAction="always"
-        android:icon="@drawable/ic_refresh"
-        android:title="@string/action_refresh" />
+        android:visible="true" />
 
     <item android:id="@+id/action_sort"
-        android:orderInCategory="90"
-        android:showAsAction="always"
+        android:title="@string/action_sort"
+        android:orderInCategory="80"
         android:icon="@drawable/ic_sort"
-        android:title="@string/action_sort">
+        android:showAsAction="always" >
 
         <menu android:id="@+id/sort_menu">
             <item android:id="@+id/sort_rank"
@@ -25,6 +26,12 @@
                 android:title="Modified" />
         </menu>
     </item>
+
+    <item android:id="@+id/action_refresh"
+        android:title="@string/action_refresh"
+        android:orderInCategory="90"
+        android:icon="@drawable/ic_refresh"
+        android:showAsAction="ifRoom" />
 
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"

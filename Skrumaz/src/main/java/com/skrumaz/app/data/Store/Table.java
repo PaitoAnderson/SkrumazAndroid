@@ -9,4 +9,5 @@ public class Table {
     public static final String ITERATIONS = "Iterations";
     public static final String ARTIFACTS = "Artifacts";
     public static final String TASKS = "Tasks";
+    public static final String TYPE_DEFINITIONS = "TypeDefinitions";
 }

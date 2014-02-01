@@ -18,7 +18,7 @@ public class Database extends SQLiteOpenHelper {
 
     // Database Setup
     private static final String DATABASE_NAME = "Skrumaz.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     // Database Create SQL
     private static final String CREATE_TABLE_PROJECTS = "CREATE TABLE " + Table.PROJECTS +
@@ -34,6 +34,9 @@ public class Database extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_TASKS = "CREATE TABLE " + Table.TASKS +
             "(" + Field.FORMATTED_ID + " VARCHAR(15) PRIMARY KEY, " + Field.PARENT_FORMATTED_ID + " VARCHAR(15), " + Field.TITLE + " TEXT, " +
     Field.BLOCKED + " BOOLEAN, " + Field.STATUS + " VARCHAR(12), " + Field.MODIFIED_DATE + " LONG)";
+
+    private static final String CREATE_TABLE_TYPE_DEFINITIONS = "CREATE TABLE " + Table.TYPE_DEFINITIONS +
+            "(" + Field.DEFINITION_ID + " LONG PRIMARY KEY, " + Field.ELEMENTNAME + " VARCHAR(256))";
 
     // Default Constructor
     public Database(Context context) {
@@ -58,6 +61,10 @@ public class Database extends SQLiteOpenHelper {
         // Create Tasks Table
         Log.v(TAG, CREATE_TABLE_TASKS);
         db.execSQL(CREATE_TABLE_TASKS);
+
+        // Create Tasks Table
+        Log.v(TAG, CREATE_TABLE_TYPE_DEFINITIONS);
+        db.execSQL(CREATE_TABLE_TYPE_DEFINITIONS);
     }
 
     @Override
@@ -76,6 +83,7 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Table.ITERATIONS);
         db.execSQL("DROP TABLE IF EXISTS " + Table.ARTIFACTS);
         db.execSQL("DROP TABLE IF EXISTS " + Table.TASKS);
+        db.execSQL("DROP TABLE IF EXISTS " + Table.TYPE_DEFINITIONS);
         onCreate(db);
     }
 }

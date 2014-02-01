@@ -61,9 +61,9 @@ public class GetArtifacts {
 
             // Setup HTTP Request
             DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current?fetch=Iteration,ObjectID,Name,State");
+            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current?fetch=Project,Iteration,ObjectID,Name,State");
 
-                Log.d("GetArtifacts", "https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current?fetch=Iteration,ObjectID,Name,State&pretty=true");
+                Log.d("GetArtifacts", "https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current?fetch=Project,Iteration,ObjectID,Name,State&pretty=true");
 
             // Setup HTTP Headers / Authorization
             get.setHeader("Accept", "application/json");
@@ -87,8 +87,10 @@ public class GetArtifacts {
                     iteration.setOid(Long.parseLong(jsonIteration.getJSONObject("Iteration").getString("ObjectID")));
                     iteration.setName(jsonIteration.getJSONObject("Iteration").getString("Name").toString());
                     iteration.setIterationStatus(IterationStatusLookup.stringToIterationStatus(jsonIteration.getJSONObject("Iteration").getString("State")));
+                    String[] projectUrl = jsonIteration.getJSONObject("Iteration").getJSONObject("Project").getString("_ref").split("/");
 
                     Log.i("GetArtifacts", "Iteration: " + iteration.getName());
+                    Log.i("GetArtifacts", "Project Id: " + projectUrl[projectUrl.length-1]);
 
                     // Get US/DE's
                     GetUserStories(context);
@@ -101,6 +103,7 @@ public class GetArtifacts {
 
                     // Set Iteration to use to current iteration
                     Preferences.setIterationId(context, iteration.getOid());
+                    Preferences.setProjectId(context, Long.parseLong(projectUrl[projectUrl.length - 1]));
 
                 } else {
                     ((ArtifactList)context).SetError(false, statusLine.getReasonPhrase());

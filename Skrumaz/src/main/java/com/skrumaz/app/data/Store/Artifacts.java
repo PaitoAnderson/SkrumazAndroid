@@ -184,7 +184,7 @@ public class Artifacts extends Database {
     public void invalidArtifacts() {
 
         // Open Database connection
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
 
         // Update Refresh Date
         ContentValues iterationValues = new ContentValues();

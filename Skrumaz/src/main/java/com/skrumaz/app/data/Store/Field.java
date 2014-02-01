@@ -18,4 +18,6 @@ public class Field {
     public static final String MODIFIED_DATE = "ModifiedDate";
     public static final String REFRESH_DATE = "RefreshDate";
     public static final String UPDATED = "Updated";
+    public static final String DEFINITION_ID = "DefinitionID";
+    public static final String ELEMENTNAME = "ElementName";
 }
