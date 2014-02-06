@@ -34,10 +34,10 @@ public class Settings extends PreferenceActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        Preference appVersion = ((Preference) findPreference("appVersion"));
+        Preference appVersion = findPreference("appVersion");
         appVersion.setSummary(appVersionString);
 
-        Preference showTeam = ((Preference) findPreference("showTeam"));
+        Preference showTeam = findPreference("showTeam");
         showTeam.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 Artifacts db = new Artifacts(getBaseContext());
@@ -46,10 +46,10 @@ public class Settings extends PreferenceActivity {
             }
         });
 
-        Preference username = ((Preference) findPreference("username"));
+        Preference username = findPreference("username");
         username.setSummary(Preferences.getUsername(getBaseContext()));
 
-        Preference resetApp = ((Preference) findPreference("resetApp"));
+        Preference resetApp = findPreference("resetApp");
         resetApp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
 

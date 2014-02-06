@@ -77,7 +77,7 @@ public class IterationList extends Activity implements OnRefreshListener, Action
             noProjects = true;
             Project temp = new Project();
             temp.setName("Loading...");
-            temp.setOid(Long.valueOf(0));
+            temp.setOid((long) 0);
             dropdownValues.add(temp);
         }
         //Add spinner to select Workspace / Project from
@@ -141,7 +141,7 @@ public class IterationList extends Activity implements OnRefreshListener, Action
     public boolean onNavigationItemSelected(int position, long id) {
 
         if (!dropdownValues.isEmpty()) {
-            if (!dropdownValues.get(position).getOid().equals(0)) {
+            if (dropdownValues.get(position).getOid() != 0) {
                 Preferences.setProjectId(mContext, dropdownValues.get(position).getOid());
             }
         }

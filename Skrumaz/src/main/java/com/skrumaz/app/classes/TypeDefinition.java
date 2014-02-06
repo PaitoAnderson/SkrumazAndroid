@@ -15,7 +15,7 @@ public class TypeDefinition {
     }
 
     /*
-     * Find in position in List of Projects based on Oid
+     * Find in position in List of TypeDefinitions based on Oid
      */
     public static int findOid(List<TypeDefinition> typeDefs, Long Oid)
     {
@@ -30,7 +30,7 @@ public class TypeDefinition {
     }
 
     /*
-     * Find in Project in List of Projects based on Oid
+     * Find in TypeDefinition in List of TypeDefinitions based on Oid
      */
     public static TypeDefinition find(List<TypeDefinition> typeDefs, Long Oid)
     {

@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.analytics.tracking.android.EasyTracker;
+import com.skrumaz.app.classes.AllowedValue;
 import com.skrumaz.app.classes.AttributeDefinition;
 import com.skrumaz.app.data.Preferences;
 import com.skrumaz.app.data.Store.TypeDefinitions;
@@ -49,10 +50,10 @@ public class CreateHierarchicalRequirement extends Activity {
     private String breakingError = "";
 
     private Context mContext;
-    private Long definitionId;
-    private Long projectId;
     private List<AttributeDefinition> attributeDefinitions  = new ArrayList<AttributeDefinition>();
     private int layoutInputID = 0;
+
+    private View activeView;
 
     Calendar myCalendar = Calendar.getInstance();
 
@@ -119,14 +120,21 @@ public class CreateHierarchicalRequirement extends Activity {
                 switch (attributeDefinition.getAttributeType()) {
                     case BOOLEAN:
                         CheckBox checkBox = new CheckBox(mContext);
+                        if (attributeDefinition.getRequired())
+                        {
+                            checkBox.setTextColor(getResources().getColor(R.color.accent_color));
+                        }
                         checkBox.setText(attributeDefinition.getName());
                         checkBox.setId(layoutInputID);
-                        checkBox.setOnClickListener(CheckBoxOnClick);
                         inputContainer.addView(checkBox);
                         break;
                     case INTEGER:
                         // Add Label
                         TextView textView = new TextView(mContext);
+                        if (attributeDefinition.getRequired())
+                        {
+                            textView.setTextColor(getResources().getColor(R.color.accent_color));
+                        }
                         textView.setText(attributeDefinition.getName());
                         inputContainer.addView(textView);
                         // Add Input
@@ -134,12 +142,15 @@ public class CreateHierarchicalRequirement extends Activity {
                         editText.setInputType(InputType.TYPE_CLASS_NUMBER);
                         editText.setId(layoutInputID);
                         editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(attributeDefinition.getMaxLength())});
-                        editText.setOnClickListener(InputOnClick);
                         inputContainer.addView(editText);
                         break;
                     case QUANTITY:
                         // Add Label
                         TextView textView2 = new TextView(mContext);
+                        if (attributeDefinition.getRequired())
+                        {
+                            textView2.setTextColor(getResources().getColor(R.color.accent_color));
+                        }
                         textView2.setText(attributeDefinition.getName());
                         inputContainer.addView(textView2);
                         // Add Input
@@ -147,12 +158,15 @@ public class CreateHierarchicalRequirement extends Activity {
                         editText2.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
                         editText2.setId(layoutInputID);
                         editText2.setFilters(new InputFilter[]{new InputFilter.LengthFilter(attributeDefinition.getMaxLength())});
-                        editText2.setOnClickListener(InputOnClick);
                         inputContainer.addView(editText2);
                         break;
                     case STRING:
                         // Add Label
                         TextView textView3 = new TextView(mContext);
+                        if (attributeDefinition.getRequired())
+                        {
+                            textView3.setTextColor(getResources().getColor(R.color.accent_color));
+                        }
                         textView3.setText(attributeDefinition.getName());
                         inputContainer.addView(textView3);
                         if (attributeDefinition.getConstrained()) {
@@ -161,6 +175,7 @@ public class CreateHierarchicalRequirement extends Activity {
                             button.setId(layoutInputID);
                             button.setOnClickListener(SpinnerOnClick);
                             button.setBackgroundResource(android.R.drawable.btn_dropdown);
+                            button.setTextColor(getResources().getColor(android.R.color.black));
                             inputContainer.addView(button);
                         } else {
                             // Add Input
@@ -168,13 +183,16 @@ public class CreateHierarchicalRequirement extends Activity {
                             editText3.setInputType(InputType.TYPE_CLASS_TEXT);
                             editText3.setId(layoutInputID);
                             editText3.setFilters(new InputFilter[]{new InputFilter.LengthFilter(attributeDefinition.getMaxLength())});
-                            editText3.setOnClickListener(InputOnClick);
                             inputContainer.addView(editText3);
                         }
                         break;
                     case TEXT:
                         // Add Label
                         TextView textView4 = new TextView(mContext);
+                        if (attributeDefinition.getRequired())
+                        {
+                            textView4.setTextColor(getResources().getColor(R.color.accent_color));
+                        }
                         textView4.setText(attributeDefinition.getName());
                         inputContainer.addView(textView4);
                         // Add Input
@@ -184,27 +202,25 @@ public class CreateHierarchicalRequirement extends Activity {
                         editText4.setFilters(new InputFilter[]{new InputFilter.LengthFilter(attributeDefinition.getMaxLength())});
                         editText4.setMinLines(1);
                         editText4.setVerticalScrollBarEnabled(true);
-                        editText4.setOnClickListener(InputOnClick);
                         inputContainer.addView(editText4);
                         break;
                     case DATE:
                         // Add Label
                         TextView textView5 = new TextView(mContext);
+                        if (attributeDefinition.getRequired())
+                        {
+                            textView5.setTextColor(getResources().getColor(R.color.accent_color));
+                        }
                         textView5.setText(attributeDefinition.getName());
                         inputContainer.addView(textView5);
                         // Add Input
                         EditText editText3 = new EditText(mContext);
                         editText3.setInputType(InputType.TYPE_CLASS_TEXT);
-                        editText3.setHint("MM/DD/YYYY");
+                        editText3.setHint("DD/MMM/YYYY");
                         editText3.setId(layoutInputID);
                         editText3.setOnFocusChangeListener(DateOnFocus);
                         editText3.setOnClickListener(DateOnClick);
                         inputContainer.addView(editText3);
-                        // Add Datepicker
-                        //DatePicker datePicker = new DatePicker(mContext);
-                        //datePicker.setId(layoutInputID);
-                        //datePicker.setOnClickListener(DateOnClick);
-                        //inputContainer.addView(datePicker);
                     case STATE:
                         // TODO: Support this..
                         break;
@@ -214,6 +230,10 @@ public class CreateHierarchicalRequirement extends Activity {
                     case OBJECT:
                         // Add Label
                         TextView textView6 = new TextView(mContext);
+                        if (attributeDefinition.getRequired())
+                        {
+                            textView6.setTextColor(getResources().getColor(R.color.accent_color));
+                        }
                         textView6.setText(attributeDefinition.getName());
                         inputContainer.addView(textView6);
                         // Add Empty Spinner
@@ -221,6 +241,7 @@ public class CreateHierarchicalRequirement extends Activity {
                         button.setId(layoutInputID);
                         button.setOnClickListener(SpinnerOnClick);
                         button.setBackgroundResource(android.R.drawable.btn_dropdown);
+                        button.setTextColor(getResources().getColor(android.R.color.black));
                         inputContainer.addView(button);
 
                         //Spinner spinner = new Spinner(mContext);
@@ -242,12 +263,12 @@ public class CreateHierarchicalRequirement extends Activity {
         protected Boolean doInBackground(String... params) {
 
             // Project ID
-            projectId = Preferences.getProjectId(getBaseContext(), true);
+            Long projectId = Preferences.getProjectId(getBaseContext(), true);
             Log.d(TAG, "projectID: " + projectId);
 
             // Definition ID for User Stories
             TypeDefinitions typeDefinitions = new TypeDefinitions(mContext);
-            definitionId = typeDefinitions.getDefinition(mContext, "HierarchicalRequirement");
+            Long definitionId = typeDefinitions.getDefinition(mContext, "HierarchicalRequirement");
             Log.d(TAG, "definitionID: " + definitionId);
 
             // Get Form Attributes
@@ -257,26 +278,14 @@ public class CreateHierarchicalRequirement extends Activity {
         }
     }
 
-    //On click listener for Checkboxes
-    final View.OnClickListener CheckBoxOnClick = new View.OnClickListener() {
-        public void onClick(final View v) {
-            //Inform the user the button has been clicked
-            Toast.makeText(mContext, "Checkbox# " + v.getId() + "clicked.", Toast.LENGTH_SHORT).show();
-        }
-    };
-
-    //On click listener for Normal Input
-    final View.OnClickListener InputOnClick = new View.OnClickListener() {
-        public void onClick(final View v) {
-            //Inform the user the button has been clicked
-            Toast.makeText(mContext, "Input# " + v.getId() + "clicked.", Toast.LENGTH_SHORT).show();
-        }
-    };
-
-    //On click listener for Date Pickers
+    //On click for Date Pickers
     final View.OnClickListener DateOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+
+            // Update Active View
+            activeView = v;
+
             //Inform the user the date input has been clicked
             new DatePickerDialog(CreateHierarchicalRequirement.this, date, myCalendar
                 .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
@@ -284,10 +293,14 @@ public class CreateHierarchicalRequirement extends Activity {
         }
     };
 
-    //On click focus for Date Pickers
+    //On focus for Date Pickers
     final View.OnFocusChangeListener DateOnFocus = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean focus) {
+
+            // Update Active View
+            activeView = v;
+
             //Inform the user the date input has focus
             if (focus) {
                 new DatePickerDialog(CreateHierarchicalRequirement.this, date, myCalendar
@@ -303,27 +316,36 @@ public class CreateHierarchicalRequirement extends Activity {
             myCalendar.set(Calendar.YEAR, year);
             myCalendar.set(Calendar.MONTH, monthOfYear);
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            updateLabel();
+            updateDatePicker();
         }
     };
 
-    private void updateLabel() {
-
-        String myFormat = "MM/dd/yy"; //In which you need put here
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-        Log.d(TAG, sdf.format(myCalendar.getTime()));
-        //edittext.setText(sdf.format(myCalendar.getTime()));
-    }
-
-    //On click listener for Spinners (Really a button)
+    // On click listener for Spinners (Really a button)
     final View.OnClickListener SpinnerOnClick = new View.OnClickListener() {
         public void onClick(final View v) {
-            //Inform the user the button has been clicked
-            Toast.makeText(mContext, "Spinner# " + v.getId() + "clicked.", Toast.LENGTH_SHORT).show();
+
+            // Update Active View
+            activeView = v;
+
+            // Create custom alert dialog select list
+            new SpinnerAllowedValues(attributeDefinitions.get(v.getId()).getObjectId(), attributeDefinitions.get(v.getId()).getName()).show(getFragmentManager(), "MyDialog");
         }
     };
 
+    private void updateDatePicker() {
 
+        // Update Input
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.US);
+        EditText activeDatePicker = (EditText) activeView;
+        activeDatePicker.setText(sdf.format(myCalendar.getTime()));
+    }
+
+    public void setValueFromSpinner(AllowedValue input)
+    {
+        // Update Input
+        Button activeButton = (Button) activeView;
+        activeButton.setText(input.getName());
+    }
 
     public void startLoading() {
         // Reset Views / Spinner

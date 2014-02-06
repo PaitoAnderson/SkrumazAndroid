@@ -1,32 +1,27 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/primary_color"
-    style="@style/FrameLayoutTheme">
+<?xml version="1.0" encoding="utf-8"?>
 
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@android:color/background_light">
-        <LinearLayout
-            android:id="@+id/inputContainer"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="invisible" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-        </LinearLayout>
-    </ScrollView>
+    <ListView
+        android:id="@+id/inputContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+    </ListView>
 
     <LinearLayout
         android:id="@+id/processContainer"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@android:color/background_light"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:layout_marginBottom="10dp">
 
         <ProgressBar
             android:id="@+id/progressSpinner"
@@ -47,6 +42,7 @@
             android:typeface="sans"
             android:visibility="invisible" >
         </TextView>
+
     </LinearLayout>
 
-</FrameLayout>
+</LinearLayout>

@@ -306,8 +306,8 @@ public class ArtifactList extends Activity implements OnRefreshListener {
         });
     }
 
-    public void SetError(final Boolean error, final String errorMsg) {
-        this.continueRequests = error;
+    public void SetError(final String errorMsg) {
+        this.continueRequests = false;
         this.breakingError = errorMsg;
     }
 

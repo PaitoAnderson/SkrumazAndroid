@@ -85,7 +85,7 @@ public class GetIterations {
 
                     // Get Iteration Name and Reference
                     project.setOid(Long.parseLong(projectUrl[projectUrl.length-1]));
-                    project.setName(jsonIteration.getJSONObject("Iteration").getJSONObject("Project").getString("_refObjectName").toString());
+                    project.setName(jsonIteration.getJSONObject("Iteration").getJSONObject("Project").getString("_refObjectName"));
 
                     // Get Iterations
                     GetProjectIterations(context);

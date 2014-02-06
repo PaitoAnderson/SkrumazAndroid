@@ -37,7 +37,6 @@ public class Login extends Activity {
     private ProgressDialog dialog;
     private EditText username;
     private EditText password;
-    private Button login;
     private String errorInfo = "";
 
     @Override
@@ -48,7 +47,7 @@ public class Login extends Activity {
         // Find all elements on the page
         username = (EditText) findViewById(R.id.input_username);
         password = (EditText) findViewById(R.id.input_password);
-        login = (Button) findViewById(R.id.login_button);
+        Button login = (Button) findViewById(R.id.login_button);
 
         // Setup for Service
         username.setHint(R.string.input_rally_username);
@@ -76,7 +75,7 @@ public class Login extends Activity {
             @Override
             public void onClick(View v) {
                 new GetUser().execute();
-            };
+            }
         });
 
         // Add back button icon

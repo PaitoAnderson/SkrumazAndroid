@@ -85,7 +85,7 @@ public class GetArtifacts {
 
                     // Get Iteration Name and Reference
                     iteration.setOid(Long.parseLong(jsonIteration.getJSONObject("Iteration").getString("ObjectID")));
-                    iteration.setName(jsonIteration.getJSONObject("Iteration").getString("Name").toString());
+                    iteration.setName(jsonIteration.getJSONObject("Iteration").getString("Name"));
                     iteration.setIterationStatus(IterationStatusLookup.stringToIterationStatus(jsonIteration.getJSONObject("Iteration").getString("State")));
                     String[] projectUrl = jsonIteration.getJSONObject("Iteration").getJSONObject("Project").getString("_ref").split("/");
 
@@ -106,7 +106,7 @@ public class GetArtifacts {
                     Preferences.setProjectId(context, Long.parseLong(projectUrl[projectUrl.length - 1]));
 
                 } else {
-                    ((ArtifactList)context).SetError(false, statusLine.getReasonPhrase());
+                    ((ArtifactList)context).SetError(statusLine.getReasonPhrase());
                     Log.e("GetArtifacts", "GI Error: " + statusLine.getReasonPhrase());
                 }
 
@@ -188,7 +188,7 @@ public class GetArtifacts {
                 }
 
             } else {
-                ((ArtifactList)context).SetError(false, statusLine.getReasonPhrase());
+                ((ArtifactList)context).SetError(statusLine.getReasonPhrase());
                 Log.d("GetArtifacts", "US Error: " + statusLine.getReasonPhrase());
             }
 
@@ -268,7 +268,7 @@ public class GetArtifacts {
                 }
 
             } else {
-                ((ArtifactList)context).SetError(false, statusLine.getReasonPhrase());
+                ((ArtifactList)context).SetError(statusLine.getReasonPhrase());
                 Log.d("GetArtifacts", "DE Error: " + statusLine.getReasonPhrase());
             }
 

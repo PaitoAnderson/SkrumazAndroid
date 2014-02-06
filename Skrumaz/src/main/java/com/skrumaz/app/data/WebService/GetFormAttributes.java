@@ -32,11 +32,8 @@ public class GetFormAttributes {
 
         // Setup HTTP Request
         DefaultHttpClient httpClient = new DefaultHttpClient();
-        HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/TypeDefinition/3418690825/Attributes?fetch=ObjectID,AllowedValues,AttributeType,Constrained,Custom,ElementName,Hidden,MaxLength,Name,ReadOnly,Required&pagesize=200");
-        Log.d("GetTypeDefinitions", "https://rally1.rallydev.com/slm/webservice/v2.0/TypeDefinition/3418690825/Attributes?fetch=ObjectID,AllowedValues,AttributeType,Constrained,Custom,ElementName,Hidden,MaxLength,Name,ReadOnly,Required&pagesize=200&pretty=true");
-
-        //HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/project/" + projectId + "/typedefinition/" + typeDefinition + "/scopedattributedefinition?fetch=ObjectID,AttributeType,Constrained,Custom,Hidden,Name,Required&pagesize=200");
-        //Log.d("GetTypeDefinitions", "https://rally1.rallydev.com/slm/webservice/v2.0/project/" + projectId + "/typedefinition/" + typeDefinition + "/scopedattributedefinition?fetch=ObjectID,AttributeType,Constrained,Custom,Hidden,Name,Required&pagesize=200&pretty=true");
+        HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/TypeDefinition/" + typeDefinition + "/Attributes?fetch=ObjectID,AllowedValues,AttributeType,Constrained,Custom,ElementName,Hidden,MaxLength,Name,ReadOnly,Required&pagesize=200");
+        Log.d("GetTypeDefinitions", "https://rally1.rallydev.com/slm/webservice/v2.0/TypeDefinition/" + typeDefinition + "/Attributes?fetch=ObjectID,AllowedValues,AttributeType,Constrained,Custom,ElementName,Hidden,MaxLength,Name,ReadOnly,Required&pagesize=200&pretty=true");
 
         // Setup HTTP Headers / Authorization
         get.setHeader("Accept", "application/json");
@@ -108,6 +105,8 @@ public class GetFormAttributes {
         } else if (name.equalsIgnoreCase("Predecessors")) {
             return true;
         } else if (name.equalsIgnoreCase("Tags")) {
+            return true;
+        } else if (name.equalsIgnoreCase("Workspace")) {
             return true;
         }
         return false;

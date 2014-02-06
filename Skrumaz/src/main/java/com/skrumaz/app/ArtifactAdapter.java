@@ -25,8 +25,6 @@ public class ArtifactAdapter extends BaseExpandableListAdapter {
     private final List<Artifact> artifacts;
     public LayoutInflater inflater;
     public Activity activity;
-    private TextView artifactName;
-    private ImageView artifactState;
 
     public ArtifactAdapter(Activity activity, List<Artifact> artifacts) {
         this.activity = activity;
@@ -52,7 +50,7 @@ public class ArtifactAdapter extends BaseExpandableListAdapter {
     public View getChildView(int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
         final String children = getChild(groupPosition, childPosition);
-        TextView text = null;
+        TextView text;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.listrow_details, null);
         }
@@ -106,8 +104,8 @@ public class ArtifactAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.listrow_group, null);
         }
 
-        artifactState = (ImageView) convertView.findViewById(R.id.imageViewH);
-        artifactName = (TextView) convertView.findViewById(R.id.textViewH);
+        ImageView artifactState = (ImageView) convertView.findViewById(R.id.imageViewH);
+        TextView artifactName = (TextView) convertView.findViewById(R.id.textViewH);
 
         Artifact artifact = (Artifact) getGroup(groupPosition);
 

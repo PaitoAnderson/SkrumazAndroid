@@ -20,11 +20,7 @@ import java.util.ArrayList;
  */
 public class Welcome extends FragmentActivity {
 
-    private Button rallySoftware;
-
     // Stuff for Tutorial Images
-    private Images imageId;
-    private ArrayList<Integer> itemData;
     FragmentPagerAdapter mAdapter;
     ViewPager mPager;
     PageIndicator mIndicator;
@@ -35,7 +31,7 @@ public class Welcome extends FragmentActivity {
         setContentView(R.layout.activity_welcome);
 
         // Find all elements on the page
-        rallySoftware = (Button) findViewById(R.id.rally_software);
+        Button rallySoftware = (Button) findViewById(R.id.rally_software);
 
         if (savedInstanceState == null) {
             // Notify handler for Rally Dev button clicks
@@ -47,13 +43,11 @@ public class Welcome extends FragmentActivity {
                     overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
                     finish(); // Remove Activity from Stack
                 }
-
-                ;
             });
 
             // Tutorial Image Stuff
-            imageId = new Images();
-            itemData = imageId.getImageItem();
+            Images imageId = new Images();
+            ArrayList<Integer> itemData = imageId.getImageItem();
 
             mAdapter = new FragmentPagerAdapter(getSupportFragmentManager(), itemData);
             mPager = (ViewPager) findViewById(R.id.pager);
