@@ -107,7 +107,7 @@ public class Login extends Activity {
         finish(); // Remove Activity from Stack
     }
 
-    class GetUser extends AsyncTask<String, Integer, Boolean> {
+    private class GetUser extends AsyncTask<String, Integer, Boolean> {
         @Override
         protected void onPreExecute() {
             // Present user with a loading spinner

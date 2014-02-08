@@ -3,6 +3,7 @@ package com.skrumaz.app;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.skrumaz.app.classes.Iteration;
@@ -106,14 +108,6 @@ public class IterationList extends Activity implements OnRefreshListener, Action
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        // Initiate API Requests
-        //populateListView(false);
-    }
-
-    @Override
     public void onRefreshStarted(View view) {
         populateListView(true);
     }
@@ -131,7 +125,16 @@ public class IterationList extends Activity implements OnRefreshListener, Action
         switch(item.getItemId()) {
             case R.id.action_refresh:
                 // Initiate API Requests
+                Toast.makeText(mContext, "Tip: You can swipe down to refresh.", Toast.LENGTH_LONG).show();
                 populateListView(true);
+                break;
+            case R.id.create_iteration:
+                // Create Iteration
+                Intent createDs = new Intent(this, Create.class);
+                createDs.putExtra("CreateName", "Iteration");
+                createDs.putExtra("CreateType", "Iteration");
+                startActivity(createDs);
+                overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -163,7 +166,7 @@ public class IterationList extends Activity implements OnRefreshListener, Action
         }
     }
 
-    class GetService extends AsyncTask<String, Integer, Boolean> {
+    private class GetService extends AsyncTask<String, Integer, Boolean> {
 
         @Override
         protected void onPreExecute() {
@@ -195,7 +198,7 @@ public class IterationList extends Activity implements OnRefreshListener, Action
         }
     }
 
-    class GetStore extends AsyncTask<String, Integer, Boolean> {
+    private class GetStore extends AsyncTask<String, Integer, Boolean> {
 
         @Override
         protected void onPreExecute() {
@@ -237,7 +240,7 @@ public class IterationList extends Activity implements OnRefreshListener, Action
         }
     }
 
-    class GetWorkspace extends AsyncTask<String, Integer, Boolean> {
+    private class GetWorkspace extends AsyncTask<String, Integer, Boolean> {
 
         @Override
         protected void onPostExecute(Boolean result) {

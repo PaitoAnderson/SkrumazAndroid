@@ -1,7 +1,5 @@
 package com.skrumaz.app.classes;
 
-import android.util.Log;
-
 import java.util.List;
 
 /**
@@ -19,8 +17,7 @@ public class Project {
     /*
      * Find in position in List of Projects based on Oid
      */
-    public static int findOid(List<Project> projects, Long Oid)
-    {
+    public static int findOid(List<Project> projects, Long Oid) {
         int i = 0;
         for (Project project : projects) {
             if (project.getOid().equals(Oid)) {
@@ -34,8 +31,7 @@ public class Project {
     /*
      * Find in Project in List of Projects based on Oid
      */
-    public static Project find(List<Project> projects, Long Oid)
-    {
+    public static Project find(List<Project> projects, Long Oid) {
         for (Project project : projects) {
             if (project.getOid().equals(Oid)) {
                 return project;

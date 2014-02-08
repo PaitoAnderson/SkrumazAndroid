@@ -1,11 +1,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/create_hierarchical_requirement"
+    <item android:id="@+id/create"
         android:title="@string/action_create"
         android:orderInCategory="70"
         android:icon="@drawable/ic_create"
         android:showAsAction="always"
-        android:visible="true" />
+        android:visible="true" >
+
+        <menu android:id="@+id/create_menu">
+            <item android:id="@+id/create_us"
+                android:title="@string/action_create_us" />
+            <item android:id="@+id/create_de"
+                android:title="@string/action_create_de" />
+            <item android:id="@+id/create_ds"
+                android:title="@string/action_create_ds" />
+        </menu>
+    </item>
 
     <item android:id="@+id/action_sort"
         android:title="@string/action_sort"
@@ -15,15 +25,15 @@
 
         <menu android:id="@+id/sort_menu">
             <item android:id="@+id/sort_rank"
-                android:title="Rank" />
+                android:title="@string/action_sort_rank" />
             <item android:id="@+id/sort_state"
-                android:title="State" />
+                android:title="@string/action_sort_state" />
             <item android:id="@+id/sort_id"
-                android:title="ID" />
+                android:title="@string/action_sort_id" />
             <item android:id="@+id/sort_name"
-                android:title="Name" />
+                android:title="@string/action_sort_name" />
             <item android:id="@+id/sort_modified"
-                android:title="Modified" />
+                android:title="@string/action_sort_modified" />
         </menu>
     </item>
 

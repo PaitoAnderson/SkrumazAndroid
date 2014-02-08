@@ -20,11 +20,11 @@ import java.util.List;
  *
  * Handles the display for User Stories and Defects in an Iteration
  */
-public class ArtifactAdapter extends BaseExpandableListAdapter {
+class ArtifactAdapter extends BaseExpandableListAdapter {
 
     private final List<Artifact> artifacts;
-    public LayoutInflater inflater;
-    public Activity activity;
+    private LayoutInflater inflater;
+    private Activity activity;
 
     public ArtifactAdapter(Activity activity, List<Artifact> artifacts) {
         this.activity = activity;
@@ -80,16 +80,6 @@ public class ArtifactAdapter extends BaseExpandableListAdapter {
     @Override
     public int getGroupCount() {
         return artifacts.size();
-    }
-
-    @Override
-    public void onGroupCollapsed(int groupPosition) {
-        super.onGroupCollapsed(groupPosition);
-    }
-
-    @Override
-    public void onGroupExpanded(int groupPosition) {
-        super.onGroupExpanded(groupPosition);
     }
 
     @Override

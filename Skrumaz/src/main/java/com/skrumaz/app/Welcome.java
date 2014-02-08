@@ -21,9 +21,9 @@ import java.util.ArrayList;
 public class Welcome extends FragmentActivity {
 
     // Stuff for Tutorial Images
-    FragmentPagerAdapter mAdapter;
-    ViewPager mPager;
-    PageIndicator mIndicator;
+    private FragmentPagerAdapter mAdapter;
+    private ViewPager mPager;
+    private PageIndicator mIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

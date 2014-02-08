@@ -20,7 +20,7 @@ public class Artifact {
     private Date LastUpdate;
 
     @Override
-    public String toString(){
+    public String toString() {
         return String.valueOf(this.Name);
     }
 

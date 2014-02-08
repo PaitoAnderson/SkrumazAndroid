@@ -15,9 +15,10 @@ public class AttributeDefinition {
     private String elementName;
     private Integer maxLength;
     private AttributeType attributeType;
+    private String returnValue;
 
     @Override
-    public String toString(){
+    public String toString() {
         return String.valueOf(this.name);
     }
 
@@ -107,5 +108,13 @@ public class AttributeDefinition {
 
     public void setAttributeType(AttributeType attributeType) {
         this.attributeType = attributeType;
+    }
+
+    public String getReturnValue() {
+        return returnValue;
+    }
+
+    public void setReturnValue(String returnValue) {
+        this.returnValue = returnValue;
     }
 }

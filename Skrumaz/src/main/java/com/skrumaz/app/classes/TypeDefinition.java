@@ -17,8 +17,7 @@ public class TypeDefinition {
     /*
      * Find in position in List of TypeDefinitions based on Oid
      */
-    public static int findOid(List<TypeDefinition> typeDefs, Long Oid)
-    {
+    public static int findOid(List<TypeDefinition> typeDefs, Long Oid) {
         int i = 0;
         for (TypeDefinition typeDef : typeDefs) {
             if (typeDef.getOid().equals(Oid)) {
@@ -32,8 +31,7 @@ public class TypeDefinition {
     /*
      * Find in TypeDefinition in List of TypeDefinitions based on Oid
      */
-    public static TypeDefinition find(List<TypeDefinition> typeDefs, Long Oid)
-    {
+    public static TypeDefinition find(List<TypeDefinition> typeDefs, Long Oid) {
         for (TypeDefinition typeDef : typeDefs) {
             if (typeDef.getOid().equals(Oid)) {
                 return typeDef;

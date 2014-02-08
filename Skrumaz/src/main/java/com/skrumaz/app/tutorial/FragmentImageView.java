@@ -23,14 +23,9 @@ public class FragmentImageView extends Fragment {
     private ImageView ivImage;
 
     public static FragmentImageView newInstance() {
-        FragmentImageView f = new FragmentImageView();
-        return f;
+        return new FragmentImageView();
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

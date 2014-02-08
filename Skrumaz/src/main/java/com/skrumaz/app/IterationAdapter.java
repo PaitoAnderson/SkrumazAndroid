@@ -23,8 +23,8 @@ import java.util.List;
 public class IterationAdapter extends BaseAdapter {
 
     private final List<Iteration> iterations;
-    public LayoutInflater inflater;
-    public Activity activity;
+    private LayoutInflater inflater;
+    private Activity activity;
     private TextView iterationName;
     private TextView iterationDateRange;
 

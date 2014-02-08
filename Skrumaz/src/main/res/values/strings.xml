@@ -7,12 +7,22 @@
     <string name="input_rally_password">Rally Password</string>
     <string name="button_login">Rally Login</string>
 
-    <string name="action_create">Create</string>
-    <string name="action_sort">Sort</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_settings">Settings</string>
     <string name="action_help">Help</string>
     <string name="action_save">Save</string>
+
+    <string name="action_sort">Sort</string>
+    <string name="action_sort_rank">Rank</string>
+    <string name="action_sort_state">State</string>
+    <string name="action_sort_id">ID</string>
+    <string name="action_sort_name">Name</string>
+    <string name="action_sort_modified">Modified</string>
+
+    <string name="action_create">Create</string>
+    <string name="action_create_us">User Story</string>
+    <string name="action_create_de">Defect</string>
+    <string name="action_create_ds">Defect Suite</string>
 
     <string name="rally_software">Rally Software</string>
 

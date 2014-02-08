@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class GetProjects {
 
-    List<Project> projects = new ArrayList<Project>();
+    private List<Project> projects = new ArrayList<Project>();
 
     public List<Project> FetchItems(Context context) {
 

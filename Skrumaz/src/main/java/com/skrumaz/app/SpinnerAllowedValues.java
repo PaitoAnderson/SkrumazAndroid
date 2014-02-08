@@ -158,7 +158,7 @@ public class SpinnerAllowedValues extends DialogFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 // Update parent with selection
-                CreateHierarchicalRequirement callingActivity = (CreateHierarchicalRequirement) getActivity();
+                Create callingActivity = (Create) getActivity();
                 callingActivity.setValueFromSpinner(allowedValues.get(position));
 
                 // Close DialogFragment

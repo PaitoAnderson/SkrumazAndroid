@@ -3,36 +3,31 @@ package com.skrumaz.app.data.WebService;
 import android.content.Context;
 import android.util.Log;
 
-import com.skrumaz.app.classes.AllowedValue;
+import com.skrumaz.app.classes.CreateAuthorization;
 import com.skrumaz.app.data.Preferences;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Created by Paito Anderson on 2/3/2014.
+ * Created by Paito Anderson on 2/6/2014.
  */
-public class GetAllowedValues {
-
-    private List<AllowedValue> allowedValues = new ArrayList<AllowedValue>();
-
-    public List<AllowedValue> FetchItems(Context context, Long fieldId) {
+public class GetCreateAuthorization {
+    private CreateAuthorization createAuthorization = new CreateAuthorization();
+    public CreateAuthorization Fetch(Context context) {
 
         // Setup HTTP Request
         DefaultHttpClient httpClient = new DefaultHttpClient();
-        HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/AttributeDefinition/" + fieldId + "/AllowedValues");
-        Log.d("GetAllowedValues", "https://rally1.rallydev.com/slm/webservice/v2.0/AttributeDefinition/" + fieldId + "/AllowedValues?pretty=true");
+        HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/security/authorize");
+        Log.d("GetSecurityToken", "https://rally1.rallydev.com/slm/webservice/v2.0/security/authorize?pretty=true");
 
         // Setup HTTP Headers / Authorization
         get.setHeader("Accept", "application/json");
@@ -53,22 +48,8 @@ public class GetAllowedValues {
                 }
 
                 // Get array of Form Attributes for this Definition for this Project
-                JSONArray allowedValueArray = new JSONObject(responseStrBuilder.toString()).getJSONObject("QueryResult").getJSONArray("Results");
-
-                // Iterate though Form Attributes
-                for (int i = 0; i < allowedValueArray.length(); i++) {
-                    AllowedValue allowedValue = new AllowedValue();
-                    if (!allowedValueArray.getJSONObject(i).getString("ObjectID").equals("null"))
-                    {
-                        allowedValue.setOid(allowedValueArray.getJSONObject(i).getLong("ObjectID"));
-                    }
-                    allowedValue.setName(allowedValueArray.getJSONObject(i).getString("StringValue"));
-
-                    if (allowedValue.getName().length() > 0)
-                    {
-                        allowedValues.add(allowedValue);
-                    }
-                }
+                createAuthorization.setSecurityToken(new JSONObject(responseStrBuilder.toString()).getJSONObject("OperationResult").getString("SecurityToken"));
+                createAuthorization.setHttpClient(httpClient);
             }
 
         } catch (UnsupportedEncodingException e) {
@@ -77,6 +58,6 @@ public class GetAllowedValues {
             e.printStackTrace();
         }
 
-        return allowedValues;
+        return createAuthorization;
     }
 }

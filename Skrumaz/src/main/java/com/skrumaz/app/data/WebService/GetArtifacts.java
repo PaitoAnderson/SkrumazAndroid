@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class GetArtifacts {
 
-    List<Artifact> artifacts = new ArrayList<Artifact>();
+    private List<Artifact> artifacts = new ArrayList<Artifact>();
     private Iteration iteration = new Iteration();
 
     public List<Artifact> FetchItems(Context context) {

@@ -112,7 +112,7 @@ public class ArtifactList extends Activity implements OnRefreshListener {
         populateExpandableListView(true);
     }
 
-    class GetService extends AsyncTask<String, Integer, Boolean> {
+    private class GetService extends AsyncTask<String, Integer, Boolean> {
 
         @Override
         protected void onPreExecute() {
@@ -235,9 +235,28 @@ public class ArtifactList extends Activity implements OnRefreshListener {
                 startActivity(new Intent(getApplicationContext(), IterationList.class));
                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.fade_out);
                 break;
-            case R.id.create_hierarchical_requirement:
+            case R.id.create_us:
                 // Create User Story
-                startActivity(new Intent(this, CreateHierarchicalRequirement.class));
+                Intent createUs = new Intent(this, Create.class);
+                createUs.putExtra("CreateName", "User Story");
+                createUs.putExtra("CreateType", "HierarchicalRequirement");
+                startActivity(createUs);
+                overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
+                break;
+            case R.id.create_de:
+                // Create Defect
+                Intent createDe = new Intent(this, Create.class);
+                createDe.putExtra("CreateName", "Defect");
+                createDe.putExtra("CreateType", "Defect");
+                startActivity(createDe);
+                overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
+                break;
+            case R.id.create_ds:
+                // Create Defect Suite
+                Intent createDs = new Intent(this, Create.class);
+                createDs.putExtra("CreateName", "Defect Suite");
+                createDs.putExtra("CreateType", "DefectSuite");
+                startActivity(createDs);
                 overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
                 break;
             case R.id.sort_rank:
@@ -271,8 +290,7 @@ public class ArtifactList extends Activity implements OnRefreshListener {
                 break;
             case R.id.action_help:
                 // UserVoice library
-                Config config = new Config("skrumaz.uservoice.com");
-                UserVoice.init(config, this);
+                UserVoice.init(new Config("skrumaz.uservoice.com"), this);
 
                 // Launch UserVoice
                 UserVoice.launchUserVoice(this);

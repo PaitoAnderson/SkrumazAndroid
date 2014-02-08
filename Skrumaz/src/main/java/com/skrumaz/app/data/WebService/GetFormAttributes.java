@@ -28,7 +28,7 @@ public class GetFormAttributes {
 
     List<AttributeDefinition> attributeDefinitions = new ArrayList<AttributeDefinition>();
 
-    public List<AttributeDefinition> FetchItems(Context context, Long projectId, Long typeDefinition) {
+    public List<AttributeDefinition> FetchItems(Context context, Long typeDefinition) {
 
         // Setup HTTP Request
         DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -107,6 +107,12 @@ public class GetFormAttributes {
         } else if (name.equalsIgnoreCase("Tags")) {
             return true;
         } else if (name.equalsIgnoreCase("Workspace")) {
+            return true;
+        } else if (name.equalsIgnoreCase("Test Case Result")) {
+            return true;
+        } else if (name.equalsIgnoreCase("Test Case")) {
+            return true;
+        } else if (name.equalsIgnoreCase("Requirement")) {
             return true;
         }
         return false;

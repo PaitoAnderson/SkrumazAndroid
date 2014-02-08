@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class GetIterations {
 
-    List<Iteration> iterations = new ArrayList<Iteration>();
+    private List<Iteration> iterations = new ArrayList<Iteration>();
     private Project project = new Project();
 
     public List<Iteration> FetchItems(Context context) {

@@ -19,14 +19,18 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.skrumaz.app.classes.AllowedValue;
 import com.skrumaz.app.classes.AttributeDefinition;
-import com.skrumaz.app.data.Preferences;
+import com.skrumaz.app.classes.CreateResult;
 import com.skrumaz.app.data.Store.TypeDefinitions;
+import com.skrumaz.app.data.WebService.GetCreateAuthorization;
 import com.skrumaz.app.data.WebService.GetFormAttributes;
+import com.skrumaz.app.data.WebService.PutDomainObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,13 +38,18 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
+
 /**
  * Created by Paito Anderson on 1/25/2014.
  */
-public class CreateHierarchicalRequirement extends Activity {
+public class Create extends Activity {
 
     // TAG for logging
     private static final String TAG = "CREATE";
+
+    private Context mContext;
 
     private LinearLayout processContainer;
     private LinearLayout inputContainer;
@@ -49,18 +58,26 @@ public class CreateHierarchicalRequirement extends Activity {
     private Boolean continueRequests = true;
     private String breakingError = "";
 
-    private Context mContext;
-    private List<AttributeDefinition> attributeDefinitions  = new ArrayList<AttributeDefinition>();
-    private int layoutInputID = 0;
+    private String createName;
+    private String createType;
+
+    JSONObject createObject = new JSONObject();
+    private CreateResult createResult;
+
+    private List<AttributeDefinition> attributeDefinitions = new ArrayList<AttributeDefinition>();
 
     private View activeView;
 
-    Calendar myCalendar = Calendar.getInstance();
+    private Calendar myCalendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_hierarchical_requirement);
+        setContentView(R.layout.activity_create);
+
+        Bundle extras = getIntent().getExtras();
+        createName = extras.getString("CreateName");
+        createType = extras.getString("CreateType");
 
         processContainer = (LinearLayout) findViewById(R.id.processContainer);
         inputContainer = (LinearLayout) findViewById(R.id.inputContainer);
@@ -73,41 +90,30 @@ public class CreateHierarchicalRequirement extends Activity {
         // Add back button icon
         ActionBar actionbar = getActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
-        actionbar.setTitle("Create User Story");
+        actionbar.setTitle("Create " + createName);
 
         // Populate Form
-        new GetService().execute();
+        new GetForm().execute();
     }
 
-    // Type Definitions - DONE!
-    //https://rally1.rallydev.com/slm/webservice/v2.0/typedefinition/?pagesize=100&pretty=true
-
-    // Fields
-    //https://rally1.rallydev.com/slm/webservice/v2.0/project/6378006083/typedefinition/3418690825/scopedattributedefinition?fetch=ObjectID,AttributeType,ChildProjectHiddenCount,ChildProjectVisibleCount,Constrained,Custom,Hidden,Name,Required,SharedAcrossWorkItems,Sortable,SystemRequired,VisibilityOnChildProjects,VisibleOnlyToAdmins&pagesize=100&pretty=true&order=ObjectID
-
-    // Fields
-    //https://rally1.rallydev.com/slm/webservice/v2.0/TypeDefinition/3418690825/Attributes?pretty=true&pagesize=100&order=ObjectID
-
-    // Values Available (For Dropdowns)
-    //https://rally1.rallydev.com/slm/webservice/v2.0/attributedefinition/ae430cd3-f67b-46d2-a899-04ef13476603/AllowedValues?pretty=true
-
-    class GetService extends AsyncTask<String, Integer, Boolean> {
+    private class GetForm extends AsyncTask<String, Integer, Boolean> {
 
         @Override
         protected void onPreExecute() {
 
-            startLoading();
+            startLoading("Loading Form...");
 
             super.onPreExecute();
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
-            if (!continueRequests)
-            {
+            if (!continueRequests) {
                 progressSpinner.setVisibility(View.GONE);
                 progressText.setText(breakingError);
             }
+
+            int layoutInputID = 0;
 
             // Build Inputs
             for (AttributeDefinition attributeDefinition : attributeDefinitions) {
@@ -120,8 +126,7 @@ public class CreateHierarchicalRequirement extends Activity {
                 switch (attributeDefinition.getAttributeType()) {
                     case BOOLEAN:
                         CheckBox checkBox = new CheckBox(mContext);
-                        if (attributeDefinition.getRequired())
-                        {
+                        if (attributeDefinition.getRequired()) {
                             checkBox.setTextColor(getResources().getColor(R.color.accent_color));
                         }
                         checkBox.setText(attributeDefinition.getName());
@@ -131,8 +136,7 @@ public class CreateHierarchicalRequirement extends Activity {
                     case INTEGER:
                         // Add Label
                         TextView textView = new TextView(mContext);
-                        if (attributeDefinition.getRequired())
-                        {
+                        if (attributeDefinition.getRequired()) {
                             textView.setTextColor(getResources().getColor(R.color.accent_color));
                         }
                         textView.setText(attributeDefinition.getName());
@@ -147,8 +151,7 @@ public class CreateHierarchicalRequirement extends Activity {
                     case QUANTITY:
                         // Add Label
                         TextView textView2 = new TextView(mContext);
-                        if (attributeDefinition.getRequired())
-                        {
+                        if (attributeDefinition.getRequired()) {
                             textView2.setTextColor(getResources().getColor(R.color.accent_color));
                         }
                         textView2.setText(attributeDefinition.getName());
@@ -163,8 +166,7 @@ public class CreateHierarchicalRequirement extends Activity {
                     case STRING:
                         // Add Label
                         TextView textView3 = new TextView(mContext);
-                        if (attributeDefinition.getRequired())
-                        {
+                        if (attributeDefinition.getRequired()) {
                             textView3.setTextColor(getResources().getColor(R.color.accent_color));
                         }
                         textView3.setText(attributeDefinition.getName());
@@ -189,15 +191,14 @@ public class CreateHierarchicalRequirement extends Activity {
                     case TEXT:
                         // Add Label
                         TextView textView4 = new TextView(mContext);
-                        if (attributeDefinition.getRequired())
-                        {
+                        if (attributeDefinition.getRequired()) {
                             textView4.setTextColor(getResources().getColor(R.color.accent_color));
                         }
                         textView4.setText(attributeDefinition.getName());
                         inputContainer.addView(textView4);
                         // Add Input
                         EditText editText4 = new EditText(mContext);
-                        editText4.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                        editText4.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                         editText4.setId(layoutInputID);
                         editText4.setFilters(new InputFilter[]{new InputFilter.LengthFilter(attributeDefinition.getMaxLength())});
                         editText4.setMinLines(1);
@@ -207,8 +208,7 @@ public class CreateHierarchicalRequirement extends Activity {
                     case DATE:
                         // Add Label
                         TextView textView5 = new TextView(mContext);
-                        if (attributeDefinition.getRequired())
-                        {
+                        if (attributeDefinition.getRequired()) {
                             textView5.setTextColor(getResources().getColor(R.color.accent_color));
                         }
                         textView5.setText(attributeDefinition.getName());
@@ -221,17 +221,16 @@ public class CreateHierarchicalRequirement extends Activity {
                         editText3.setOnFocusChangeListener(DateOnFocus);
                         editText3.setOnClickListener(DateOnClick);
                         inputContainer.addView(editText3);
-                    case STATE:
-                        // TODO: Support this..
                         break;
                     case COLLECTION:
                         // TODO: Support this..
                         break;
+                    case STATE:
+                        // TODO: Could be a static list...
                     case OBJECT:
                         // Add Label
                         TextView textView6 = new TextView(mContext);
-                        if (attributeDefinition.getRequired())
-                        {
+                        if (attributeDefinition.getRequired()) {
                             textView6.setTextColor(getResources().getColor(R.color.accent_color));
                         }
                         textView6.setText(attributeDefinition.getName());
@@ -262,24 +261,20 @@ public class CreateHierarchicalRequirement extends Activity {
         @Override
         protected Boolean doInBackground(String... params) {
 
-            // Project ID
-            Long projectId = Preferences.getProjectId(getBaseContext(), true);
-            Log.d(TAG, "projectID: " + projectId);
-
             // Definition ID for User Stories
             TypeDefinitions typeDefinitions = new TypeDefinitions(mContext);
-            Long definitionId = typeDefinitions.getDefinition(mContext, "HierarchicalRequirement");
+            Long definitionId = typeDefinitions.getDefinition(mContext, createType);
             Log.d(TAG, "definitionID: " + definitionId);
 
             // Get Form Attributes
-            attributeDefinitions.addAll(new GetFormAttributes().FetchItems(mContext, projectId, definitionId));
+            attributeDefinitions.addAll(new GetFormAttributes().FetchItems(mContext, definitionId));
 
             return null;
         }
     }
 
     //On click for Date Pickers
-    final View.OnClickListener DateOnClick = new View.OnClickListener() {
+    private final View.OnClickListener DateOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
@@ -287,14 +282,14 @@ public class CreateHierarchicalRequirement extends Activity {
             activeView = v;
 
             //Inform the user the date input has been clicked
-            new DatePickerDialog(CreateHierarchicalRequirement.this, date, myCalendar
-                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                 myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            new DatePickerDialog(Create.this, date, myCalendar
+                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                    myCalendar.get(Calendar.DAY_OF_MONTH)).show();
         }
     };
 
     //On focus for Date Pickers
-    final View.OnFocusChangeListener DateOnFocus = new View.OnFocusChangeListener() {
+    private final View.OnFocusChangeListener DateOnFocus = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean focus) {
 
@@ -303,7 +298,7 @@ public class CreateHierarchicalRequirement extends Activity {
 
             //Inform the user the date input has focus
             if (focus) {
-                new DatePickerDialog(CreateHierarchicalRequirement.this, date, myCalendar
+                new DatePickerDialog(Create.this, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
@@ -317,11 +312,12 @@ public class CreateHierarchicalRequirement extends Activity {
             myCalendar.set(Calendar.MONTH, monthOfYear);
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             updateDatePicker();
+            // Update Object with Date Picked..
         }
     };
 
     // On click listener for Spinners (Really a button)
-    final View.OnClickListener SpinnerOnClick = new View.OnClickListener() {
+    private final View.OnClickListener SpinnerOnClick = new View.OnClickListener() {
         public void onClick(final View v) {
 
             // Update Active View
@@ -335,24 +331,41 @@ public class CreateHierarchicalRequirement extends Activity {
     private void updateDatePicker() {
 
         // Update Input
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
         EditText activeDatePicker = (EditText) activeView;
         activeDatePicker.setText(sdf.format(myCalendar.getTime()));
+        updateReturnValue(null);
     }
 
-    public void setValueFromSpinner(AllowedValue input)
-    {
+    public void setValueFromSpinner(AllowedValue input) {
         // Update Input
         Button activeButton = (Button) activeView;
         activeButton.setText(input.getName());
+        updateReturnValue(input);
     }
 
-    public void startLoading() {
-        // Reset Views / Spinner
+    protected void updateReturnValue(AllowedValue input) {
+        switch (attributeDefinitions.get(activeView.getId()).getAttributeType()) {
+            case DATE:
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T00:00:00.'SSSZ", Locale.getDefault());
+                attributeDefinitions.get(activeView.getId()).setReturnValue(sdf.format(myCalendar.getTime()));
+                break;
+            case STRING: // Only used for constrained strings
+            case STATE:
+                attributeDefinitions.get(activeView.getId()).setReturnValue(input.getName());
+                break;
+            case OBJECT:
+                attributeDefinitions.get(activeView.getId()).setReturnValue(input.getOid().toString());
+                break;
+        }
+    }
+
+    public void startLoading(String message) {
+        inputContainer.setVisibility(View.INVISIBLE);
         processContainer.setVisibility(View.VISIBLE);
         progressSpinner.setVisibility(View.VISIBLE);
         progressText.setVisibility(View.VISIBLE);
-        progressText.setText("Loading Form..."); // Text updated using SetProgress()
+        progressText.setText(message);
     }
 
     public void finishLoading() {
@@ -362,9 +375,87 @@ public class CreateHierarchicalRequirement extends Activity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    public void createItem() {
+
+        //String securityKey = new GetSecurityToken().FetchKey(mContext);
+        //Log.d(TAG, "key=" + securityKey);
+
+        try {
+            JSONObject inputObj = new JSONObject();
+            int layoutInputID = 0;
+            for (AttributeDefinition attributeDefinition : attributeDefinitions) {
+                switch (attributeDefinition.getAttributeType()) {
+                    case BOOLEAN:
+                        inputObj.put(attributeDefinition.getElementName(), ((CheckBox) inputContainer.findViewById(layoutInputID)).isChecked());
+                        break;
+                    case STRING:
+                        if (attributeDefinition.getConstrained()) {
+                            if (attributeDefinition.getReturnValue() !=null &&  !attributeDefinition.getReturnValue().isEmpty()){
+                                inputObj.put(attributeDefinition.getElementName(), attributeDefinition.getReturnValue());
+                            }
+                        }
+                        else
+                        {
+                            if (((EditText) inputContainer.findViewById(layoutInputID)).getText().length() > 0) {
+                                inputObj.put(attributeDefinition.getElementName(), ((EditText) inputContainer.findViewById(layoutInputID)).getText());
+                            }
+                        }
+                        break;
+                    case INTEGER:
+                    case QUANTITY:
+                    case TEXT:
+                        if (((EditText) inputContainer.findViewById(layoutInputID)).getText().length() > 0) {
+                            inputObj.put(attributeDefinition.getElementName(), ((EditText) inputContainer.findViewById(layoutInputID)).getText());
+                        }
+                        break;
+                    case STATE:
+                    case OBJECT:
+                    case DATE:
+                        if (attributeDefinition.getReturnValue() !=null &&  !attributeDefinition.getReturnValue().isEmpty()){
+                            inputObj.put(attributeDefinition.getElementName(), attributeDefinition.getReturnValue());
+                        }
+                        break;
+                }
+                layoutInputID++;
+            }
+            createObject.put(createType, inputObj);
+        } catch (JSONException ex) {
+            ex.printStackTrace();
+        }
+        Log.e(TAG, createObject.toString());
+
+        new CreateItem().execute();
+    }
+
+    private class CreateItem extends AsyncTask<String, Integer, Boolean> {
+
+        @Override
+        protected void onPreExecute() {
+            startLoading("Creating " + createName + "...");
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+
+            // Create Object (Includes getting Security Key)
+            createResult = new PutDomainObject().PutObject(mContext, new GetCreateAuthorization().Fetch(mContext), createType, createObject);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+
+            finishLoading();
+
+            for (String errorMessage : createResult.getAllMessages()) {
+                Crouton.makeText((Activity) mContext, errorMessage, Style.ALERT).show();
+            }
+
+            //TODO: Show Success if Successful
+            super.onPostExecute(result);
+        }
     }
 
     @Override
@@ -377,28 +468,34 @@ public class CreateHierarchicalRequirement extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action buttons
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 super.onBackPressed();
                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.fade_out);
                 finish();
                 break;
             case R.id.action_save:
-                Toast.makeText(mContext, "Call Save...", Toast.LENGTH_SHORT).show();
+                createItem();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void onStart() {
+    protected void onStart() {
         super.onStart();
         EasyTracker.getInstance(this).activityStart(this);
     }
 
     @Override
-    public void onStop() {
+    protected void onStop() {
         super.onStop();
         EasyTracker.getInstance(this).activityStop(this);
+    }
+
+    @Override
+    protected void onDestroy(){
+        Crouton.clearCroutonsForActivity(this);
+        super.onDestroy();
     }
 }
