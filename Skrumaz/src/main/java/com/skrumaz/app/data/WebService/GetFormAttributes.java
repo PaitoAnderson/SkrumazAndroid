@@ -19,6 +19,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -89,6 +90,7 @@ public class GetFormAttributes {
         }
 
         // Order Form Attributes
+        attributeDefinitions = orderFormAttributes(attributeDefinitions);
 
 
         return attributeDefinitions;
@@ -120,7 +122,73 @@ public class GetFormAttributes {
 
     private List<AttributeDefinition> orderFormAttributes(List<AttributeDefinition> attributeDefinitions)
     {
-        //for (AttributeDefinition attributeDefinition)
+        // How items should be re-ordered
+        List<String> orderNames = new ArrayList<String>();
+
+        /**
+         * GENERAL
+         */
+        orderNames.add("Name");
+        orderNames.add("Theme");
+        orderNames.add("Start Date");
+        orderNames.add("End Date");
+        //orderNames.add("Tags");
+        orderNames.add("Description");
+        //orderNames.add("Attachments");
+        orderNames.add("Owner");
+        orderNames.add("Project");
+        orderNames.add("State");
+        orderNames.add("Planned Velocity");
+        orderNames.add("Notes");
+
+        /**
+         * DEFECT
+         */
+        orderNames.add("Priority");
+        orderNames.add("Submitted By");
+        orderNames.add("Found In Build");
+        orderNames.add("Fixed In Build");
+        orderNames.add("Verified In Build");
+        orderNames.add("Target Build");
+        orderNames.add("Target Date");
+        orderNames.add("Resolution");
+        orderNames.add("Release Note");
+        //orderNames.add("User Story");
+        //orderNames.add("Test Case");
+        orderNames.add("Environment");
+        orderNames.add("Severity");
+        orderNames.add("Affects Doc");
+
+        /**
+         * HIERARCHY
+         */
+        //orderNames.add("Parent");
+
+        /**
+         * SCHEDULE
+         */
+        orderNames.add("Schedule State");
+        orderNames.add("Ready");
+        orderNames.add("Release");
+        orderNames.add("Plan Estimate");
+        orderNames.add("Blocked");
+        orderNames.add("Blocked Reason");
+        orderNames.add("Iteration");
+
+        // Current position in re-ordering process
+        int toIndex = 0;
+
+        for (String orderName : orderNames)
+        {
+            for (AttributeDefinition attributeDefinition : attributeDefinitions) {
+                if (attributeDefinition.getName().equalsIgnoreCase(orderName))
+                {
+                    int fromIndex = attributeDefinitions.indexOf(attributeDefinition);
+                    Collections.swap(attributeDefinitions, fromIndex, toIndex);
+                    toIndex++;
+                }
+            }
+        }
 
         return attributeDefinitions;
     }

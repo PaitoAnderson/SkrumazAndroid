@@ -238,7 +238,7 @@ public class ArtifactList extends Activity implements OnRefreshListener {
             case R.id.create_us:
                 // Create User Story
                 Intent createUs = new Intent(this, Create.class);
-                createUs.putExtra("CreateName", "User Story");
+                createUs.putExtra("CreateName", mContext.getResources().getString(R.string.action_create_us));
                 createUs.putExtra("CreateType", "HierarchicalRequirement");
                 startActivity(createUs);
                 overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
@@ -246,7 +246,7 @@ public class ArtifactList extends Activity implements OnRefreshListener {
             case R.id.create_de:
                 // Create Defect
                 Intent createDe = new Intent(this, Create.class);
-                createDe.putExtra("CreateName", "Defect");
+                createDe.putExtra("CreateName", mContext.getResources().getString(R.string.action_create_de));
                 createDe.putExtra("CreateType", "Defect");
                 startActivity(createDe);
                 overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
@@ -254,9 +254,17 @@ public class ArtifactList extends Activity implements OnRefreshListener {
             case R.id.create_ds:
                 // Create Defect Suite
                 Intent createDs = new Intent(this, Create.class);
-                createDs.putExtra("CreateName", "Defect Suite");
+                createDs.putExtra("CreateName", mContext.getResources().getString(R.string.action_create_ds));
                 createDs.putExtra("CreateType", "DefectSuite");
                 startActivity(createDs);
+                overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
+                break;
+            case R.id.create_ts:
+                // Create Defect Suite
+                Intent createTs = new Intent(this, Create.class);
+                createTs.putExtra("CreateName", mContext.getResources().getString(R.string.action_create_ts));
+                createTs.putExtra("CreateType", "TestSet");
+                startActivity(createTs);
                 overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
                 break;
             case R.id.sort_rank:
@@ -281,7 +289,7 @@ public class ArtifactList extends Activity implements OnRefreshListener {
                 break;
             case R.id.action_refresh:
                 // Initiate API Requests
-                Toast.makeText(mContext, "Tip: You can swipe down to refresh.", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, mContext.getResources().getString(R.string.tip_swipe_down), Toast.LENGTH_LONG).show();
                 populateExpandableListView(true);
                 break;
             case R.id.action_settings:

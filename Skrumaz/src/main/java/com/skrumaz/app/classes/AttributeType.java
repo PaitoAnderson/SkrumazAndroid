@@ -5,7 +5,7 @@ package com.skrumaz.app.classes;
  */
 public enum AttributeType {
     // AttributeDefinition -> AttributeType
-    BOOLEAN, INTEGER, QUANTITY, STRING, TEXT, DATE, STATE, COLLECTION, OBJECT
+    BOOLEAN, INTEGER, QUANTITY, STRING, TEXT, DATE, STATE, RATING, COLLECTION, OBJECT
 
     // ScopedAttributeDefinition -> AttributeType
     //BOOLEAN, INTEGER, DECIMAL, STRING, TEXT, DATE, DROP_DOWN_LIST, CHOOSER

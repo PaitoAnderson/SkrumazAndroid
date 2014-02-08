@@ -125,13 +125,13 @@ public class IterationList extends Activity implements OnRefreshListener, Action
         switch(item.getItemId()) {
             case R.id.action_refresh:
                 // Initiate API Requests
-                Toast.makeText(mContext, "Tip: You can swipe down to refresh.", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, mContext.getResources().getString(R.string.tip_swipe_down), Toast.LENGTH_LONG).show();
                 populateListView(true);
                 break;
             case R.id.create_iteration:
                 // Create Iteration
                 Intent createDs = new Intent(this, Create.class);
-                createDs.putExtra("CreateName", "Iteration");
+                createDs.putExtra("CreateName", mContext.getResources().getString(R.string.action_create_iteration));
                 createDs.putExtra("CreateType", "Iteration");
                 startActivity(createDs);
                 overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);

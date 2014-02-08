@@ -12,7 +12,6 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -56,8 +55,6 @@ public class PutDomainObject {
             StatusLine statusLine = response.getStatusLine();
             if (statusLine.getStatusCode() == HttpURLConnection.HTTP_OK) {
 
-                //Log.e("PutDomainObject", response.getEntity().getContent().toString());
-
                 // Parse JSON Response
                 BufferedReader streamReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
                 StringBuilder responseStrBuilder = new StringBuilder();
@@ -66,16 +63,28 @@ public class PutDomainObject {
                     responseStrBuilder.append(inputStr);
                 }
 
-                Log.e("PutDomainObject", responseStrBuilder.toString());
+                //Log.i("PutDomainObject", responseStrBuilder.toString());
 
                 // Get array of Errors from this Request
-                JSONArray requestErrors = new JSONObject(responseStrBuilder.toString()).getJSONObject("CreateResult").getJSONArray("Errors");
+                JSONObject jsonResponse = new JSONObject(responseStrBuilder.toString()).getJSONObject("CreateResult");
 
-                for (int i = 0; i < requestErrors.length(); i++) {
-                    Log.e("PutDomainObject",requestErrors.getString(i));
-                    createResult.addMessage(stripMessage(requestErrors.getString(i)));
+                for (int i = 0; i < jsonResponse.getJSONArray("Errors").length(); i++) {
+                    createResult.addMessage(stripMessage(jsonResponse.getJSONArray("Errors").getString(i)));
                 }
 
+                if (jsonResponse.getJSONArray("Errors").length() == 0) {
+                    if (!jsonResponse.isNull("Object")) {
+                        if (!jsonResponse.getJSONObject("Object").isNull("FormattedID")) {
+                            createResult.addMessage("Created " + jsonResponse.getJSONObject("Object").getString("FormattedID") + "!");
+                        } else {
+                            createResult.addMessage("Created Successfully!");
+                        }
+                        createResult.setSuccess(true);
+
+                    }
+                }
+
+                // Error Response
                 //{
                 //    "CreateResult":{
                 //        "_rallyAPIMajor":"2",
@@ -88,8 +97,6 @@ public class PutDomainObject {
                 //        "Warnings":[]
                 //    }
                 //}
-
-
             }
 
         } catch (UnsupportedEncodingException e) {

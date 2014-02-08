@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.skrumaz.app.classes.AllowedValue;
@@ -222,11 +223,14 @@ public class Create extends Activity {
                         editText3.setOnClickListener(DateOnClick);
                         inputContainer.addView(editText3);
                         break;
-                    case COLLECTION:
-                        // TODO: Support this..
-                        break;
                     case STATE:
+                    case RATING:
                         // TODO: Could be a static list...
+                        //Spinner spinner = new Spinner(mContext);
+                        //spinner.setId(layoutInputID);
+                        //spinner.setAdapter(null);
+                        //spinner.setOnItemSelectedListener(SpinnerOnClick);
+                        //inputContainer.addView(spinner);
                     case OBJECT:
                         // Add Label
                         TextView textView6 = new TextView(mContext);
@@ -242,12 +246,9 @@ public class Create extends Activity {
                         button.setBackgroundResource(android.R.drawable.btn_dropdown);
                         button.setTextColor(getResources().getColor(android.R.color.black));
                         inputContainer.addView(button);
-
-                        //Spinner spinner = new Spinner(mContext);
-                        //spinner.setId(layoutInputID);
-                        //spinner.setAdapter(null);
-                        //spinner.setOnItemSelectedListener(SpinnerOnClick);
-                        //inputContainer.addView(spinner);
+                        break;
+                    case COLLECTION:
+                        // TODO: Support this..
                         break;
                 }
                 layoutInputID++;
@@ -264,7 +265,6 @@ public class Create extends Activity {
             // Definition ID for User Stories
             TypeDefinitions typeDefinitions = new TypeDefinitions(mContext);
             Long definitionId = typeDefinitions.getDefinition(mContext, createType);
-            Log.d(TAG, "definitionID: " + definitionId);
 
             // Get Form Attributes
             attributeDefinitions.addAll(new GetFormAttributes().FetchItems(mContext, definitionId));
@@ -312,7 +312,6 @@ public class Create extends Activity {
             myCalendar.set(Calendar.MONTH, monthOfYear);
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             updateDatePicker();
-            // Update Object with Date Picked..
         }
     };
 
@@ -352,6 +351,7 @@ public class Create extends Activity {
                 break;
             case STRING: // Only used for constrained strings
             case STATE:
+            case RATING:
                 attributeDefinitions.get(activeView.getId()).setReturnValue(input.getName());
                 break;
             case OBJECT:
@@ -409,11 +409,15 @@ public class Create extends Activity {
                         }
                         break;
                     case STATE:
+                    case RATING:
                     case OBJECT:
                     case DATE:
                         if (attributeDefinition.getReturnValue() !=null &&  !attributeDefinition.getReturnValue().isEmpty()){
                             inputObj.put(attributeDefinition.getElementName(), attributeDefinition.getReturnValue());
                         }
+                        break;
+                    case COLLECTION:
+                        // TODO: Support this..
                         break;
                 }
                 layoutInputID++;
@@ -449,11 +453,29 @@ public class Create extends Activity {
 
             finishLoading();
 
-            for (String errorMessage : createResult.getAllMessages()) {
-                Crouton.makeText((Activity) mContext, errorMessage, Style.ALERT).show();
+            if (createResult.getSuccess()) {
+
+                // TODO: Invalidate Iteration Cache
+                //if (createType.equalsIgnoreCase("Iteration"))
+                //{
+                    //Iterations db = new Iterations(mContext);
+                    //db.invalidIterations();
+                //}
+
+                // Notify user of the success
+                Toast.makeText(mContext, createResult.getAllMessages().get(0), Toast.LENGTH_LONG).show();
+
+                // Return to previous activity
+                finish();
+            } else {
+
+                // Loop through the errors
+                for (String errorMessage : createResult.getAllMessages()) {
+                    // Show users the errors as a ActionBar notification
+                    Crouton.makeText((Activity) mContext, errorMessage, Style.ALERT).show();
+                }
             }
 
-            //TODO: Show Success if Successful
             super.onPostExecute(result);
         }
     }

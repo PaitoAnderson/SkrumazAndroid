@@ -4,7 +4,7 @@
         android:orderInCategory="90"
         android:showAsAction="always"
         android:icon="@drawable/ic_create"
-        android:title="@string/action_create" />
+        android:title="@string/action_create_iteration" />
 
     <item android:id="@+id/action_refresh"
         android:orderInCategory="100"

@@ -24,6 +24,8 @@ public class AttributeTypeLookup {
             return AttributeType.DATE;
         } else if (attributeType.equalsIgnoreCase("STATE")) {
             return AttributeType.STATE;
+        } else if (attributeType.equalsIgnoreCase("RATING")) {
+            return AttributeType.RATING;
         } else if (attributeType.equalsIgnoreCase("COLLECTION")) {
             return AttributeType.COLLECTION;
         } else if (attributeType.equalsIgnoreCase("OBJECT")) {
@@ -55,6 +57,8 @@ public class AttributeTypeLookup {
                 return "DATE";
             case STATE:
                 return "STATE";
+            case RATING:
+                return "RATING";
             case COLLECTION:
                 return "COLLECTION";
             case OBJECT:

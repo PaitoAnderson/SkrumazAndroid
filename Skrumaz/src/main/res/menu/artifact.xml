@@ -14,6 +14,8 @@
                 android:title="@string/action_create_de" />
             <item android:id="@+id/create_ds"
                 android:title="@string/action_create_ds" />
+            <item android:id="@+id/create_ts"
+                android:title="@string/action_create_ts" />
         </menu>
     </item>
 
