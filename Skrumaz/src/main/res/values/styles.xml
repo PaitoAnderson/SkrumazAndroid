@@ -43,6 +43,8 @@
         <item name="android:listChoiceBackgroundIndicator">@drawable/list_selector_holo_light</item>
 
         <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemTheme</item>
+
+        <item name="android:actionOverflowButtonStyle">@style/OverflowTheme</item>
     </style>
 
     <style name="PreferencesTheme" parent="AppTheme" />
@@ -95,6 +97,9 @@
     <style name="SpinnerDropDownItemTheme" parent="android:Widget.Holo.Light.DropDownItem.Spinner">
         <item name="android:background">@drawable/spinner_selector_holo_light</item>
         <item name="android:divider">@android:color/white</item>
+    </style>
+    <style name="OverflowTheme" parent="@android:style/Widget.Holo.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_overflow</item>
     </style>
 
 </resources>
