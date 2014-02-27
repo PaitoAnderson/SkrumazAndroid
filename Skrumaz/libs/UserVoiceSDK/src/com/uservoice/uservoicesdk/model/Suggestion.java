@@ -199,7 +199,7 @@ public class Suggestion extends BaseModel {
     public void commentPosted(Comment comment) {
         numberOfComments += 1;
     }
-
+    
     public int getWeight() {
         return weight;
     }

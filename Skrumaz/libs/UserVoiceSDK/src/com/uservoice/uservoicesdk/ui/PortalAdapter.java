@@ -140,7 +140,7 @@ public class PortalAdapter extends SearchAdapter<BaseModel> implements AdapterVi
                 }
             }
             if (!Session.getInstance().getClientConfig().isWhiteLabel()) {
-                rows += 1;
+            	rows += 1;
             }
             return rows;
         }
@@ -228,7 +228,7 @@ public class PortalAdapter extends SearchAdapter<BaseModel> implements AdapterVi
             else if (type == ARTICLE)
                 view = inflater.inflate(R.layout.uv_text_item, null);
             else if (type == POWERED_BY)
-                view = inflater.inflate(R.layout.uv_powered_by_item, null);
+            	view = inflater.inflate(R.layout.uv_powered_by_item, null);
         }
 
         if (type == FORUM) {
@@ -259,8 +259,8 @@ public class PortalAdapter extends SearchAdapter<BaseModel> implements AdapterVi
             Article article = (Article) getItem(position);
             textView.setText(article.getTitle());
         } else if (type == POWERED_BY) {
-            TextView textView = (TextView) view.findViewById(R.id.uv_version);
-            textView.setText(context.getString(R.string.uv_android_sdk) + " v" + UserVoice.getVersion());
+        	TextView textView = (TextView) view.findViewById(R.id.uv_version);
+        	textView.setText(context.getString(R.string.uv_android_sdk) + " v" + UserVoice.getVersion());
         }
 
         View divider = view.findViewById(R.id.uv_divider);
@@ -289,14 +289,14 @@ public class PortalAdapter extends SearchAdapter<BaseModel> implements AdapterVi
             return type;
         }
         if (Session.getInstance().getConfig().shouldShowKnowledgeBase()) {
-            if (getTopics() == null || (shouldShowArticles() && getArticles() == null)) {
-                if (position - staticRows.size() == 0)
-                    return LOADING;
-            } else if (shouldShowArticles() && position - staticRows.size() < getArticles().size()) {
-                return ARTICLE;
-            } else if (!shouldShowArticles() && position - staticRows.size() < getTopics().size()) {
-                return TOPIC;
-            }
+	        if (getTopics() == null || (shouldShowArticles() && getArticles() == null)) {
+	        	if (position - staticRows.size() == 0)
+	        		return LOADING;
+	        } else if (shouldShowArticles() && position - staticRows.size() < getArticles().size()) {
+	        	return ARTICLE;
+	        } else if (!shouldShowArticles() && position - staticRows.size() < getTopics().size()) {
+	        	return TOPIC;
+	        }
         }
         return POWERED_BY;
     }

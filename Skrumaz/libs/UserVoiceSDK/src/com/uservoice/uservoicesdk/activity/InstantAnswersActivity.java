@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.ViewGroup;
 
 import android.view.WindowManager;
-
 import com.uservoice.uservoicesdk.R;
 import com.uservoice.uservoicesdk.flow.InitManager;
 import com.uservoice.uservoicesdk.ui.InstantAnswersAdapter;
