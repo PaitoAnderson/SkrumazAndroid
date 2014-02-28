@@ -16,6 +16,8 @@
 
         <item name="android:actionBarItemBackground">@drawable/activated_background_holo_light</item>
 
+        <item name="ptrHeaderTitleTextAppearance">@style/TextAppearanceCustomPtrHeaderTitle</item>
+
         <item name="android:popupMenuStyle">@style/PopupMenuTheme</item>
 
         <item name="android:dropDownListViewStyle">@style/DropDownListViewTheme</item>
@@ -60,6 +62,9 @@
     </style>
     <style name="ActionBarTheme.TitleTextStyle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="TextAppearanceCustomPtrHeaderTitle" parent="android:TextAppearance.Large.Inverse">
+        <item name="android:textSize">20dp</item>
     </style>
     <style name="ButtonTheme" parent="android:Widget.Holo.Light.Button">
         <item name="android:background">@drawable/btn_default_holo_light</item>
