@@ -18,11 +18,14 @@ public class Database extends SQLiteOpenHelper {
 
     // Database Setup
     private static final String DATABASE_NAME = "Skrumaz.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     // Database Create SQL
+    private static final String CREATE_TABLE_WORKSPACES = "CREATE TABLE " + Table.WORKSPACES +
+            "(" + Field.WORKSPACE_ID + " LONG PRIMARY KEY, " + Field.TITLE + " TEXT, " + Field.REFRESH_DATE + " LONG)";
+
     private static final String CREATE_TABLE_PROJECTS = "CREATE TABLE " + Table.PROJECTS +
-            "(" + Field.PROJECT_ID + " LONG PRIMARY KEY, " + Field.TITLE + " TEXT, " + Field.REFRESH_DATE + " LONG)";
+            "(" + Field.PROJECT_ID + " LONG PRIMARY KEY, " + Field.WORKSPACE_ID + " LONG, " + Field.TITLE + " TEXT, " + Field.REFRESH_DATE + " LONG, " + Field.UPDATED + " CHAR(1))";
 
     private static final String CREATE_TABLE_ITERATIONS = "CREATE TABLE " + Table.ITERATIONS +
             "(" + Field.ITERATION_ID + " LONG PRIMARY KEY, " + Field.PROJECT_ID + " LONG, " + Field.TITLE + " TEXT, " + Field.REFRESH_DATE + " LONG, " + Field.ITERATION_STATUS + " VARCHAR(12), " + Field.UPDATED + " CHAR(1))";
@@ -36,7 +39,7 @@ public class Database extends SQLiteOpenHelper {
     Field.BLOCKED + " BOOLEAN, " + Field.STATUS + " VARCHAR(12), " + Field.MODIFIED_DATE + " LONG)";
 
     private static final String CREATE_TABLE_TYPE_DEFINITIONS = "CREATE TABLE " + Table.TYPE_DEFINITIONS +
-            "(" + Field.DEFINITION_ID + " LONG PRIMARY KEY, " + Field.ELEMENTNAME + " VARCHAR(256))";
+            "(" + Field.DEFINITION_ID + " LONG PRIMARY KEY, " + Field.ELEMENT_NAME + " VARCHAR(256))";
 
     // Default Constructor
     public Database(Context context) {
@@ -45,6 +48,10 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
+        // Create Workspaces Table
+        Log.v(TAG, CREATE_TABLE_WORKSPACES);
+        db.execSQL(CREATE_TABLE_WORKSPACES);
 
         // Create Projects Table
         Log.v(TAG, CREATE_TABLE_PROJECTS);
@@ -79,6 +86,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
     private void emptyDatabase(SQLiteDatabase db) {
+        db.execSQL("DROP TABLE IF EXISTS " + Table.WORKSPACES);
         db.execSQL("DROP TABLE IF EXISTS " + Table.PROJECTS);
         db.execSQL("DROP TABLE IF EXISTS " + Table.ITERATIONS);
         db.execSQL("DROP TABLE IF EXISTS " + Table.ARTIFACTS);

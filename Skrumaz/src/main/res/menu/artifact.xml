@@ -9,13 +9,13 @@
 
         <menu android:id="@+id/create_menu">
             <item android:id="@+id/create_us"
-                android:title="@string/action_create_us" />
+                android:title="@string/action_us" />
             <item android:id="@+id/create_de"
-                android:title="@string/action_create_de" />
+                android:title="@string/action_de" />
             <item android:id="@+id/create_ds"
-                android:title="@string/action_create_ds" />
+                android:title="@string/action_ds" />
             <item android:id="@+id/create_ts"
-                android:title="@string/action_create_ts" />
+                android:title="@string/action_ts" />
         </menu>
     </item>
 

@@ -238,7 +238,7 @@ public class ArtifactList extends Activity implements OnRefreshListener {
             case R.id.create_us:
                 // Create User Story
                 Intent createUs = new Intent(this, Create.class);
-                createUs.putExtra("CreateName", mContext.getResources().getString(R.string.action_create_us));
+                createUs.putExtra("CreateName", mContext.getResources().getString(R.string.action_us));
                 createUs.putExtra("CreateType", "HierarchicalRequirement");
                 startActivity(createUs);
                 overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
@@ -246,7 +246,7 @@ public class ArtifactList extends Activity implements OnRefreshListener {
             case R.id.create_de:
                 // Create Defect
                 Intent createDe = new Intent(this, Create.class);
-                createDe.putExtra("CreateName", mContext.getResources().getString(R.string.action_create_de));
+                createDe.putExtra("CreateName", mContext.getResources().getString(R.string.action_de));
                 createDe.putExtra("CreateType", "Defect");
                 startActivity(createDe);
                 overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
@@ -254,7 +254,7 @@ public class ArtifactList extends Activity implements OnRefreshListener {
             case R.id.create_ds:
                 // Create Defect Suite
                 Intent createDs = new Intent(this, Create.class);
-                createDs.putExtra("CreateName", mContext.getResources().getString(R.string.action_create_ds));
+                createDs.putExtra("CreateName", mContext.getResources().getString(R.string.action_ds));
                 createDs.putExtra("CreateType", "DefectSuite");
                 startActivity(createDs);
                 overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
@@ -262,7 +262,7 @@ public class ArtifactList extends Activity implements OnRefreshListener {
             case R.id.create_ts:
                 // Create Defect Suite
                 Intent createTs = new Intent(this, Create.class);
-                createTs.putExtra("CreateName", mContext.getResources().getString(R.string.action_create_ts));
+                createTs.putExtra("CreateName", mContext.getResources().getString(R.string.action_ts));
                 createTs.putExtra("CreateType", "TestSet");
                 startActivity(createTs);
                 overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);

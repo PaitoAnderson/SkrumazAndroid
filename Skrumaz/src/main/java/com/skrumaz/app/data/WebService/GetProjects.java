@@ -3,7 +3,9 @@ package com.skrumaz.app.data.WebService;
 import android.content.Context;
 import android.util.Log;
 
+import com.skrumaz.app.ProjectList;
 import com.skrumaz.app.classes.Project;
+import com.skrumaz.app.classes.Workspace;
 import com.skrumaz.app.data.Preferences;
 import com.skrumaz.app.data.Store.Projects;
 
@@ -27,15 +29,102 @@ import java.util.List;
 public class GetProjects {
 
     private List<Project> projects = new ArrayList<Project>();
+    private Workspace workspace = new Workspace();
 
     public List<Project> FetchItems(Context context) {
+
+        // Get workspaceId to use
+        Long workspaceId = Preferences.getWorkspaceId(context, false);
+
+        // Is workspaceId available? If not, get current.
+        if (workspaceId > 0) {
+
+            // Set IterationId to use
+            workspace.setOid(workspaceId);
+
+            // Get Iterations
+            GetWorkspaceProjects(context);
+
+            // Store items in Database
+            Projects db = new Projects(context);
+            db.storeProjects(projects, workspace);
+            db.close();
+
+        } else {
+
+            // Update Main View with status
+            ((ProjectList)context).SetProgress("Getting Current Workspace...");
+
+            // Setup HTTP Request
+            DefaultHttpClient httpClient = new DefaultHttpClient();
+
+            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/workspace?fetch=ObjectID");
+
+                 Log.d("GetProjects", "https://rally1.rallydev.com/slm/webservice/v2.0/workspace?fetch=ObjectID&pretty=true");
+
+            // Setup HTTP Headers / Authorization
+            get.setHeader("Accept", "application/json");
+            get.setHeader("Authorization", Preferences.getCredentials(context));
+            try {
+                // Make HTTP Request
+                HttpResponse response = httpClient.execute(get);
+                StatusLine statusLine = response.getStatusLine();
+                if (statusLine.getStatusCode() == HttpURLConnection.HTTP_OK) {
+
+                    // Parse JSON Response
+                    BufferedReader streamReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+                    StringBuilder responseStrBuilder = new StringBuilder();
+                    String inputStr;
+                    while ((inputStr = streamReader.readLine()) != null) {
+                        responseStrBuilder.append(inputStr);
+                    }
+
+                    // Get array of User Stories in Iteration for this user
+                    JSONObject projectArray = new JSONObject(responseStrBuilder.toString()).getJSONObject("QueryResult").getJSONArray("Results").getJSONObject(0);
+
+                    workspace.setOid(projectArray.getLong("ObjectID"));
+                    workspace.setName(projectArray.getString("_refObjectName"));
+
+                    // Get Projects
+                    GetWorkspaceProjects(context);
+
+                    // Store items in Database
+                    Projects db = new Projects(context);
+                    db.storeProjects(projects, workspace);
+                    db.close();
+
+                    // Set Workspace to use
+                    Preferences.setWorkspaceId(context, workspace.getOid());
+
+                } else {
+                    ((ProjectList)context).SetError(false, statusLine.getReasonPhrase());
+                    Log.d("GetProjects", "Workspace Error: " + statusLine.getReasonPhrase());
+                }
+
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return projects;
+    }
+
+    // Get Projects from WebService
+    private void GetWorkspaceProjects(Context context) {
+
+        // Update Main View with status
+        ((ProjectList) context).SetProgress("Getting Projects...");
 
         // Setup HTTP Request
         DefaultHttpClient httpClient = new DefaultHttpClient();
 
-        HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/project");
+        // https://rally1.rallydev.com/slm/webservice/v2.0/project?query=(Parent%20=%20%22https://rally1.rallydev.com/slm/webservice/v2.0/project/4331522546%22)&fetch=Children&pretty=true
 
-        Log.d("GetProjects", "https://rally1.rallydev.com/slm/webservice/v2.0/project?pretty=true");
+        HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/workspace/" + workspace.getOid() + "/Projects?fetch=Name,ObjectID,State&pagesize=100");
+
+        Log.d("GetProjects", "https://rally1.rallydev.com/slm/webservice/v2.0/workspace/" + workspace.getOid() + "/Projects?fetch=Name,ObjectID,State&pagesize=100&pretty=true");
 
         // Setup HTTP Headers / Authorization
         get.setHeader("Accept", "application/json");
@@ -54,30 +143,23 @@ public class GetProjects {
                     responseStrBuilder.append(inputStr);
                 }
 
-                // Get array of User Stories in Iteration for this user
+                // Get array of Projects for this Workspace
                 JSONArray projectArray = new JSONObject(responseStrBuilder.toString()).getJSONObject("QueryResult").getJSONArray("Results");
 
-                // Iterate though Defects
+                // Iterate though Projects
                 for (int i = 0; i < projectArray.length(); i++) {
-
-                    String[] projectUrl = projectArray.getJSONObject(i).getString("_ref").split("/");
-
                     Project project = new Project();
-                    project.setOid(Long.parseLong(projectUrl[projectUrl.length-1]));
-                    project.setName(projectArray.getJSONObject(i).getString("_refObjectName"));
+                    project.setOid(projectArray.getJSONObject(i).getLong("ObjectID"));
+                    project.setName(projectArray.getJSONObject(i).getString("Name"));
 
                     // Add iteration to list
                     projects.add(project);
+
                 }
 
-                // Store items in Database
-                Projects db = new Projects(context);
-                db.storeProjects(projects);
-                db.close();
-
             } else {
-                //((IterationList)context).SetError(false, statusLine.getReasonPhrase());
-                //Log.d("GetProjects", "Project Error: " + statusLine.getReasonPhrase());
+                ((ProjectList) context).SetError(false, statusLine.getReasonPhrase());
+                Log.d("GetProjects", "Project Error: " + statusLine.getReasonPhrase());
             }
 
         } catch (UnsupportedEncodingException e) {
@@ -85,7 +167,5 @@ public class GetProjects {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return projects;
     }
 }

@@ -6,6 +6,7 @@ package com.skrumaz.app.data.Store;
 public class Field {
 
     // Database Fields
+    public static final String WORKSPACE_ID = "WorkspaceID";
     public static final String PROJECT_ID = "ProjectID";
     public static final String ITERATION_ID = "IterationID";
     public static final String FORMATTED_ID = "FormattedID";
@@ -19,5 +20,5 @@ public class Field {
     public static final String REFRESH_DATE = "RefreshDate";
     public static final String UPDATED = "Updated";
     public static final String DEFINITION_ID = "DefinitionID";
-    public static final String ELEMENTNAME = "ElementName";
+    public static final String ELEMENT_NAME = "ElementName";
 }

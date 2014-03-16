@@ -126,7 +126,7 @@ public class Iterations extends Database {
                 new String[] { "*" }, null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {
-                refreshDate = new Date(cursor.getLong(2) + (20*60*60*1000)); // 20 Hours
+                refreshDate = new Date(cursor.getLong(3) + (20*60*60*1000)); // 20 Hours
             } while (cursor.moveToNext());
         }
 

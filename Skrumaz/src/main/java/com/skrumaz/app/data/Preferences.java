@@ -47,7 +47,34 @@ public class Preferences {
         }
     }
 
-    // Get Iteration ID to use
+    // Get Workspace ID to use
+    public static long getWorkspaceId(Context context, boolean force) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        Long workspace = prefs.getLong("useWorkspace", 0);
+        Date workspaceTime = new Date(prefs.getLong("useWorkspaceTime", 0));
+
+        if (force) {
+            return workspace;
+        }
+
+        if (workspaceTime.after(new Date(System.currentTimeMillis()))) {
+            return workspace;
+        } else {
+            return 0;
+        }
+    }
+
+    // Set Workspace ID to use
+    public static void setWorkspaceId(Context context, long workspaceId) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor prefsEditor = prefs.edit();
+        prefsEditor.putLong("useWorkspace", workspaceId);
+        Long currentDate = System.currentTimeMillis() + (20*60*60*1000); //Add 20hours to current time
+        prefsEditor.putLong("useWorkspaceTime", currentDate);
+        prefsEditor.commit();
+    }
+
+    // Get Project ID to use
     public static long getProjectId(Context context, boolean force) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         Long project = prefs.getLong("useProject", 0);
@@ -64,7 +91,7 @@ public class Preferences {
         }
     }
 
-    // Set Iteration ID to use
+    // Set Project ID to use
     public static void setProjectId(Context context, long projectId) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor prefsEditor = prefs.edit();
@@ -128,6 +155,13 @@ public class Preferences {
         prefsEditor.putLong("dataExpiry", 0);
         prefsEditor.putString("username", "");
         prefsEditor.putString("password", "");
+
+        prefsEditor.remove("useWorkspace");
+        prefsEditor.remove("useWorkspaceTime");
+        prefsEditor.remove("useProject");
+        prefsEditor.remove("useProjectTime");
+        prefsEditor.remove("useIteration");
+        prefsEditor.remove("useIterationTime");
 
         // Empty Database
         Database db = new Database(context);

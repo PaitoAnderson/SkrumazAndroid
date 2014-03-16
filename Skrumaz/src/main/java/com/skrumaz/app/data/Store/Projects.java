@@ -6,9 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.skrumaz.app.classes.Project;
+import com.skrumaz.app.classes.Workspace;
 import com.skrumaz.app.data.Database;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,13 +25,27 @@ public class Projects extends Database {
     /*
      * Store all Projects in list
      */
-    public void storeProjects(List<Project> projects) {
+    public void storeProjects(List<Project> projects, Workspace workspace) {
 
         // Open Database connection
         SQLiteDatabase db = this.getWritableDatabase();
 
-        // Clear Database in Preparation for new data
-        db.execSQL("DELETE FROM " + Table.PROJECTS);
+        // Update Project Refresh date
+        ContentValues workspaceValues = new ContentValues();
+        workspaceValues.put(Field.REFRESH_DATE, System.currentTimeMillis());
+
+        // Try Update then Insert
+        int rows = 0;
+        try {
+            rows = db.update(Table.WORKSPACES, workspaceValues, Field.WORKSPACE_ID + " = " + workspace.getOid(), null);
+        } finally {
+            if (rows == 0) {
+                workspaceValues.put(Field.WORKSPACE_ID, workspace.getOid());
+                db.insert(Table.WORKSPACES, null, workspaceValues);
+            }
+        }
+
+        db.execSQL("UPDATE " + Table.PROJECTS + " SET " + Field.UPDATED + " = 'N' WHERE " + Field.WORKSPACE_ID + " = " + workspace.getOid());
 
         // Iterate though all projects
         for (Project project : projects) {
@@ -37,9 +53,11 @@ public class Projects extends Database {
             // Setup Values for project
             ContentValues iterationValues = new ContentValues();
             iterationValues.put(Field.TITLE, project.getName());
+            iterationValues.put(Field.WORKSPACE_ID, workspace.getOid());
+            iterationValues.put(Field.UPDATED, "Y");
 
             // Try Update then Insert
-            int rows = 0;
+            rows = 0;
             try {
                 rows = db.update(Table.PROJECTS, iterationValues, Field.PROJECT_ID + " = " + project.getOid(), null);
             } finally {
@@ -52,6 +70,9 @@ public class Projects extends Database {
             }
         }
 
+        // Delete any iteration in this project that weren't updated (prevents deleted iterations from showing up)
+        db.execSQL("DELETE FROM " + Table.PROJECTS + " WHERE (" + Field.UPDATED + " = 'N') AND (" + Field.WORKSPACE_ID + " = " + workspace.getOid() + ")");
+
         // Close database connection
         db.releaseReference();
     }
@@ -59,7 +80,7 @@ public class Projects extends Database {
     /*
      * Pull all Projects from the database and put them in a usable list
      */
-    public List<Project> getProjects() {
+    public List<Project> getProjects(long workspaceId) {
 
         List<Project> projects = new ArrayList<Project>();
 
@@ -67,13 +88,13 @@ public class Projects extends Database {
         SQLiteDatabase db = this.getReadableDatabase();
 
         // Populate projects from Database
-        Cursor cursor = db.query(Table.PROJECTS + " Order BY " + Field.PROJECT_ID + " DESC",
+        Cursor cursor = db.query(Table.PROJECTS + " WHERE " + Field.WORKSPACE_ID + " = " + workspaceId + " Order BY " + Field.PROJECT_ID + " DESC",
                 new String[] { "*" }, null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {
                 Project project = new Project();
                 project.setOid(cursor.getLong(0));
-                project.setName(cursor.getString(1));
+                project.setName(cursor.getString(2));
 
                 if (!cursor.isNull(1)) {
                     projects.add(project);
@@ -89,5 +110,46 @@ public class Projects extends Database {
         db.releaseReference();
 
         return projects;
+    }
+
+    public boolean isValidProjects(long workspaceId) {
+
+        // Open Database connection
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Date refreshDate = new Date(0);
+        Date currentDate = new Date(System.currentTimeMillis());
+
+        // Get Refresh Date
+        Cursor cursor = db.query(Table.WORKSPACES + " WHERE " + Field.WORKSPACE_ID + " = " + workspaceId,
+                new String[] { "*" }, null, null, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                refreshDate = new Date(cursor.getLong(2) + (20*60*60*1000)); // 20 Hours
+            } while (cursor.moveToNext());
+        }
+
+        // Close Database connection
+        db.releaseReference();
+
+        if (currentDate.after(refreshDate)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void invalidProjects() {
+
+        // Open Database connection
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Update Refresh Date
+        ContentValues projectValues = new ContentValues();
+        projectValues.put(Field.REFRESH_DATE, 0);
+        db.update(Table.WORKSPACES, projectValues, null, null);
+
+        // Close Database connection
+        db.releaseReference();
     }
 }

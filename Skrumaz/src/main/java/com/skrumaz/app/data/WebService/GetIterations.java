@@ -57,9 +57,9 @@ public class GetIterations {
 
             // Setup HTTP Request
             DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current?fetch=Project");
+            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current?fetch=Workspace,Project,ObjectID");
 
-                    Log.d("GetIterations", "https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current?fetch=Project&pretty=true");
+                    Log.d("GetIterations", "https://rally1.rallydev.com/slm/webservice/v2.0/iteration:current?fetch=Workspace,Project,ObjectID&pretty=true");
 
             // Setup HTTP Headers / Authorization
             get.setHeader("Accept", "application/json");
@@ -79,12 +79,8 @@ public class GetIterations {
                     }
                     JSONObject jsonIteration = new JSONObject(responseStrBuilder.toString());
 
-                    String[] projectUrl = jsonIteration.getJSONObject("Iteration").getJSONObject("Project").getString("_ref").split("/");
-
-                    Log.i("GetIterations", "Project Id: " + projectUrl[projectUrl.length-1]);
-
                     // Get Iteration Name and Reference
-                    project.setOid(Long.parseLong(projectUrl[projectUrl.length-1]));
+                    project.setOid(jsonIteration.getJSONObject("Iteration").getJSONObject("Project").getLong("ObjectID"));
                     project.setName(jsonIteration.getJSONObject("Iteration").getJSONObject("Project").getString("_refObjectName"));
 
                     // Get Iterations
@@ -95,8 +91,9 @@ public class GetIterations {
                     db.storeIterations(iterations, project);
                     db.close();
 
-                    // Set Iteration to use to current iteration
+                    // Set Project, Workspace to use for current iteration
                     Preferences.setProjectId(context, project.getOid());
+                    Preferences.setWorkspaceId(context, jsonIteration.getJSONObject("Iteration").getJSONObject("Workspace").getLong("ObjectID"));
 
                 } else {
                     ((IterationList)context).SetError(false, statusLine.getReasonPhrase());
@@ -143,14 +140,14 @@ public class GetIterations {
                     responseStrBuilder.append(inputStr);
                 }
 
-                // Get array of User Stories in Iteration for this user
+                // Get array of Iterations for this Project
                 JSONArray iterationArray = new JSONObject(responseStrBuilder.toString()).getJSONObject("QueryResult").getJSONArray("Results");
 
-                // Iterate though Defects
+                // Iterate though Iterations
                 for (int i = 0; i < iterationArray.length(); i++) {
 
                     Iteration iteration = new Iteration();
-                    iteration.setOid(Long.parseLong(iterationArray.getJSONObject(i).getString("ObjectID")));
+                    iteration.setOid(iterationArray.getJSONObject(i).getLong("ObjectID"));
                     iteration.setName(iterationArray.getJSONObject(i).getString("Name"));
                     iteration.setIterationStatus(IterationStatusLookup.stringToIterationStatus(iterationArray.getJSONObject(i).getString("State")));
 

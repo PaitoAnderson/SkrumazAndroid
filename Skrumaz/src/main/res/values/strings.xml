@@ -21,11 +21,16 @@
     <string name="action_sort_modified">Modified</string>
 
     <string name="action_create">Create</string>
-    <string name="action_create_us">User Story</string>
-    <string name="action_create_de">Defect</string>
-    <string name="action_create_ds">Defect Suite</string>
-    <string name="action_create_ts">Test Set</string>
-    <string name="action_create_iteration">Iteration</string>
+    <string name="action_us">User Story</string>
+    <string name="action_de">Defect</string>
+    <string name="action_ds">Defect Suite</string>
+    <string name="action_ts">Test Set</string>
+    <string name="action_iteration">Iteration</string>
+    <string name="action_project">Project</string>
+    <string name="action_workspace">Workspace</string>
+
+    <string name="action_iterations">Iterations</string>
+    <string name="action_projects">Projects</string>
 
     <string name="tip_swipe_down">Tip: You can swipe down to refresh.</string>
 
@@ -35,8 +40,8 @@
     <string name="pref_title_username">Username</string>
     <string name="pref_key_username">username</string>
 
-    <string name="pref_key_sort">defaultSort</string>
     <string name="pref_title_sort">Set Default Sort</string>
+    <string name="pref_key_sort">defaultSort</string>
     <string name="pref_summary_sort">How should your items be sorted?</string>
 
     <string-array name="pref_value_sort">
@@ -57,7 +62,7 @@
 
     <string name="pref_title_reset">Reset Application</string>
     <string name="pref_key_reset">resetApp</string>
-    <string name="pref_summary_reset">Password Changed? Switching Agile Apps?</string>
+    <string name="pref_summary_reset">Password Changed? Switching Accounts?</string>
 
     <string name="pref_title_app_version">Version</string>
     <string name="pref_key_app_version">appVersion</string>

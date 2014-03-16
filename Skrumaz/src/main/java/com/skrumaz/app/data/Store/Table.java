@@ -5,6 +5,7 @@ package com.skrumaz.app.data.Store;
  */
 public class Table {
     // Database Tables
+    public static final String WORKSPACES = "Workspaces";
     public static final String PROJECTS = "Projects";
     public static final String ITERATIONS = "Iterations";
     public static final String ARTIFACTS = "Artifacts";

@@ -1,0 +1,25 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/create"
+        android:title="@string/action_create"
+        android:orderInCategory="90"
+        android:icon="@drawable/ic_create"
+        android:showAsAction="always"
+        android:visible="true" >
+
+        <menu android:id="@+id/create_menu">
+            <item android:id="@+id/create_project"
+                android:title="@string/action_project" />
+            <item android:id="@+id/create_workspace"
+                android:title="@string/action_workspace" />
+        </menu>
+    </item>
+
+
+    <item android:id="@+id/action_refresh"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_refresh"
+        android:title="@string/action_refresh" />
+
+</menu>

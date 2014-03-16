@@ -37,7 +37,7 @@ public class TypeDefinitions extends Database {
             // Setup Values for Definition
             ContentValues artifactValues = new ContentValues();
             artifactValues.put(Field.DEFINITION_ID, typeDefinition.getOid());
-            artifactValues.put(Field.ELEMENTNAME, typeDefinition.getElementName());
+            artifactValues.put(Field.ELEMENT_NAME, typeDefinition.getElementName());
 
             // Insert Row
             db.insert(Table.TYPE_DEFINITIONS, null, artifactValues);
@@ -71,7 +71,7 @@ public class TypeDefinitions extends Database {
         SQLiteDatabase db = this.getReadableDatabase();
 
         // Query Database
-        Cursor cursor = db.query(Table.TYPE_DEFINITIONS + " WHERE " + Field.ELEMENTNAME + " = '" + elementName + "'",
+        Cursor cursor = db.query(Table.TYPE_DEFINITIONS + " WHERE " + Field.ELEMENT_NAME + " = '" + elementName + "'",
                 new String[] { "*" }, null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {

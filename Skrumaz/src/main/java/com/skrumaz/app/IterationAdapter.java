@@ -25,8 +25,6 @@ public class IterationAdapter extends BaseAdapter {
     private final List<Iteration> iterations;
     private LayoutInflater inflater;
     private Activity activity;
-    private TextView iterationName;
-    private TextView iterationDateRange;
 
     public IterationAdapter(Activity act, List<Iteration> iterations) {
         activity = act;
@@ -57,6 +55,7 @@ public class IterationAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.listrow_iteration, null);
         }
+
         ImageView iterationStatus = (ImageView) convertView.findViewById(R.id.iterationStatus);
         TextView iterationName = (TextView) convertView.findViewById(R.id.iterationName);
 
@@ -73,8 +72,6 @@ public class IterationAdapter extends BaseAdapter {
                 // Send to Artifact List
                 activity.startActivity(new Intent(activity, ArtifactList.class));
                 activity.overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
-
-                //Toast.makeText(activity, iteration.getName(), Toast.LENGTH_SHORT).show();
             }
         });
 

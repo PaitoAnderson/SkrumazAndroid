@@ -4,10 +4,6 @@
     android:versionCode="037"
     android:versionName="0.3.7" >
 
-    <uses-sdk
-        android:minSdkVersion="15"
-        android:targetSdkVersion="19" />
-
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -27,6 +23,7 @@
         <activity android:name=".Welcome" android:theme="@android:style/Theme.Holo.Light.NoActionBar" android:screenOrientation="portrait" />
         <activity android:name=".Login" />
         <activity android:name=".IterationList" />
+        <activity android:name=".ProjectList" />
         <activity android:name=".Create" android:screenOrientation="portrait" />
         <activity android:name=".Settings" android:theme="@style/PreferencesTheme" />
 

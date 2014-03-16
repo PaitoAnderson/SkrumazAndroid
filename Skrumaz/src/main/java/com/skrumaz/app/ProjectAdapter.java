@@ -1,28 +1,31 @@
 package com.skrumaz.app;
 
-import android.content.Context;
+import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.skrumaz.app.classes.Project;
+import com.skrumaz.app.data.Preferences;
 
 import java.util.List;
 
 /**
- * Created by Paito Anderson on 12/1/2013.
+ * Created by Paito Anderson on 2014-03-15.
  */
-public class ProjectAdapter extends ArrayAdapter<Project> {
+public class ProjectAdapter extends BaseAdapter {
 
     private final List<Project> projects;
-    private Context context;
+    private LayoutInflater inflater;
+    private Activity activity;
 
-    public ProjectAdapter(Context context, int resource, int textViewResourceId, List<Project> projects) {
-        super(context, resource, textViewResourceId, projects);
-        this.context = context;
+    public ProjectAdapter(Activity act, List<Project> projects) {
+        activity = act;
         this.projects = projects;
+        inflater = act.getLayoutInflater();
     }
 
     @Override
@@ -40,33 +43,31 @@ public class ProjectAdapter extends ArrayAdapter<Project> {
         return projects.get(position).getOid();
     }
 
-    /*
-     * Passive Spinner State
-     */
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
+
         final Project project = getItem(position);
 
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        TextView text = (TextView) inflater.inflate(R.layout.spinner_item, null);
-
-        text.setText(project.getName());
-
-        return text;
-    }
-
-    @Override
-    public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        final Project project = getItem(position);
-
-        if  (convertView == null) {
-            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.spinner_dropdown_item, parent, false);
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.listrow_project, null);
         }
 
+        // Set Project name
         TextView projectName = (TextView) convertView.findViewById(R.id.projectName);
-
         projectName.setText(project.getName());
+
+        // Respond to clicking
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Set Project Id to use
+                Preferences.setProjectId(activity, project.getOid());
+
+                // Send to Iteration List
+                activity.startActivity(new Intent(activity, IterationList.class));
+                activity.overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
+            }
+        });
 
         return convertView;
     }
