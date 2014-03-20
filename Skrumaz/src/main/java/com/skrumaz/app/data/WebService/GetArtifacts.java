@@ -9,6 +9,7 @@ import com.skrumaz.app.classes.Iteration;
 import com.skrumaz.app.classes.Task;
 import com.skrumaz.app.data.Preferences;
 import com.skrumaz.app.data.Store.Artifacts;
+import com.skrumaz.app.utils.ClientInfo;
 import com.skrumaz.app.utils.IterationStatusLookup;
 import com.skrumaz.app.utils.StatusLookup;
 
@@ -67,6 +68,7 @@ public class GetArtifacts {
 
             // Setup HTTP Headers / Authorization
             get.setHeader("Accept", "application/json");
+            get = ClientInfo.addHttpGetHeaders(get);
             get.setHeader("Authorization", Preferences.getCredentials(context));
             try {
                 // Make HTTP Request
@@ -139,6 +141,7 @@ public class GetArtifacts {
 
         // Setup HTTP Headers / Authorization
         get.setHeader("Accept", "application/json");
+        get = ClientInfo.addHttpGetHeaders(get);
         get.setHeader("Authorization", Preferences.getCredentials(context));
         try {
             // Make HTTP Request
@@ -218,6 +221,7 @@ public class GetArtifacts {
 
         // Setup HTTP Headers / Authorization
         get.setHeader("Accept", "application/json");
+        get = ClientInfo.addHttpGetHeaders(get);
         get.setHeader("Authorization", Preferences.getCredentials(context));
         try {
             // Make HTTP Request

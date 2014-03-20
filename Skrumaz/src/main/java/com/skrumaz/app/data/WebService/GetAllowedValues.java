@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.skrumaz.app.classes.AllowedValue;
 import com.skrumaz.app.data.Preferences;
+import com.skrumaz.app.utils.ClientInfo;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -36,6 +37,7 @@ public class GetAllowedValues {
 
         // Setup HTTP Headers / Authorization
         get.setHeader("Accept", "application/json");
+        get = ClientInfo.addHttpGetHeaders(get);
         get.setHeader("Authorization", Preferences.getCredentials(context));
         try {
 
