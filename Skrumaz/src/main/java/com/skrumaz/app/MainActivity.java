@@ -3,6 +3,7 @@ package com.skrumaz.app;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -15,10 +16,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.skrumaz.app.ui.Artifacts;
 import com.skrumaz.app.ui.Home;
 import com.skrumaz.app.ui.Projects;
+import com.skrumaz.app.utils.CircularImageView;
 import com.uservoice.uservoicesdk.Config;
 import com.uservoice.uservoicesdk.UserVoice;
 
@@ -27,12 +31,19 @@ import com.uservoice.uservoicesdk.UserVoice;
  */
 public class MainActivity extends Activity {
     private DrawerLayout mDrawerLayout;
+    private RelativeLayout mDrawer;
     private ListView mDrawerList;
+    private CircularImageView mDrawerProfile;
+    private TextView mDrawerName;
+    private TextView mDrawerEmail;
     private ActionBarDrawerToggle mDrawerToggle;
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private String[] mMenuTitles;
+
+    //https://rally1.rallydev.com/slm/profile/viewThumbnailImage.sp?tSize=150&uid=3011767271
+    //https://rally1.rallydev.com/slm/webservice/v2.0/user?pretty=true
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +53,27 @@ public class MainActivity extends Activity {
         mTitle = mDrawerTitle = getTitle();
         mMenuTitles = getResources().getStringArray(R.array.menu_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mDrawer = (RelativeLayout) findViewById(R.id.left_drawer);
+        mDrawerProfile = (CircularImageView) findViewById(R.id.left_drawer_profile);
+        mDrawerName = (TextView) findViewById(R.id.left_drawer_name);
+        mDrawerEmail = (TextView) findViewById(R.id.left_drawer_email);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer_list);
 
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+
+        // set profile picture view
+        mDrawerProfile.setImageResource(R.drawable.profile);
+        mDrawerProfile.setBorderColor(getResources().getColor(R.color.background));
+        mDrawerProfile.setBorderWidth(5);
+        //mDrawerProfile.addShadow();
+
+        // set profile name
+        mDrawerName.setText("Paito Anderson");
+
+        // set profile email
+        mDrawerEmail.setText("panderso@sylectus.com");
+
         // set up the drawer's list view with items and click listener
         mDrawerList.setAdapter(new DrawerAdapter(MainActivity.this, mMenuTitles));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -141,8 +169,9 @@ public class MainActivity extends Activity {
 
             // Switch fragment
             FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction().replace(R.id.content_frame, fragment);
+            fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, 0, android.R.anim.fade_out, 0);
+            fragmentTransaction.commit();
             // Update title
             setTitle(mMenuTitles[position]);
 
@@ -150,7 +179,7 @@ public class MainActivity extends Activity {
             mDrawerList.setItemChecked(position, true);
 
             // close the drawer
-            mDrawerLayout.closeDrawer(mDrawerList);
+            mDrawerLayout.closeDrawer(mDrawer);
         }
     }
 

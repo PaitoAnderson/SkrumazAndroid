@@ -71,7 +71,7 @@ public class DrawerAdapter extends BaseAdapter {
             TextView textView = (TextView) itemView.findViewById(R.id.text);
 
             // Set the title to the TextView
-            textView.setText("  " + mTitle[position]);
+            textView.setText("  " + mTitle[position].toUpperCase());
 
             // Set icon to the TextView
             if (position == 4) {
