@@ -8,6 +8,7 @@ import com.skrumaz.app.classes.Project;
 import com.skrumaz.app.classes.Workspace;
 import com.skrumaz.app.data.Preferences;
 import com.skrumaz.app.data.Store.Projects;
+import com.skrumaz.app.utils.ClientInfo;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -64,6 +65,7 @@ public class GetProjects {
 
             // Setup HTTP Headers / Authorization
             get.setHeader("Accept", "application/json");
+            get = ClientInfo.addHttpGetHeaders(get);
             get.setHeader("Authorization", Preferences.getCredentials(context));
             try {
                 // Make HTTP Request
@@ -128,6 +130,7 @@ public class GetProjects {
 
         // Setup HTTP Headers / Authorization
         get.setHeader("Accept", "application/json");
+        get = ClientInfo.addHttpGetHeaders(get);
         get.setHeader("Authorization", Preferences.getCredentials(context));
         try {
             // Make HTTP Request

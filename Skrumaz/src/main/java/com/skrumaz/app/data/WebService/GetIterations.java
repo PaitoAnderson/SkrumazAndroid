@@ -8,6 +8,7 @@ import com.skrumaz.app.classes.Iteration;
 import com.skrumaz.app.classes.Project;
 import com.skrumaz.app.data.Preferences;
 import com.skrumaz.app.data.Store.Iterations;
+import com.skrumaz.app.utils.ClientInfo;
 import com.skrumaz.app.utils.IterationStatusLookup;
 
 import org.apache.http.HttpResponse;
@@ -63,6 +64,7 @@ public class GetIterations {
 
             // Setup HTTP Headers / Authorization
             get.setHeader("Accept", "application/json");
+            get = ClientInfo.addHttpGetHeaders(get);
             get.setHeader("Authorization", Preferences.getCredentials(context));
             try {
                 // Make HTTP Request
@@ -125,6 +127,7 @@ public class GetIterations {
 
         // Setup HTTP Headers / Authorization
         get.setHeader("Accept", "application/json");
+        get = ClientInfo.addHttpGetHeaders(get);
         get.setHeader("Authorization", Preferences.getCredentials(context));
         try {
             // Make HTTP Request

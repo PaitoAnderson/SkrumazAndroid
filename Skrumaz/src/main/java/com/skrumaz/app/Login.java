@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.skrumaz.app.data.Preferences;
+import com.skrumaz.app.utils.ClientInfo;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -139,6 +140,7 @@ public class Login extends Activity {
 
             // Setup HTTP Headers / Authorization
             get.setHeader("Accept", "application/json");
+            get = ClientInfo.addHttpGetHeaders(get);
             get.setHeader("Authorization", "Basic " + Base64.encodeToString((username.getText() + ":" + password.getText()).getBytes(), Base64.URL_SAFE | Base64.NO_WRAP));
 
             try {

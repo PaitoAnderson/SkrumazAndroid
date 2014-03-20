@@ -6,6 +6,7 @@ import android.util.Log;
 import com.skrumaz.app.classes.CreateAuthorization;
 import com.skrumaz.app.classes.CreateResult;
 import com.skrumaz.app.data.Preferences;
+import com.skrumaz.app.utils.ClientInfo;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -38,6 +39,7 @@ public class PutDomainObject {
 
         // Setup HTTP Headers / Authorization
         put.setHeader("Accept", "application/json");
+        put = ClientInfo.addHttpPutHeaders(put);
         put.setHeader("Authorization", Preferences.getCredentials(context));
 
         try {
