@@ -124,9 +124,9 @@ public class GetProjects {
 
         // https://rally1.rallydev.com/slm/webservice/v2.0/project?query=(Parent%20=%20%22https://rally1.rallydev.com/slm/webservice/v2.0/project/4331522546%22)&fetch=Children&pretty=true
 
-        HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/workspace/" + workspace.getOid() + "/Projects?fetch=Name,ObjectID,State&pagesize=100");
+        HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/workspace/" + workspace.getOid() + "/Projects?fetch=Name,ObjectID,State&pagesize=200&order=Name");
 
-        Log.d("GetProjects", "https://rally1.rallydev.com/slm/webservice/v2.0/workspace/" + workspace.getOid() + "/Projects?fetch=Name,ObjectID,State&pagesize=100&pretty=true");
+        Log.d("GetProjects", "https://rally1.rallydev.com/slm/webservice/v2.0/workspace/" + workspace.getOid() + "/Projects?fetch=Name,ObjectID,State&pagesize=200&order=Name&pretty=true");
 
         // Setup HTTP Headers / Authorization
         get.setHeader("Accept", "application/json");
