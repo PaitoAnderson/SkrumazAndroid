@@ -119,56 +119,72 @@ public class GetProjects {
         // Update Main View with status
         ((ProjectList) context).SetProgress("Getting Projects...");
 
-        // Setup HTTP Request
-        DefaultHttpClient httpClient = new DefaultHttpClient();
+        int startIndex = 1;
+        int pageSize = 200;
+        int currentIndex = pageSize;
+        boolean continueRequests = true;
 
-        // https://rally1.rallydev.com/slm/webservice/v2.0/project?query=(Parent%20=%20%22https://rally1.rallydev.com/slm/webservice/v2.0/project/4331522546%22)&fetch=Children&pretty=true
+        // Loop until we have all the Projects
+        while (continueRequests) {
 
-        HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/workspace/" + workspace.getOid() + "/Projects?fetch=Name,ObjectID,State&pagesize=200&order=Name");
+            // Set to not loop
+            continueRequests = false;
 
-        Log.d("GetProjects", "https://rally1.rallydev.com/slm/webservice/v2.0/workspace/" + workspace.getOid() + "/Projects?fetch=Name,ObjectID,State&pagesize=200&order=Name&pretty=true");
+            // Setup HTTP Request
+            DefaultHttpClient httpClient = new DefaultHttpClient();
 
-        // Setup HTTP Headers / Authorization
-        get.setHeader("Accept", "application/json");
-        get = ClientInfo.addHttpGetHeaders(get);
-        get.setHeader("Authorization", Preferences.getCredentials(context));
-        try {
-            // Make HTTP Request
-            HttpResponse response = httpClient.execute(get);
-            StatusLine statusLine = response.getStatusLine();
-            if (statusLine.getStatusCode() == HttpURLConnection.HTTP_OK) {
+            HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/workspace/" + workspace.getOid() + "/Projects?fetch=Name,ObjectID,State&start=" + startIndex + "&pagesize=" + pageSize + "&order=Name");
+                 Log.d("GetProjects", "https://rally1.rallydev.com/slm/webservice/v2.0/workspace/" + workspace.getOid() + "/Projects?fetch=Name,ObjectID,State&start=" + startIndex + "&pagesize=" + pageSize + "&order=Name&pretty=true");
 
-                // Parse JSON Response
-                BufferedReader streamReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-                StringBuilder responseStrBuilder = new StringBuilder();
-                String inputStr;
-                while ((inputStr = streamReader.readLine()) != null) {
-                    responseStrBuilder.append(inputStr);
+            // Setup HTTP Headers / Authorization
+            get.setHeader("Accept", "application/json");
+            get = ClientInfo.addHttpGetHeaders(get);
+            get.setHeader("Authorization", Preferences.getCredentials(context));
+            try {
+                // Make HTTP Request
+                HttpResponse response = httpClient.execute(get);
+                StatusLine statusLine = response.getStatusLine();
+                if (statusLine.getStatusCode() == HttpURLConnection.HTTP_OK) {
+
+                    // Parse JSON Response
+                    BufferedReader streamReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+                    StringBuilder responseStrBuilder = new StringBuilder();
+                    String inputStr;
+                    while ((inputStr = streamReader.readLine()) != null) {
+                        responseStrBuilder.append(inputStr);
+                    }
+
+                    // Get total number of projects
+                    int totalResultCount = new JSONObject(responseStrBuilder.toString()).getJSONObject("QueryResult").getInt("TotalResultCount");
+                    if (totalResultCount > currentIndex) {
+                        startIndex = startIndex + pageSize;
+                        currentIndex = currentIndex + pageSize;
+                        continueRequests = true;
+                    }
+
+                    // Get array of Projects for this Workspace
+                    JSONArray projectArray = new JSONObject(responseStrBuilder.toString()).getJSONObject("QueryResult").getJSONArray("Results");
+
+                    // Iterate though Projects
+                    for (int i = 0; i < projectArray.length(); i++) {
+                        Project project = new Project();
+                        project.setOid(projectArray.getJSONObject(i).getLong("ObjectID"));
+                        project.setName(projectArray.getJSONObject(i).getString("Name"));
+
+                        // Add iteration to list
+                        projects.add(project);
+                    }
+
+                } else {
+                    ((ProjectList) context).SetError(false, statusLine.getReasonPhrase());
+                    Log.d("GetProjects", "Project Error: " + statusLine.getReasonPhrase());
                 }
 
-                // Get array of Projects for this Workspace
-                JSONArray projectArray = new JSONObject(responseStrBuilder.toString()).getJSONObject("QueryResult").getJSONArray("Results");
-
-                // Iterate though Projects
-                for (int i = 0; i < projectArray.length(); i++) {
-                    Project project = new Project();
-                    project.setOid(projectArray.getJSONObject(i).getLong("ObjectID"));
-                    project.setName(projectArray.getJSONObject(i).getString("Name"));
-
-                    // Add iteration to list
-                    projects.add(project);
-
-                }
-
-            } else {
-                ((ProjectList) context).SetError(false, statusLine.getReasonPhrase());
-                Log.d("GetProjects", "Project Error: " + statusLine.getReasonPhrase());
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }
