@@ -115,7 +115,7 @@ public class Artifacts extends Database {
         SQLiteDatabase db = this.getReadableDatabase();
 
         // Populate artifacts from Database
-        Cursor cursor = db.query(Table.ARTIFACTS + " WHERE (" + Field.ITERATION_ID + " = " + iterationId + ") Order BY " + Field.RANK + " ASC",
+        Cursor cursor = db.query(Table.ARTIFACTS + " WHERE (" + Field.ITERATION_ID + " = " + iterationId + ") ORDER BY " + Field.RANK + " ASC",
                 new String[] { "*" }, null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {

@@ -42,7 +42,7 @@ dependencies {
     compile project(':Skrumaz:libs:UserVoiceSDK')
     compile project(':Skrumaz:libs:ViewPageIndicator')
     compile('com.github.chrisbanes.actionbarpulltorefresh:library:+')
-    compile('de.keyboardsurfer.android.widget:crouton:1.8.3') {
+    compile('de.keyboardsurfer.android.widget:crouton:+') {
         exclude group: 'com.google.android', module: 'support-v4'
     }
     compile files('libs/libGoogleAnalyticsServices.jar')

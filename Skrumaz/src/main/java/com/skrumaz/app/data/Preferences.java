@@ -35,6 +35,12 @@ public class Preferences {
         return prefs.getString("username", "");
     }
 
+    // Get RallyDev Password
+    public static String getPassword(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        return prefs.getString("password", "");
+    }
+
     // Check if app is setup
     public static boolean isLoggedIn(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);

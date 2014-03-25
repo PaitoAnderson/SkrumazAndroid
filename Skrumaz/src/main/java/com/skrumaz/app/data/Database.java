@@ -21,25 +21,33 @@ public class Database extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 5;
 
     // Database Create SQL
-    private static final String CREATE_TABLE_WORKSPACES = "CREATE TABLE " + Table.WORKSPACES +
-            "(" + Field.WORKSPACE_ID + " LONG PRIMARY KEY, " + Field.TITLE + " TEXT, " + Field.REFRESH_DATE + " LONG)";
+    private static final String CREATE_TABLE_WORKSPACES = "CREATE TABLE " + Table.WORKSPACES + "("
+            + Field.WORKSPACE_ID + " LONG PRIMARY KEY, " + Field.TITLE + " TEXT, "
+            + Field.REFRESH_DATE + " LONG)";
 
-    private static final String CREATE_TABLE_PROJECTS = "CREATE TABLE " + Table.PROJECTS +
-            "(" + Field.PROJECT_ID + " LONG PRIMARY KEY, " + Field.WORKSPACE_ID + " LONG, " + Field.TITLE + " TEXT, " + Field.REFRESH_DATE + " LONG, " + Field.UPDATED + " CHAR(1))";
+    private static final String CREATE_TABLE_PROJECTS = "CREATE TABLE " + Table.PROJECTS + "("
+            + Field.PROJECT_ID + " LONG PRIMARY KEY, " + Field.WORKSPACE_ID + " LONG, "
+            + Field.TITLE + " TEXT, " + Field.REFRESH_DATE + " LONG, "
+            + Field.UPDATED + " CHAR(1))";
 
-    private static final String CREATE_TABLE_ITERATIONS = "CREATE TABLE " + Table.ITERATIONS +
-            "(" + Field.ITERATION_ID + " LONG PRIMARY KEY, " + Field.PROJECT_ID + " LONG, " + Field.TITLE + " TEXT, " + Field.REFRESH_DATE + " LONG, " + Field.ITERATION_STATUS + " VARCHAR(12), " + Field.UPDATED + " CHAR(1))";
+    private static final String CREATE_TABLE_ITERATIONS = "CREATE TABLE " + Table.ITERATIONS + "("
+            + Field.ITERATION_ID + " LONG PRIMARY KEY, " + Field.PROJECT_ID + " LONG, "
+            + Field.TITLE + " TEXT, " + Field.REFRESH_DATE + " LONG, "
+            + Field.ITERATION_STATUS + " VARCHAR(12), " + Field.UPDATED + " CHAR(1))";
 
-    private static final String CREATE_TABLE_ARTIFACTS = "CREATE TABLE " + Table.ARTIFACTS +
-            "(" + Field.FORMATTED_ID + " VARCHAR(15) PRIMARY KEY, " + Field.ITERATION_ID + " LONG, " + Field.TITLE + " TEXT, " +
-    Field.BLOCKED + " BOOLEAN, " + Field.RANK + " VARCHAR(65), " + Field.STATUS + " VARCHAR(12), " + Field.MODIFIED_DATE + " LONG)";
+    private static final String CREATE_TABLE_ARTIFACTS = "CREATE TABLE " + Table.ARTIFACTS + "("
+            + Field.FORMATTED_ID + " VARCHAR(15) PRIMARY KEY, " + Field.ITERATION_ID + " LONG, "
+            + Field.TITLE + " TEXT, " + Field.BLOCKED + " BOOLEAN, "
+            + Field.RANK + " VARCHAR(65), " + Field.STATUS + " VARCHAR(12), "
+            + Field.MODIFIED_DATE + " LONG)";
 
-    private static final String CREATE_TABLE_TASKS = "CREATE TABLE " + Table.TASKS +
-            "(" + Field.FORMATTED_ID + " VARCHAR(15) PRIMARY KEY, " + Field.PARENT_FORMATTED_ID + " VARCHAR(15), " + Field.TITLE + " TEXT, " +
-    Field.BLOCKED + " BOOLEAN, " + Field.STATUS + " VARCHAR(12), " + Field.MODIFIED_DATE + " LONG)";
+    private static final String CREATE_TABLE_TASKS = "CREATE TABLE " + Table.TASKS + "("
+            + Field.FORMATTED_ID + " VARCHAR(15) PRIMARY KEY, " + Field.PARENT_FORMATTED_ID + " VARCHAR(15), "
+            + Field.TITLE + " TEXT, " + Field.BLOCKED + " BOOLEAN, "
+            + Field.STATUS + " VARCHAR(12), " + Field.MODIFIED_DATE + " LONG)";
 
-    private static final String CREATE_TABLE_TYPE_DEFINITIONS = "CREATE TABLE " + Table.TYPE_DEFINITIONS +
-            "(" + Field.DEFINITION_ID + " LONG PRIMARY KEY, " + Field.ELEMENT_NAME + " VARCHAR(256))";
+    private static final String CREATE_TABLE_TYPE_DEFINITIONS = "CREATE TABLE " + Table.TYPE_DEFINITIONS + "("
+            + Field.DEFINITION_ID + " LONG PRIMARY KEY, " + Field.ELEMENT_NAME + " VARCHAR(256))";
 
     // Default Constructor
     public Database(Context context) {
