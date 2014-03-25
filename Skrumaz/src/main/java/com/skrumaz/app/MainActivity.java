@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
@@ -19,6 +21,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.skrumaz.app.classes.User;
+import com.skrumaz.app.data.Store.Users;
+import com.skrumaz.app.data.WebService.GetUser;
 import com.skrumaz.app.ui.Artifacts;
 import com.skrumaz.app.ui.Home;
 import com.skrumaz.app.ui.Projects;
@@ -33,14 +38,17 @@ public class MainActivity extends Activity {
     private DrawerLayout mDrawerLayout;
     private RelativeLayout mDrawer;
     private ListView mDrawerList;
-    private CircularImageView mDrawerProfile;
-    private TextView mDrawerName;
-    private TextView mDrawerEmail;
     private ActionBarDrawerToggle mDrawerToggle;
-
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private String[] mMenuTitles;
+
+    private User user;
+    private CircularImageView mDrawerProfile;
+    private TextView mDrawerName;
+    private TextView mDrawerEmail;
+
+    private Context mContext;
 
     //https://rally1.rallydev.com/slm/profile/viewThumbnailImage.sp?tSize=150&uid=3011767271
     //https://rally1.rallydev.com/slm/webservice/v2.0/user?pretty=true
@@ -62,17 +70,18 @@ public class MainActivity extends Activity {
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-        // set profile picture view
-        mDrawerProfile.setImageResource(R.drawable.profile);
-        mDrawerProfile.setBorderColor(getResources().getColor(R.color.background));
-        mDrawerProfile.setBorderWidth(5);
-        //mDrawerProfile.addShadow();
+        // Set Context variable to self
+        mContext = this;
 
-        // set profile name
-        mDrawerName.setText("Paito Anderson");
+        // Get User from Database
+        Users users = new Users(mContext);
+        user = users.getUser();
 
-        // set profile email
-        mDrawerEmail.setText("panderso@sylectus.com");
+        if (user == null) {
+            new UpdateUser().execute();
+        } else {
+            populateUser();
+        }
 
         // set up the drawer's list view with items and click listener
         mDrawerList.setAdapter(new DrawerAdapter(MainActivity.this, mMenuTitles));
@@ -187,6 +196,48 @@ public class MainActivity extends Activity {
     public void setTitle(CharSequence title) {
         mTitle = title;
         getActionBar().setTitle(mTitle);
+    }
+
+    private void populateUser() {
+        if (user != null) {
+            // set profile picture view
+            try {
+                mDrawerProfile.setImageBitmap(user.getPhotoBitmap());
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+            mDrawerProfile.setBorderColor(getResources().getColor(R.color.primary_color));
+            mDrawerProfile.setBorderWidth(5);
+            //mDrawerProfile.addShadow();
+
+            // set profile name
+            mDrawerName.setText(user.getName());
+
+            // set profile email
+            mDrawerEmail.setText(user.getEmail());
+        }
+    }
+
+    private class UpdateUser extends AsyncTask<String, Integer, Boolean> {
+        @Override
+        protected void onPreExecute() {
+            // TODO: Present user with a loading spinner
+
+            super.onPreExecute();
+        }
+        @Override
+        protected Boolean doInBackground(String... params) {
+            user = new GetUser().FetchUser(mContext);
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Boolean result) {
+            // TODO: Remove loading spinner
+
+            populateUser();
+
+            super.onPostExecute(result);
+        }
     }
 
     /**
