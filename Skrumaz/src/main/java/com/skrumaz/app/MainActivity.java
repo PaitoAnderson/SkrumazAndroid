@@ -50,8 +50,7 @@ public class MainActivity extends Activity {
 
     private Context mContext;
 
-    //https://rally1.rallydev.com/slm/profile/viewThumbnailImage.sp?tSize=150&uid=3011767271
-    //https://rally1.rallydev.com/slm/webservice/v2.0/user?pretty=true
+    // TODO: OnLongClickListener for Profile Picture to update User Info
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

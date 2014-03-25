@@ -127,6 +127,7 @@ public class GetIterations {
 
         // Setup HTTP Headers / Authorization
         get.setHeader("Accept", "application/json");
+        get = ClientInfo.addHttpGetHeaders(get);
         get.setHeader("Authorization", Preferences.getCredentials(context));
         try {
             // Make HTTP Request

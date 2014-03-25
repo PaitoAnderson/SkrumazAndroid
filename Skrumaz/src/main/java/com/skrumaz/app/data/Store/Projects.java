@@ -88,7 +88,7 @@ public class Projects extends Database {
         SQLiteDatabase db = this.getReadableDatabase();
 
         // Populate projects from Database
-        Cursor cursor = db.query(Table.PROJECTS + " WHERE " + Field.WORKSPACE_ID + " = " + workspaceId + " Order BY " + Field.PROJECT_ID + " DESC",
+        Cursor cursor = db.query(Table.PROJECTS + " WHERE (" + Field.WORKSPACE_ID + " = " + workspaceId + ") ORDER BY " + Field.TITLE + " ASC",
                 new String[] { "*" }, null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {
