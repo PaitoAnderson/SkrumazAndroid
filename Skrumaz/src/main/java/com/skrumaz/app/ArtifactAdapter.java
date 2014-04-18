@@ -20,7 +20,7 @@ import java.util.List;
  *
  * Handles the display for User Stories and Defects in an Iteration
  */
-class ArtifactAdapter extends BaseExpandableListAdapter {
+public class ArtifactAdapter extends BaseExpandableListAdapter {
 
     private final List<Artifact> artifacts;
     private LayoutInflater inflater;
