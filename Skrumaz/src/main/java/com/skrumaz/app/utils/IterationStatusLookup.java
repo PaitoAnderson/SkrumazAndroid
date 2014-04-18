@@ -42,6 +42,11 @@ public class IterationStatusLookup {
     }
 
     public static int iterationStatusToRes(IterationStatus status) {
+
+        if (status == null) {
+            return R.drawable.pg;
+        }
+
         switch (status)
         {
             case RD_PLANNED:

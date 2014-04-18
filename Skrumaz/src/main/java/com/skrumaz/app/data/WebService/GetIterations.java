@@ -118,6 +118,13 @@ public class GetIterations {
         // Update Main View with status
         ((IterationList)context).SetProgress("Getting Iterations...");
 
+        // Add Backlog Link
+        //Iteration backlog = new Iteration();
+        //backlog.setName("Backlog");
+        //backlog.setOid(Long.parseLong("0"));
+        //backlog.setIterationStatus(IterationStatus.RD_PLANNED);
+        //iterations.add(backlog);
+
         // Setup HTTP Request
         DefaultHttpClient httpClient = new DefaultHttpClient();
 
