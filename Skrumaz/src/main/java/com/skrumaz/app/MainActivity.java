@@ -42,6 +42,9 @@ public class MainActivity extends Activity {
     private CharSequence mTitle;
     private String[] mMenuTitles;
 
+    public enum Fragments { TASKS, ITERATIONS, PROJECTS }
+    public Fragments mFragmentAttached;
+
     private User user;
     private CircularImageView mDrawerProfile;
     private TextView mDrawerName;
@@ -178,22 +181,11 @@ public class MainActivity extends Activity {
                 startActivity(createWorkspace);
                 overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
                 break;
-            case R.id.action_settings:
-                // Launch Setting Activity
-                startActivity(new Intent(this, Settings.class));
-                break;
-            case R.id.action_help:
-                // UserVoice library
-                UserVoice.init(new Config("skrumaz.uservoice.com"), this);
-
-                // Launch UserVoice
-                UserVoice.launchUserVoice(this);
-                break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    /* The click listner for ListView in the navigation drawer */
+    /* The click listener for ListView in the navigation drawer */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -235,6 +227,7 @@ public class MainActivity extends Activity {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction().replace(R.id.content_frame, fragment);
             fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, 0, android.R.anim.fade_out, 0);
             fragmentTransaction.commit();
+
             // Update title
             setTitle(mMenuTitles[position]);
 
@@ -302,6 +295,48 @@ public class MainActivity extends Activity {
             Intent welcome = new Intent(this, Welcome.class);
             startActivity(welcome);
             finish(); // Remove Activity from Stack
+        }
+    }
+
+    public void SetProgress(final String processMsg) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                switch (mFragmentAttached)
+                {
+                    case TASKS:
+                        Tasks tasksFragment = (Tasks) getFragmentManager().findFragmentById(R.id.content_frame);
+                        tasksFragment.progressText.setText(processMsg);
+                        break;
+                    case ITERATIONS:
+                        Iterations iterationsFragment = (Iterations) getFragmentManager().findFragmentById(R.id.content_frame);
+                        iterationsFragment.progressText.setText(processMsg);
+                        break;
+                    case PROJECTS:
+                        Projects projectsFragment = (Projects) getFragmentManager().findFragmentById(R.id.content_frame);
+                        projectsFragment.progressText.setText(processMsg);
+                        break;
+                }
+            }
+        });
+    }
+
+    public void SetError(final String errorMsg) {
+        switch (mFragmentAttached) {
+            case TASKS:
+                Tasks tasksFragment = (Tasks) getFragmentManager().findFragmentById(R.id.content_frame);
+                tasksFragment.continueRequests = false;
+                tasksFragment.breakingError = errorMsg;
+                break;
+            case ITERATIONS:
+                Tasks iterationsFragment = (Tasks) getFragmentManager().findFragmentById(R.id.content_frame);
+                iterationsFragment.continueRequests = false;
+                iterationsFragment.breakingError = errorMsg;
+                break;
+            case PROJECTS:
+                Tasks projectsFragment = (Tasks) getFragmentManager().findFragmentById(R.id.content_frame);
+                projectsFragment.continueRequests = false;
+                projectsFragment.breakingError = errorMsg;
+                break;
         }
     }
 

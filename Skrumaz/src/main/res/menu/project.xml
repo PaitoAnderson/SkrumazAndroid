@@ -15,11 +15,9 @@
         </menu>
     </item>
 
-
     <item android:id="@+id/action_refresh"
+        android:title="@string/action_refresh"
         android:orderInCategory="100"
-        android:showAsAction="ifRoom"
         android:icon="@drawable/ic_refresh"
-        android:title="@string/action_refresh" />
-
+        android:showAsAction="never" />
 </menu>

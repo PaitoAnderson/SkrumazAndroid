@@ -3,7 +3,7 @@ package com.skrumaz.app.data.WebService;
 import android.content.Context;
 import android.util.Log;
 
-import com.skrumaz.app.IterationList;
+import com.skrumaz.app.MainActivity;
 import com.skrumaz.app.classes.Iteration;
 import com.skrumaz.app.classes.Project;
 import com.skrumaz.app.data.Preferences;
@@ -35,6 +35,9 @@ public class GetIterations {
 
     public List<Iteration> FetchItems(Context context) {
 
+        // Set Calling Fragment
+        ((MainActivity) context).mFragmentAttached = MainActivity.Fragments.ITERATIONS;
+
         // Get ProjectId to use
         Long ProjectId = Preferences.getProjectId(context, false);
 
@@ -54,7 +57,7 @@ public class GetIterations {
         } else {
 
             // Update Main View with status
-            ((IterationList)context).SetProgress("Getting Current Project...");
+            ((MainActivity)context).SetProgress("Getting Current Project...");
 
             // Setup HTTP Request
             DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -98,7 +101,7 @@ public class GetIterations {
                     Preferences.setWorkspaceId(context, jsonIteration.getJSONObject("Iteration").getJSONObject("Workspace").getLong("ObjectID"));
 
                 } else {
-                    ((IterationList)context).SetError(false, statusLine.getReasonPhrase());
+                    ((MainActivity)context).SetError(statusLine.getReasonPhrase());
                     Log.e("GetIterations", "Project Error: " + statusLine.getReasonPhrase());
                 }
 
@@ -116,7 +119,7 @@ public class GetIterations {
     private void GetProjectIterations(Context context) {
 
         // Update Main View with status
-        ((IterationList)context).SetProgress("Getting Iterations...");
+        ((MainActivity)context).SetProgress("Getting Iterations...");
 
         // Add Backlog Link
         //Iteration backlog = new Iteration();
@@ -166,7 +169,7 @@ public class GetIterations {
                 }
 
             } else {
-                ((IterationList)context).SetError(false, statusLine.getReasonPhrase());
+                ((MainActivity)context).SetError(statusLine.getReasonPhrase());
                 Log.d("GetIterations", "Iteration Error: " + statusLine.getReasonPhrase());
             }
 
