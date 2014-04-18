@@ -8,10 +8,9 @@
     <string name="drawer_close">Close navigation drawer</string>
 
     <string-array name="menu_array">
-        <item>Home</item>
-        <item>Projects</item>
+        <item>Tasks</item>
         <item>Iterations</item>
-        <item>Releases</item>
+        <item>Projects</item>
         <item>Settings</item>
         <item>Help</item>
     </string-array>

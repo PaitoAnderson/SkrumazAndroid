@@ -155,7 +155,7 @@ public class Login extends Activity {
                     Preferences.setCredentials(getBaseContext(), username.getText().toString(), password.getText().toString());
 
                     // Sent to ArtifactList
-                    Intent mainActivity = new Intent(getApplicationContext(), ArtifactList.class);
+                    Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(mainActivity);
                     finish(); // Remove Activity from Stack
                 } else {

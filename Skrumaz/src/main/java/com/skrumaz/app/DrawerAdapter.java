@@ -50,7 +50,7 @@ public class DrawerAdapter extends BaseAdapter {
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        if (position < 4)
+        if (position < 3)
         {
             itemView = inflater.inflate(R.layout.drawer_item_noicon, parent,
                     false);
@@ -74,10 +74,10 @@ public class DrawerAdapter extends BaseAdapter {
             textView.setText("  " + mTitle[position].toUpperCase());
 
             // Set icon to the TextView
-            if (position == 4) {
+            if (position == 3) {
                 textView.setCompoundDrawablesWithIntrinsicBounds(
                         R.drawable.ic_settings, 0, 0, 0);
-            } else if (position == 5) {
+            } else if (position == 4) {
                 textView.setCompoundDrawablesWithIntrinsicBounds(
                         R.drawable.ic_help, 0, 0, 0);
             }

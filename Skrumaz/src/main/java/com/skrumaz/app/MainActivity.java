@@ -12,8 +12,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,11 +20,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.skrumaz.app.classes.User;
+import com.skrumaz.app.data.Preferences;
 import com.skrumaz.app.data.Store.Users;
 import com.skrumaz.app.data.WebService.GetUser;
-import com.skrumaz.app.ui.Artifacts;
-import com.skrumaz.app.ui.Home;
+import com.skrumaz.app.ui.Iterations;
 import com.skrumaz.app.ui.Projects;
+import com.skrumaz.app.ui.Tasks;
 import com.skrumaz.app.utils.CircularImageView;
 import com.uservoice.uservoicesdk.Config;
 import com.uservoice.uservoicesdk.UserVoice;
@@ -115,13 +114,6 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.artifact, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // The action bar home/up action should open or close the drawer.
         // ActionBarDrawerToggle will take care of this.
@@ -130,9 +122,75 @@ public class MainActivity extends Activity {
         }
         // Handle action buttons
         switch (item.getItemId()) {
-            default:
-                return super.onOptionsItemSelected(item);
+            case R.id.create_us:
+                // Create User Story
+                Intent createUs = new Intent(this, Create.class);
+                createUs.putExtra("CreateName", mContext.getResources().getString(R.string.action_us));
+                createUs.putExtra("CreateType", "HierarchicalRequirement");
+                startActivity(createUs);
+                overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
+                break;
+            case R.id.create_de:
+                // Create Defect
+                Intent createDe = new Intent(this, Create.class);
+                createDe.putExtra("CreateName", mContext.getResources().getString(R.string.action_de));
+                createDe.putExtra("CreateType", "Defect");
+                startActivity(createDe);
+                overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
+                break;
+            case R.id.create_ds:
+                // Create Defect Suite
+                Intent createDs = new Intent(this, Create.class);
+                createDs.putExtra("CreateName", mContext.getResources().getString(R.string.action_ds));
+                createDs.putExtra("CreateType", "DefectSuite");
+                startActivity(createDs);
+                overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
+                break;
+            case R.id.create_ts:
+                // Create Defect Suite
+                Intent createTs = new Intent(this, Create.class);
+                createTs.putExtra("CreateName", mContext.getResources().getString(R.string.action_ts));
+                createTs.putExtra("CreateType", "TestSet");
+                startActivity(createTs);
+                overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
+                break;
+            case R.id.create_iteration:
+                // Create Iteration
+                Intent createIteration = new Intent(this, Create.class);
+                createIteration.putExtra("CreateName", mContext.getResources().getString(R.string.action_iteration));
+                createIteration.putExtra("CreateType", "Iteration");
+                startActivity(createIteration);
+                overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
+                break;
+            case R.id.create_project:
+                // Create Project
+                Intent createProject = new Intent(this, Create.class);
+                createProject.putExtra("CreateName", mContext.getResources().getString(R.string.action_project));
+                createProject.putExtra("CreateType", "Project");
+                startActivity(createProject);
+                overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
+                break;
+            case R.id.create_workspace:
+                // Create Workspace
+                Intent createWorkspace = new Intent(this, Create.class);
+                createWorkspace.putExtra("CreateName", mContext.getResources().getString(R.string.action_workspace));
+                createWorkspace.putExtra("CreateType", "Workspace");
+                startActivity(createWorkspace);
+                overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
+                break;
+            case R.id.action_settings:
+                // Launch Setting Activity
+                startActivity(new Intent(this, Settings.class));
+                break;
+            case R.id.action_help:
+                // UserVoice library
+                UserVoice.init(new Config("skrumaz.uservoice.com"), this);
+
+                // Launch UserVoice
+                UserVoice.launchUserVoice(this);
+                break;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     /* The click listner for ListView in the navigation drawer */
@@ -149,22 +207,19 @@ public class MainActivity extends Activity {
 
         switch (position) {
             case 0:
-                fragment = new Home();
+                fragment = new Tasks();
                 break;
             case 1:
-                fragment = new Projects();
+                fragment = new Iterations();
                 break;
             case 2:
-                fragment = new Artifacts();
+                fragment = new Projects();
                 break;
             case 3:
-                fragment = new Artifacts();
-                break;
-            case 4:
                 Intent intent = new Intent(this, Settings.class);
                 startActivity(intent);
                 break;
-            case 5:
+            case 4:
                 // UserVoice library
                 UserVoice.init(new Config("skrumaz.uservoice.com"), this);
 
@@ -236,6 +291,17 @@ public class MainActivity extends Activity {
             populateUser();
 
             super.onPostExecute(result);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!Preferences.isLoggedIn(mContext)) {
+            Intent welcome = new Intent(this, Welcome.class);
+            startActivity(welcome);
+            finish(); // Remove Activity from Stack
         }
     }
 

@@ -16,18 +16,18 @@ import com.skrumaz.app.R;
 /**
  * Created by Paito Anderson on 2014-03-16.
  */
-public class Projects extends Fragment {
+public class Iterations extends Fragment {
 
     private Context mContext;
 
-    public Projects() {
+    public Iterations() {
         // Empty constructor required for fragment subclasses
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Set Title
-        getActivity().setTitle("Projects");
+        getActivity().setTitle("Iterations");
 
         // Get Context
         mContext = getActivity();
@@ -36,12 +36,12 @@ public class Projects extends Fragment {
         setHasOptionsMenu(true);
 
         // Return View
-        return inflater.inflate(R.layout.activity_project_list, container, false);
+        return inflater.inflate(R.layout.activity_iteration_list, container, false);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.project, menu);
+        inflater.inflate(R.menu.iteration, menu);
         super.onCreateOptionsMenu(menu,inflater);
     }
 
