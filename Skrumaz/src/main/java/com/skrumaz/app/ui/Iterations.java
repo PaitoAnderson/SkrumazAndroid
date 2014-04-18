@@ -17,6 +17,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.Tracker;
 import com.skrumaz.app.IterationAdapter;
 import com.skrumaz.app.R;
 import com.skrumaz.app.classes.Iteration;
@@ -43,6 +47,7 @@ public class Iterations extends Fragment implements OnRefreshListener {
     private Context mContext;
     private List<Iteration> iterations = new ArrayList<Iteration>();
     private PullToRefreshLayout mPullToRefreshLayout;
+    private Tracker mTracker;
 
     public TextView progressText;
     public Boolean continueRequests = true;
@@ -119,6 +124,9 @@ public class Iterations extends Fragment implements OnRefreshListener {
 
         // Initiate API Requests
         populateListView(false);
+
+        // Google Analytics
+        mTracker = EasyTracker.getInstance(getActivity());
     }
 
     @Override
@@ -234,5 +242,13 @@ public class Iterations extends Fragment implements OnRefreshListener {
         // Notify refresh finished
         mPullToRefreshLayout.setRefreshComplete();
         iterationAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        mTracker.set(Fields.SCREEN_NAME, "Iterations");
+        mTracker.send(MapBuilder.createAppView().build());
     }
 }

@@ -17,6 +17,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.Tracker;
 import com.skrumaz.app.ArtifactAdapter;
 import com.skrumaz.app.R;
 import com.skrumaz.app.classes.Artifact;
@@ -45,6 +49,7 @@ public class Tasks extends Fragment implements OnRefreshListener {
     private Context mContext;
     private List<Artifact> artifacts = new ArrayList<Artifact>();
     private PullToRefreshLayout mPullToRefreshLayout;
+    private Tracker mTracker;
 
     public TextView progressText;
     public Boolean continueRequests = true;
@@ -105,6 +110,9 @@ public class Tasks extends Fragment implements OnRefreshListener {
 
         // Initiate API Requests
         populateExpandableListView(false);
+
+        // Google Analytics
+        mTracker = EasyTracker.getInstance(getActivity());
     }
 
     @Override
@@ -289,8 +297,11 @@ public class Tasks extends Fragment implements OnRefreshListener {
         }
     }
 
-    public void SetError2(final String errorMsg) {
-        continueRequests = false;
-        breakingError = errorMsg;
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        mTracker.set(Fields.SCREEN_NAME, "Tasks");
+        mTracker.send(MapBuilder.createAppView().build());
     }
 }

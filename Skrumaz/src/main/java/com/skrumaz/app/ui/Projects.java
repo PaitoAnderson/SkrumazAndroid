@@ -17,6 +17,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.Tracker;
 import com.skrumaz.app.ProjectAdapter;
 import com.skrumaz.app.R;
 import com.skrumaz.app.WorkspaceAdapter;
@@ -52,6 +56,7 @@ public class Projects extends Fragment implements OnRefreshListener, ActionBar.O
     private List<Workspace> dropdownValues;
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
     private PullToRefreshLayout mPullToRefreshLayout;
+    private Tracker mTracker;
 
     public TextView progressText;
     public Boolean continueRequests = true;
@@ -130,6 +135,9 @@ public class Projects extends Fragment implements OnRefreshListener, ActionBar.O
 
         // Initiate API Requests
         populateListView(false);
+
+        // Google Analytics
+        mTracker = EasyTracker.getInstance(getActivity());
     }
 
     @Override
@@ -334,5 +342,13 @@ public class Projects extends Fragment implements OnRefreshListener, ActionBar.O
             int currentPosition = Workspace.findOid(dropdownValues, currentWorkspace);
             actionBar.setSelectedNavigationItem(currentPosition);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        mTracker.set(Fields.SCREEN_NAME, "Projects");
+        mTracker.send(MapBuilder.createAppView().build());
     }
 }

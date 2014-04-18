@@ -10,7 +10,9 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.view.MenuItem;
 
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.Tracker;
 import com.skrumaz.app.data.Preferences;
 import com.skrumaz.app.data.Store.Artifacts;
 
@@ -18,6 +20,8 @@ import com.skrumaz.app.data.Store.Artifacts;
  * Created by Paito Anderson on 2013-09-22.
  */
 public class Settings extends PreferenceActivity {
+
+    private Tracker mTracker;
 
     @SuppressWarnings("deprecation")
     @Override
@@ -101,12 +105,8 @@ public class Settings extends PreferenceActivity {
     @Override
     public void onStart() {
         super.onStart();
-        EasyTracker.getInstance(this).activityStart(this);
-    }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        EasyTracker.getInstance(this).activityStop(this);
+        mTracker.set(Fields.SCREEN_NAME, "Iterations");
+        mTracker.send(MapBuilder.createAppView().build());
     }
 }
