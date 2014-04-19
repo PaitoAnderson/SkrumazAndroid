@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <View android:background="@color/drawer_line_divider_color"
+        android:layout_width="fill_parent" android:layout_height="1.0dip" />
+
+    <TextView android:textAppearance="@style/DrawerTextWithIcon" android:gravity="center_vertical"
+        android:id="@+id/text" android:background="@drawable/drawer_list_selector_icon"
+        android:paddingLeft="16.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content"
+        android:minHeight="46.0dip" />
+
+    <View android:id="@+id/last_item_line" android:background="@color/drawer_line_divider_color"
+        android:visibility="gone" android:layout_width="fill_parent" android:layout_height="1.0dip" />
+
+</LinearLayout>

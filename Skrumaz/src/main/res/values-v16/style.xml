@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- All API v16+ customizations can go here. -->
+    <style name="ActionBarTheme.TitleTextStyle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="DrawerTextWithoutIcon" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">21.0sp</item>
+        <item name="android:textColor">#ff505050</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name="DrawerTextWithIcon" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">13.0sp</item>
+        <item name="android:textColor">#ff666666</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="SansSerif">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+    <style name="SansSerifLight">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+</resources>

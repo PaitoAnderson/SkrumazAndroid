@@ -4,6 +4,19 @@
     <string name="app_name">Skrumaz</string>
     <string name="rally_software">Rally Software</string>
 
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
+    <string-array name="menu_array">
+        <item>Tasks</item>
+        <item>Iterations</item>
+        <item>Projects</item>
+        <item>Settings</item>
+        <item>Help</item>
+    </string-array>
+
+    <string name="profile_image_description">Profile Image</string>
+
     <string name="input_rally_username">Rally Username</string>
     <string name="input_rally_password">Rally Password</string>
     <string name="button_login">Rally Login</string>

@@ -5,6 +5,7 @@ package com.skrumaz.app.data.Store;
  */
 public interface Table {
     // Database Tables
+    String USERS = "Users";
     String WORKSPACES = "Workspaces";
     String PROJECTS = "Projects";
     String ITERATIONS = "Iterations";

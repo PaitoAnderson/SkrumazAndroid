@@ -1,7 +1,9 @@
 package com.skrumaz.app;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 
 import com.skrumaz.app.classes.Iteration;
 import com.skrumaz.app.data.Preferences;
+import com.skrumaz.app.ui.Tasks;
 import com.skrumaz.app.utils.IterationStatusLookup;
 
 import java.util.List;
@@ -26,10 +29,10 @@ public class IterationAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private Activity activity;
 
-    public IterationAdapter(Activity act, List<Iteration> iterations) {
-        activity = act;
+    public IterationAdapter(Activity activity, List<Iteration> iterations) {
+        this.activity = activity;
         this.iterations = iterations;
-        inflater = act.getLayoutInflater();
+        this.inflater = activity.getLayoutInflater();
     }
 
     @Override
@@ -69,9 +72,13 @@ public class IterationAdapter extends BaseAdapter {
                 // Set Iteration Id to use
                 Preferences.setIterationId(activity, iteration.getOid());
 
-                // Send to Artifact List
-                activity.startActivity(new Intent(activity, ArtifactList.class));
-                activity.overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
+                // Send to Task List
+                Fragment fragment = new Tasks();
+                FragmentManager fragmentManager = activity.getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction().replace(R.id.content_frame, fragment);
+                fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, 0, android.R.anim.fade_out, 0);
+                fragmentTransaction.addToBackStack("Iterations");
+                fragmentTransaction.commit();
             }
         });
 

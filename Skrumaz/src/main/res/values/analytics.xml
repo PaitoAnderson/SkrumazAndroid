@@ -10,6 +10,6 @@
     <!--Enable automatic exception tracking-->
     <bool name="ga_reportUncaughtExceptions">true</bool>
 
-    <!--The verbosity of the SDK logger. error,warning,info-->
+    <!--The verbosity of the SDK logger. error,warning,info,verbose-->
     <string name="ga_logLevel">warning</string>
 </resources>

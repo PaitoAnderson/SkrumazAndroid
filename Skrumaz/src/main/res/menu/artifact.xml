@@ -43,17 +43,5 @@
         android:title="@string/action_refresh"
         android:orderInCategory="90"
         android:icon="@drawable/ic_refresh"
-        android:showAsAction="ifRoom" />
-
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        android:icon="@drawable/ic_settings"
-        android:showAsAction="ifRoom" />
-
-    <item android:id="@+id/action_help"
-        android:title="@string/action_help"
-        android:orderInCategory="110"
-        android:icon="@drawable/ic_help"
-        android:showAsAction="ifRoom" />
+        android:showAsAction="never" />
 </menu>

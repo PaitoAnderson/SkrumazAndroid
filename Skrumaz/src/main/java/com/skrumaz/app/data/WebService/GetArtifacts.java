@@ -3,7 +3,7 @@ package com.skrumaz.app.data.WebService;
 import android.content.Context;
 import android.util.Log;
 
-import com.skrumaz.app.ArtifactList;
+import com.skrumaz.app.MainActivity;
 import com.skrumaz.app.classes.Artifact;
 import com.skrumaz.app.classes.Iteration;
 import com.skrumaz.app.classes.Task;
@@ -38,6 +38,9 @@ public class GetArtifacts {
 
     public List<Artifact> FetchItems(Context context) {
 
+        // Set Calling Fragment
+        ((MainActivity) context).mFragmentAttached = MainActivity.Fragments.TASKS;
+
         // Get IterationId to use
         Long IterationId = Preferences.getIterationId(context, false);
 
@@ -58,7 +61,7 @@ public class GetArtifacts {
         } else {
 
             // Update Main View with status
-            ((ArtifactList)context).SetProgress("Getting Current Iteration...");
+            ((MainActivity)context).SetProgress("Getting Current Iteration...");
 
             // Setup HTTP Request
             DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -107,7 +110,7 @@ public class GetArtifacts {
                     Preferences.setWorkspaceId(context, jsonIteration.getJSONObject("Iteration").getJSONObject("Workspace").getLong("ObjectID"));
 
                 } else {
-                    ((ArtifactList)context).SetError(statusLine.getReasonPhrase());
+                    ((MainActivity) context).SetError(statusLine.getReasonPhrase());
                     Log.e("GetArtifacts", "GI Error: " + statusLine.getReasonPhrase());
                 }
 
@@ -123,7 +126,7 @@ public class GetArtifacts {
 
     public void GetUserStories(Context context) {
 
-        ((ArtifactList)context).SetProgress("Getting User Stories...");
+        ((MainActivity)context).SetProgress("Getting User Stories...");
 
         // Setup HTTP Request
         DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -190,7 +193,7 @@ public class GetArtifacts {
                 }
 
             } else {
-                ((ArtifactList)context).SetError(statusLine.getReasonPhrase());
+                ((MainActivity)context).SetError(statusLine.getReasonPhrase());
                 Log.d("GetArtifacts", "US Error: " + statusLine.getReasonPhrase());
             }
 
@@ -203,7 +206,7 @@ public class GetArtifacts {
 
     public void GetDefects(Context context) {
 
-        ((ArtifactList)context).SetProgress("Getting Defects...");
+        ((MainActivity)context).SetProgress("Getting Defects...");
 
         // Setup HTTP Request
         DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -271,7 +274,7 @@ public class GetArtifacts {
                 }
 
             } else {
-                ((ArtifactList)context).SetError(statusLine.getReasonPhrase());
+                ((MainActivity)context).SetError(statusLine.getReasonPhrase());
                 Log.d("GetArtifacts", "DE Error: " + statusLine.getReasonPhrase());
             }
 

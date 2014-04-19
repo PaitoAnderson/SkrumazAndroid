@@ -16,11 +16,19 @@ public class Database extends SQLiteOpenHelper {
     // TAG for logging
     private static final String TAG = "DATABASE";
 
+    // Database Versions
+    private static final int SKRUMAZ_100 = 10;
+
     // Database Setup
     private static final String DATABASE_NAME = "Skrumaz.db";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = SKRUMAZ_100;
 
     // Database Create SQL
+    private static final String CREATE_TABLE_USERS = "CREATE TABLE " + Table.USERS + "("
+            + Field.USER_ID + " LONG PRIMARY KEY, " + Field.USER_NAME + " TEXT, "
+            + Field.USER_EMAIL + " TEXT, " + Field.USER_PHOTO + " BLOB,"
+            + "UNIQUE (" + Field.USER_ID + ") ON CONFLICT REPLACE)";
+
     private static final String CREATE_TABLE_WORKSPACES = "CREATE TABLE " + Table.WORKSPACES + "("
             + Field.WORKSPACE_ID + " LONG PRIMARY KEY, " + Field.TITLE + " TEXT, "
             + Field.REFRESH_DATE + " LONG)";
@@ -57,6 +65,10 @@ public class Database extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
+        // Create Users Table
+        Log.v(TAG, CREATE_TABLE_USERS);
+        db.execSQL(CREATE_TABLE_USERS);
+
         // Create Workspaces Table
         Log.v(TAG, CREATE_TABLE_WORKSPACES);
         db.execSQL(CREATE_TABLE_WORKSPACES);
@@ -86,7 +98,12 @@ public class Database extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
                 + newVersion + ", which will destroy all old data");
-        emptyDatabase(db);
+
+        // Upgrade to Skrumaz 1.0
+        switch (newVersion) {
+            case SKRUMAZ_100:
+                emptyDatabase(db);
+        }
     }
 
     public void emptyDatabasePref() {
@@ -94,6 +111,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
     private void emptyDatabase(SQLiteDatabase db) {
+        db.execSQL("DROP TABLE IF EXISTS " + Table.USERS);
         db.execSQL("DROP TABLE IF EXISTS " + Table.WORKSPACES);
         db.execSQL("DROP TABLE IF EXISTS " + Table.PROJECTS);
         db.execSQL("DROP TABLE IF EXISTS " + Table.ITERATIONS);

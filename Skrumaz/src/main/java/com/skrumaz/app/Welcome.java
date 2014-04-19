@@ -11,7 +11,6 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.skrumaz.app.tutorial.FragmentPagerAdapter;
 import com.skrumaz.app.tutorial.Images;
 import com.viewpagerindicator.CirclePageIndicator;
-import com.viewpagerindicator.PageIndicator;
 
 import java.util.ArrayList;
 
@@ -23,7 +22,6 @@ public class Welcome extends FragmentActivity {
     // Stuff for Tutorial Images
     private FragmentPagerAdapter mAdapter;
     private ViewPager mPager;
-    private PageIndicator mIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +52,6 @@ public class Welcome extends FragmentActivity {
             mPager.setAdapter(mAdapter);
 
             CirclePageIndicator indicator = (CirclePageIndicator) findViewById(R.id.indicator);
-            mIndicator = indicator;
             indicator.setViewPager(mPager);
 
             final float density = getResources().getDisplayMetrics().density;

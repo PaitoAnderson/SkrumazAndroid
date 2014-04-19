@@ -5,5 +5,11 @@
 
     <color name="accent_color">#D95467</color>
 
-    <color name="background_color">#EEE</color>
+    <color name="drawer_line_divider_color">#ffe5e5e5</color>
+    <color name="drawer_item_pressed_color">#33999999</color>
+
+    <color name="drawer_bg_color">#fff7f7f7</color>
+
+    <color name="background">#eeeeee</color>
+    <color name="background_light">#fffafafa</color>
 </resources>

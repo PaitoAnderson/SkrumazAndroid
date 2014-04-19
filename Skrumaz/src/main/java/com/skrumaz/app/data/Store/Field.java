@@ -6,6 +6,10 @@ package com.skrumaz.app.data.Store;
 public interface Field {
 
     // Database Fields
+    String USER_ID = "UserID";
+    String USER_NAME = "UserName";
+    String USER_EMAIL = "UserEmail";
+    String USER_PHOTO = "UserPhoto";
     String WORKSPACE_ID = "WorkspaceID";
     String PROJECT_ID = "ProjectID";
     String ITERATION_ID = "IterationID";

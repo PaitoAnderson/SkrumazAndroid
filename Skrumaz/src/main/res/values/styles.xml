@@ -106,5 +106,21 @@
     <style name="OverflowTheme" parent="@android:style/Widget.Holo.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_overflow</item>
     </style>
+    <style name="DrawerTextWithoutIcon" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">21.0sp</item>
+        <item name="android:textColor">#ff505050</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    <style name="DrawerTextWithIcon" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">13.0sp</item>
+        <item name="android:textColor">#ff666666</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="SansSerif"></style>
+
+    <style name="SansSerifLight"></style>
 
 </resources>

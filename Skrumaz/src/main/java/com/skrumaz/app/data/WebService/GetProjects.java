@@ -3,7 +3,7 @@ package com.skrumaz.app.data.WebService;
 import android.content.Context;
 import android.util.Log;
 
-import com.skrumaz.app.ProjectList;
+import com.skrumaz.app.MainActivity;
 import com.skrumaz.app.classes.Project;
 import com.skrumaz.app.classes.Workspace;
 import com.skrumaz.app.data.Preferences;
@@ -34,6 +34,9 @@ public class GetProjects {
 
     public List<Project> FetchItems(Context context) {
 
+        // Set Calling Fragment
+        ((MainActivity) context).mFragmentAttached = MainActivity.Fragments.PROJECTS;
+
         // Get workspaceId to use
         Long workspaceId = Preferences.getWorkspaceId(context, false);
 
@@ -54,7 +57,7 @@ public class GetProjects {
         } else {
 
             // Update Main View with status
-            ((ProjectList)context).SetProgress("Getting Current Workspace...");
+            ((MainActivity)context).SetProgress("Getting Current Workspace...");
 
             // Setup HTTP Request
             DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -99,7 +102,7 @@ public class GetProjects {
                     Preferences.setWorkspaceId(context, workspace.getOid());
 
                 } else {
-                    ((ProjectList)context).SetError(false, statusLine.getReasonPhrase());
+                    ((MainActivity)context).SetError(statusLine.getReasonPhrase());
                     Log.d("GetProjects", "Workspace Error: " + statusLine.getReasonPhrase());
                 }
 
@@ -117,7 +120,7 @@ public class GetProjects {
     private void GetWorkspaceProjects(Context context) {
 
         // Update Main View with status
-        ((ProjectList) context).SetProgress("Getting Projects...");
+        ((MainActivity) context).SetProgress("Getting Projects...");
 
         int startIndex = 1;
         int pageSize = 200;
@@ -176,7 +179,7 @@ public class GetProjects {
                     }
 
                 } else {
-                    ((ProjectList) context).SetError(false, statusLine.getReasonPhrase());
+                    ((MainActivity) context).SetError(statusLine.getReasonPhrase());
                     Log.d("GetProjects", "Project Error: " + statusLine.getReasonPhrase());
                 }
 

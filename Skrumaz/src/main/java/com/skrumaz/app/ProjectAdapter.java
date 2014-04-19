@@ -1,7 +1,9 @@
 package com.skrumaz.app;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 
 import com.skrumaz.app.classes.Project;
 import com.skrumaz.app.data.Preferences;
+import com.skrumaz.app.ui.Iterations;
 
 import java.util.List;
 
@@ -64,8 +67,12 @@ public class ProjectAdapter extends BaseAdapter {
                 Preferences.setProjectId(activity, project.getOid());
 
                 // Send to Iteration List
-                activity.startActivity(new Intent(activity, IterationList.class));
-                activity.overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
+                Fragment fragment = new Iterations();
+                FragmentManager fragmentManager = activity.getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction().replace(R.id.content_frame, fragment);
+                fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, 0, android.R.anim.fade_out, 0);
+                fragmentTransaction.addToBackStack("Projects");
+                fragmentTransaction.commit();
             }
         });
 
