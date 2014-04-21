@@ -304,16 +304,28 @@ public class MainActivity extends Activity {
                 switch (mFragmentAttached)
                 {
                     case TASKS:
-                        Tasks tasksFragment = (Tasks) getFragmentManager().findFragmentById(R.id.content_frame);
-                        tasksFragment.progressText.setText(processMsg);
+                        try {
+                            Tasks tasksFragment = (Tasks) getFragmentManager().findFragmentById(R.id.content_frame);
+                            tasksFragment.progressText.setText(processMsg);
+                        } catch (Exception ex) {
+                            // Doesn't matter
+                        }
                         break;
                     case ITERATIONS:
-                        Iterations iterationsFragment = (Iterations) getFragmentManager().findFragmentById(R.id.content_frame);
-                        iterationsFragment.progressText.setText(processMsg);
+                        try {
+                            Iterations iterationsFragment = (Iterations) getFragmentManager().findFragmentById(R.id.content_frame);
+                            iterationsFragment.progressText.setText(processMsg);
+                        } catch (Exception ex) {
+                            // Doesn't matter
+                        }
                         break;
                     case PROJECTS:
-                        Projects projectsFragment = (Projects) getFragmentManager().findFragmentById(R.id.content_frame);
-                        projectsFragment.progressText.setText(processMsg);
+                        try {
+                            Projects projectsFragment = (Projects) getFragmentManager().findFragmentById(R.id.content_frame);
+                            projectsFragment.progressText.setText(processMsg);
+                        } catch (Exception ex) {
+                            // Doesn't matter
+                        }
                         break;
                 }
             }
@@ -323,19 +335,31 @@ public class MainActivity extends Activity {
     public void SetError(final String errorMsg) {
         switch (mFragmentAttached) {
             case TASKS:
-                Tasks tasksFragment = (Tasks) getFragmentManager().findFragmentById(R.id.content_frame);
-                tasksFragment.continueRequests = false;
-                tasksFragment.breakingError = errorMsg;
+                try {
+                    Tasks tasksFragment = (Tasks) getFragmentManager().findFragmentById(R.id.content_frame);
+                    tasksFragment.continueRequests = false;
+                    tasksFragment.breakingError = errorMsg;
+                } catch (Exception ex) {
+                    // Doesn't matter
+                }
                 break;
             case ITERATIONS:
-                Tasks iterationsFragment = (Tasks) getFragmentManager().findFragmentById(R.id.content_frame);
-                iterationsFragment.continueRequests = false;
-                iterationsFragment.breakingError = errorMsg;
+                try {
+                    Iterations iterationsFragment = (Iterations) getFragmentManager().findFragmentById(R.id.content_frame);
+                    iterationsFragment.continueRequests = false;
+                    iterationsFragment.breakingError = errorMsg;
+                } catch (Exception ex) {
+                    // Doesn't matter
+                }
                 break;
             case PROJECTS:
-                Tasks projectsFragment = (Tasks) getFragmentManager().findFragmentById(R.id.content_frame);
-                projectsFragment.continueRequests = false;
-                projectsFragment.breakingError = errorMsg;
+                try {
+                    Projects projectsFragment = (Projects) getFragmentManager().findFragmentById(R.id.content_frame);
+                    projectsFragment.continueRequests = false;
+                    projectsFragment.breakingError = errorMsg;
+                } catch (Exception ex) {
+                    // Doesn't matter
+                }
                 break;
         }
     }
