@@ -340,7 +340,9 @@ public class Projects extends Fragment implements OnRefreshListener, ActionBar.O
         Long currentWorkspace = Preferences.getWorkspaceId(mContext, true);
         if (currentWorkspace > 0) {
             int currentPosition = Workspace.findOid(dropdownValues, currentWorkspace);
-            actionBar.setSelectedNavigationItem(currentPosition);
+            if (actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_LIST) {
+                actionBar.setSelectedNavigationItem(currentPosition);
+            }
         }
     }
 

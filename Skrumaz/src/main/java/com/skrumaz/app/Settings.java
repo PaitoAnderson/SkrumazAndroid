@@ -31,6 +31,9 @@ public class Settings extends PreferenceActivity {
         String appVersionString = "1.0";
         try {
             appVersionString = getBaseContext().getPackageManager().getPackageInfo(getBaseContext().getPackageName(), 0).versionName;
+            if (getApplicationContext().getPackageName().endsWith(".dev")) {
+                appVersionString += " DEV";
+            }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
