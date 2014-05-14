@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.skrumaz.app.MainActivity;
 import com.skrumaz.app.classes.Iteration;
+import com.skrumaz.app.classes.IterationStatus;
 import com.skrumaz.app.classes.Project;
 import com.skrumaz.app.data.Preferences;
 import com.skrumaz.app.data.Store.Iterations;
@@ -122,18 +123,11 @@ public class GetIterations {
         ((MainActivity)context).SetProgress("Getting Iterations...");
 
         // Add Backlog Link
-        //Iteration backlog = new Iteration();
-        //backlog.setName("Backlog");
-        //backlog.setOid(Long.parseLong("0"));
-        //backlog.setIterationStatus(IterationStatus.RD_PLANNED);
-        //iterations.add(backlog);
-
-        // Add Backlog Link
-        //Iteration backlog = new Iteration();
-        //backlog.setName("Backlog");
-        //backlog.setOid(Long.parseLong("0"));
-        //backlog.setIterationStatus(IterationStatus.RD_PLANNED);
-        //iterations.add(backlog);
+        Iteration backlog = new Iteration();
+        backlog.setName("Unscheduled");
+        backlog.setOid(Long.MAX_VALUE);
+        backlog.setIterationStatus(IterationStatus.RD_PLANNED);
+        iterations.add(backlog);
 
         // Setup HTTP Request
         DefaultHttpClient httpClient = new DefaultHttpClient();
