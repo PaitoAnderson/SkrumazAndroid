@@ -18,6 +18,7 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -131,16 +132,16 @@ public class GetArtifacts {
         // Setup HTTP Request
         DefaultHttpClient httpClient = new DefaultHttpClient();
         String fetchOwner = ",Owner";
-        String whereQuery = "((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)";
+        String whereQuery = "(Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)";
 
         // Get Backlog Items
         if (iteration.getOid() == Long.MAX_VALUE) {
-            whereQuery = "((Iteration.Name%20=%20%22%22)";
+            whereQuery = "(Iteration.Name%20=%20%22%22)";
         }
 
         if (!Preferences.showAllOwners(context)) {
             fetchOwner = "";
-            whereQuery += "%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(context) + "%22))";
+            whereQuery = "(" + whereQuery + "%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(context) + "%22))";
         }
 
         HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate" + fetchOwner);
@@ -191,7 +192,11 @@ public class GetArtifacts {
 
                     // Update story with Owner name
                     if (fetchOwner.length() > 0) {
-                        userStory.setName(userStoriesArray.getJSONObject(i).getJSONObject("Owner").getString("_refObjectName") + " - " + userStory.getName());
+                        try {
+                            userStory.setName(userStoriesArray.getJSONObject(i).getJSONObject("Owner").getString("_refObjectName") + " - " + userStory.getName());
+                        } catch(JSONException ex) {
+                            userStory.setName("Not Set - " + userStory.getName());
+                        }
                     }
 
                     artifacts.add(userStory);
@@ -216,16 +221,16 @@ public class GetArtifacts {
         // Setup HTTP Request
         DefaultHttpClient httpClient = new DefaultHttpClient();
         String fetchOwner = ",Owner";
-        String whereQuery = "((Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)";
+        String whereQuery = "(Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)";
 
         // Get Backlog Items
         if (iteration.getOid() == Long.MAX_VALUE) {
-            whereQuery = "((Iteration.Name%20=%20%22%22)";
+            whereQuery = "(Iteration.Name%20=%20%22%22)";
         }
 
         if (!Preferences.showAllOwners(context)) {
             fetchOwner = "";
-            whereQuery += "%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(context) + "%22))";
+            whereQuery = "(" + whereQuery + "%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(context) + "%22))";
         }
 
         HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate" + fetchOwner);
@@ -276,7 +281,11 @@ public class GetArtifacts {
 
                     // Update defect with Owner name
                     if (fetchOwner.length() > 0) {
-                        defect.setName(defectsArray.getJSONObject(i).getJSONObject("Owner").getString("_refObjectName") + " - " + defect.getName());
+                        try {
+                            defect.setName(defectsArray.getJSONObject(i).getJSONObject("Owner").getString("_refObjectName") + " - " + defect.getName());
+                        } catch(JSONException ex) {
+                            defect.setName("Not Set - " + defect.getName());
+                        }
                     }
 
                     // Add defect with Tasks to List
