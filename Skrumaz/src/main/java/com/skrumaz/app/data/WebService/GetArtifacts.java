@@ -195,7 +195,7 @@ public class GetArtifacts {
                         try {
                             userStory.setName(userStoriesArray.getJSONObject(i).getJSONObject("Owner").getString("_refObjectName") + " - " + userStory.getName());
                         } catch(JSONException ex) {
-                            userStory.setName("Not Set - " + userStory.getName());
+                            userStory.setName("No Owner - " + userStory.getName());
                         }
                     }
 
@@ -284,7 +284,7 @@ public class GetArtifacts {
                         try {
                             defect.setName(defectsArray.getJSONObject(i).getJSONObject("Owner").getString("_refObjectName") + " - " + defect.getName());
                         } catch(JSONException ex) {
-                            defect.setName("Not Set - " + defect.getName());
+                            defect.setName("No Owner - " + defect.getName());
                         }
                     }
 
