@@ -119,8 +119,10 @@
         <item name="android:singleLine">true</item>
     </style>
 
-    <style name="SansSerif"></style>
+    <style name="SansSerif" />
 
-    <style name="SansSerifLight"></style>
+    <style name="SansSerifThin" />
+
+    <style name="SansSerifLight" />
 
 </resources>

@@ -1,25 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:padding="5dp"
+    android:id="@+id/content"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
+    android:weightSum="100" >
 
     <ImageView
-        android:id="@+id/iterationStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="22dp"
-        android:layout_gravity="center_vertical"
-        android:scaleType="centerInside" />
+        android:id="@+id/iterationStatusColor"
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:adjustViewBounds="true"
+        android:baselineAlignBottom="true"
+        android:scaleType="centerCrop" />
 
-    <TextView
-        android:id="@+id/iterationName"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/contentLayout"
+        android:layout_width="0dip"
         android:layout_height="wrap_content"
-        android:paddingLeft="6dp"
-        android:textSize="16sp"
-        android:gravity="left"
-        android:textStyle="bold" />
+        android:layout_marginLeft="8dip"
+        android:layout_weight="98"
+        android:orientation="vertical" >
 
+        <TextView
+            android:id="@+id/iterationName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/SansSerifThin"
+            android:textSize="24sp"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+
+        <TextView
+            android:id="@+id/iterationStatusName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            style="@style/SansSerifLight"
+            android:textSize="16sp" />
+    </LinearLayout>
 </LinearLayout>

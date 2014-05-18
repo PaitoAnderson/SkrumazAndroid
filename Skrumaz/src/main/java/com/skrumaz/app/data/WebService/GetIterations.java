@@ -126,7 +126,7 @@ public class GetIterations {
         Iteration backlog = new Iteration();
         backlog.setName("Unscheduled");
         backlog.setOid(Long.MAX_VALUE);
-        backlog.setIterationStatus(IterationStatus.RD_PLANNED);
+        backlog.setIterationStatus(IterationStatus.RD_PLANNING);
         iterations.add(backlog);
 
         // Setup HTTP Request

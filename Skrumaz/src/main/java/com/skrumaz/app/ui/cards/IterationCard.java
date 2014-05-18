@@ -22,12 +22,11 @@ import it.gmariotti.cardslib.library.internal.Card;
  */
 public class IterationCard extends Card {
 
-    private static final String TAG = IterationCard.class.getSimpleName();
-
     private Iteration mIteration;
 
     protected TextView mIterationName;
-    protected ImageView mIterationStatus;
+    protected TextView mIterationStatusName;
+    protected ImageView mIterationStatusColor;
 
     public IterationCard(Activity activity, Iteration iteration) {
         this(activity, R.layout.card_iteration, iteration);
@@ -61,9 +60,11 @@ public class IterationCard extends Card {
         // Set Iteration Data Elements to Card
 
         mIterationName = (TextView) parent.findViewById(R.id.iterationName);
-        mIterationStatus = (ImageView) parent.findViewById(R.id.iterationStatus);
+        mIterationStatusName = (TextView) parent.findViewById(R.id.iterationStatusName);
+        mIterationStatusColor = (ImageView) parent.findViewById(R.id.iterationStatusColor);
 
         mIterationName.setText(mIteration.getName());
-        mIterationStatus.setImageResource(IterationStatusLookup.iterationStatusToRes(mIteration.getIterationStatus()));
+        mIterationStatusName.setText(IterationStatusLookup.iterationStatusToString(mIteration.getIterationStatus()));
+        mIterationStatusColor.setBackgroundColor(getContext().getResources().getColor(IterationStatusLookup.iterationStatusToColor(mIteration.getIterationStatus())));
     }
 }

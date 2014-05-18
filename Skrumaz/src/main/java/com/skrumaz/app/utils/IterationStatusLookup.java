@@ -12,13 +12,13 @@ public class IterationStatusLookup {
 
         // When we move to Java SE 7 we can have our String Switch case ;)
         if (status.equalsIgnoreCase("Planning")) {
-            return IterationStatus.RD_PLANNED;
+            return IterationStatus.RD_PLANNING;
         } else if (status.equalsIgnoreCase("Committed")) {
             return IterationStatus.RD_COMMITTED;
         } else if (status.equalsIgnoreCase("Accepted")) {
             return IterationStatus.RD_ACCEPTED;
         } else {
-            return IterationStatus.RD_PLANNED;
+            return IterationStatus.RD_PLANNING;
         }
     }
 
@@ -30,7 +30,7 @@ public class IterationStatusLookup {
 
         switch (status)
         {
-            case RD_PLANNED:
+            case RD_PLANNING:
                 return "Planning";
             case RD_COMMITTED:
                 return "Committed";
@@ -49,7 +49,7 @@ public class IterationStatusLookup {
 
         switch (status)
         {
-            case RD_PLANNED:
+            case RD_PLANNING:
                 return R.drawable.pg;
             case RD_COMMITTED:
                 return R.drawable.cg;
@@ -57,6 +57,25 @@ public class IterationStatusLookup {
                 return R.drawable.ag;
             default:
                 return R.drawable.pg;
+        }
+    }
+
+    public static int iterationStatusToColor(IterationStatus status) {
+
+        if (status == null) {
+            return R.color.iteration_planning;
+        }
+
+        switch (status)
+        {
+            case RD_PLANNING:
+                return R.color.iteration_planning;
+            case RD_COMMITTED:
+                return R.color.iteration_committed;
+            case RD_ACCEPTED:
+                return R.color.iteration_accepted;
+            default:
+                return R.color.iteration_planning;
         }
     }
 }

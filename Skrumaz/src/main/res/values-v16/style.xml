@@ -25,6 +25,9 @@
     <style name="SansSerif">
         <item name="android:fontFamily">sans-serif</item>
     </style>
+    <style name="SansSerifThin">
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
     <style name="SansSerifLight">
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
