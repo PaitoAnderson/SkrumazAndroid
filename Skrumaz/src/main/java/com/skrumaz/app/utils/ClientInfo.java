@@ -1,5 +1,6 @@
 package com.skrumaz.app.utils;
 
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 
@@ -24,5 +25,13 @@ public class ClientInfo {
         httpPut.setHeader("X-RallyIntegrationVersion", appVersionName);
         httpPut.setHeader("X-RallyIntegrationOS", System.getProperty("os.name") + " " + System.getProperty("os.version"));
         return httpPut;
+    }
+
+    public static HttpDelete addHttpDeleteHeaders(HttpDelete httpDelete) {
+        httpDelete.setHeader("X-RallyIntegrationName", "Skrumaz");
+        httpDelete.setHeader("X-RallyIntegrationVendor", "Paito Anderson");
+        httpDelete.setHeader("X-RallyIntegrationVersion", appVersionName);
+        httpDelete.setHeader("X-RallyIntegrationOS", System.getProperty("os.name") + " " + System.getProperty("os.version"));
+        return httpDelete;
     }
 }

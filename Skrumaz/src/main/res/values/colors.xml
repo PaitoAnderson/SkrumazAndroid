@@ -12,4 +12,5 @@
 
     <color name="background">#eeeeee</color>
     <color name="background_light">#fffafafa</color>
+    <color name="background_cards">#f4f4f4</color>
 </resources>

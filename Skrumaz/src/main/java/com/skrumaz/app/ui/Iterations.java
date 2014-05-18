@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,15 +20,17 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.Tracker;
-import com.skrumaz.app.IterationAdapter;
 import com.skrumaz.app.R;
-import com.skrumaz.app.classes.Iteration;
 import com.skrumaz.app.data.Preferences;
 import com.skrumaz.app.data.WebService.GetIterations;
+import com.skrumaz.app.ui.factories.IterationFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
+import it.gmariotti.cardslib.library.view.CardListView;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.DefaultHeaderTransformer;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
@@ -40,12 +41,12 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
  */
 public class Iterations extends Fragment implements OnRefreshListener {
 
-    private ListView listView;
+    private CardListView cardListView;
     private LinearLayout processContainer;
     private ProgressBar progressSpinner;
-    private IterationAdapter iterationAdapter;
+    private CardArrayAdapter cardArrayAdapter;
     private Context mContext;
-    private List<Iteration> iterations = new ArrayList<Iteration>();
+    private List<Card> iterationCards = new ArrayList<Card>();
     private PullToRefreshLayout mPullToRefreshLayout;
     private Tracker mTracker;
 
@@ -69,12 +70,12 @@ public class Iterations extends Fragment implements OnRefreshListener {
         View iterationsView = inflater.inflate(R.layout.activity_iteration_list, container, false);
 
         // Find things in the View
-        listView = (ListView) iterationsView.findViewById(R.id.listContainer);
+        cardListView = (CardListView) iterationsView.findViewById(R.id.listContainer);
         processContainer = (LinearLayout) iterationsView.findViewById(R.id.processContainer);
         progressText = (TextView) iterationsView.findViewById(R.id.progressText);
         progressSpinner = (ProgressBar) iterationsView.findViewById(R.id.progressSpinner);
-        iterationAdapter = new IterationAdapter(getActivity(), iterations);
-        listView.setAdapter(iterationAdapter);
+        cardArrayAdapter = new CardArrayAdapter(getActivity().getBaseContext(), iterationCards);
+        cardListView.setAdapter(cardArrayAdapter);
 
         // Remove spinner select Workspace / Project from
         final ActionBar actionBar = getActivity().getActionBar();
@@ -169,7 +170,7 @@ public class Iterations extends Fragment implements OnRefreshListener {
         @Override
         protected Boolean doInBackground(String... params) {
 
-            iterations.addAll(new GetIterations().FetchItems(mContext));
+            iterationCards.addAll(IterationFactory.getIterationCards(getActivity(), new GetIterations().FetchItems(mContext)));
 
             return null;
         }
@@ -189,17 +190,17 @@ public class Iterations extends Fragment implements OnRefreshListener {
         protected void onPostExecute(Boolean result) {
 
             // If no items display empty state
-            if (iterations.isEmpty()) {
+            if (iterationCards.isEmpty()) {
                 progressSpinner.setVisibility(View.GONE);
                 progressText.setText("No Iterations.");
             } else {
                 processContainer.setVisibility(View.GONE);
-                listView.setVisibility(View.VISIBLE);
+                cardListView.setVisibility(View.VISIBLE);
             }
 
             // Notify refresh finished
             mPullToRefreshLayout.setRefreshComplete();
-            iterationAdapter.notifyDataSetChanged();
+            cardArrayAdapter.notifyDataSetChanged();
 
             super.onPostExecute(result);
         }
@@ -209,9 +210,11 @@ public class Iterations extends Fragment implements OnRefreshListener {
 
             // Pull Artifacts and Tasks from SQLite
             com.skrumaz.app.data.Store.Iterations db = new com.skrumaz.app.data.Store.Iterations(mContext);
-            iterations.clear();
-            iterations.addAll(db.getIterations(Preferences.getProjectId(mContext, true)));
+            iterationCards.clear();
+            iterationCards.addAll(IterationFactory.getIterationCards(getActivity(), db.getIterations(Preferences.getProjectId(mContext, true))));
             db.close();
+
+
 
             return null;
         }
@@ -219,29 +222,29 @@ public class Iterations extends Fragment implements OnRefreshListener {
 
     public void startLoading() {
         // Reset Views / Spinner
-        iterations.clear();
+        iterationCards.clear();
         processContainer.setVisibility(View.VISIBLE);
         progressSpinner.setVisibility(View.VISIBLE);
         progressText.setVisibility(View.VISIBLE);
         progressText.setText("Getting Items..."); // Text updated using SetProgress()
-        listView.setVisibility(View.GONE);
+        cardListView.setVisibility(View.GONE);
     }
 
     public void finishLoading() {
         if (continueRequests) {
             // If no items display empty state
-            if (iterations.isEmpty()) {
+            if (iterationCards.isEmpty()) {
                 progressSpinner.setVisibility(View.GONE);
                 progressText.setText("No Iterations.");
             } else {
                 processContainer.setVisibility(View.GONE);
-                listView.setVisibility(View.VISIBLE);
+                cardListView.setVisibility(View.VISIBLE);
             }
         }
 
         // Notify refresh finished
         mPullToRefreshLayout.setRefreshComplete();
-        iterationAdapter.notifyDataSetChanged();
+        cardArrayAdapter.notifyDataSetChanged();
     }
 
     @Override
