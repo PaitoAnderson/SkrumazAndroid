@@ -41,25 +41,6 @@ public class IterationStatusLookup {
         }
     }
 
-    public static int iterationStatusToRes(IterationStatus status) {
-
-        if (status == null) {
-            return R.drawable.pg;
-        }
-
-        switch (status)
-        {
-            case RD_PLANNING:
-                return R.drawable.pg;
-            case RD_COMMITTED:
-                return R.drawable.cg;
-            case RD_ACCEPTED:
-                return R.drawable.ag;
-            default:
-                return R.drawable.pg;
-        }
-    }
-
     public static int iterationStatusToColor(IterationStatus status) {
 
         if (status == null) {

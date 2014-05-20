@@ -11,7 +11,7 @@ import com.skrumaz.app.classes.Iteration;
 import com.skrumaz.app.classes.Task;
 import com.skrumaz.app.data.Database;
 import com.skrumaz.app.utils.IterationStatusLookup;
-import com.skrumaz.app.utils.StatusLookup;
+import com.skrumaz.app.utils.ArtifactStatusLookup;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -70,8 +70,9 @@ public class Artifacts extends Database {
             artifactValues.put(Field.TITLE, artifact.getName());
             artifactValues.put(Field.BLOCKED, artifact.isBlocked());
             artifactValues.put(Field.RANK, artifact.getRank());
-            artifactValues.put(Field.STATUS, StatusLookup.statusToString(artifact.getStatus()));
+            artifactValues.put(Field.STATUS, ArtifactStatusLookup.statusToString(artifact.getStatus()));
             artifactValues.put(Field.MODIFIED_DATE, artifact.getLastUpdate().getTime());
+            artifactValues.put(Field.OWNER_NAME, artifact.getOwnerName());
 
             // Insert Row
             try {
@@ -123,8 +124,9 @@ public class Artifacts extends Database {
                 artifact.setFormattedID(cursor.getString(0));
                 artifact.setBlocked(cursor.getInt(3)>0);
                 artifact.setRank(cursor.getString(4));
-                artifact.setStatus(StatusLookup.stringToStatus(cursor.getString(5)));
+                artifact.setStatus(ArtifactStatusLookup.stringToStatus(cursor.getString(5)));
                 artifact.setLastUpdate(new Date(cursor.getLong(6)));
+                artifact.setOwnerName(cursor.getString(7));
 
                 Cursor cursor1 = db.query(Table.TASKS + " WHERE (" + Field.PARENT_FORMATTED_ID + " = '" + artifact.getFormattedID() + "')",
                         new String[] { "*" }, null, null, null, null, null);

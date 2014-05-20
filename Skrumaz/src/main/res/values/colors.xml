@@ -17,4 +17,9 @@
     <color name="iteration_planning">#D95467</color>
     <color name="iteration_committed">#EBAE4D</color>
     <color name="iteration_accepted">#1BC6B0</color>
+
+    <color name="artifact_defined">#D95467</color>
+    <color name="artifact_in_progress">#EBAE4D</color>
+    <color name="artifact_completed">#1BC6B0</color>
+    <color name="artifact_accepted">#E0DE0F</color>
 </resources>

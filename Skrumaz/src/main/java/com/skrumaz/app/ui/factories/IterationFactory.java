@@ -13,21 +13,11 @@ import java.util.List;
  */
 public class IterationFactory {
 
-    public static IterationCard getIterationCard(Activity activity, Iteration iteration) {
-        IterationCard iterationCard = new IterationCard(activity, iteration);
-
-        //CardHeader header = new CardHeader(activity.getBaseContext());
-        //header.setTitle(iteration.getName());
-        //iterationCard.addCardHeader(header);
-
-        return iterationCard;
-    }
-
     public static List<IterationCard> getIterationCards(Activity activity, List<Iteration> iterations) {
         List<IterationCard> iterationCards = new ArrayList<IterationCard>();
 
         for(Iteration iteration: iterations ) {
-            iterationCards.add(getIterationCard(activity, iteration));
+            iterationCards.add(new IterationCard(activity, iteration));
         }
 
         return iterationCards;

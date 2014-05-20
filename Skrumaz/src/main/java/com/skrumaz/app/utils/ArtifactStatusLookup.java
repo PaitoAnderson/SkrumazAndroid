@@ -6,7 +6,7 @@ import com.skrumaz.app.classes.Status;
 /**
  * Created by Paito Anderson on 2013-09-30.
  */
-public class StatusLookup {
+public class ArtifactStatusLookup {
 
     public static Status stringToStatus(String status) {
 
@@ -45,38 +45,24 @@ public class StatusLookup {
         }
     }
 
-    public static int statusToRes(Boolean blocked, Status status) {
+    public static int statusToColor(Status status) {
 
-        if (blocked) {
-            switch (status)
-            {
-                case RD_DEFINED:
-                    return R.drawable.dr;
-                case RD_IN_PROGRESS:
-                    return R.drawable.pr;
-                case RD_COMPLETED:
-                    return R.drawable.cr;
-                case RD_ACCEPTED:
-                    return R.drawable.ar;
-                default:
-                    return R.drawable.dr;
-            }
+        if (status == null) {
+            return R.color.artifact_defined;
         }
-        else
+
+        switch (status)
         {
-            switch (status)
-            {
-                case RD_IN_PROGRESS:
-                    return R.drawable.pg;
-                case RD_COMPLETED:
-                    return R.drawable.cg;
-                case RD_ACCEPTED:
-                    return R.drawable.ag;
-                case RD_DEFINED:
-                    return R.drawable.dg;
-                default:
-                    return R.drawable.dg;
-            }
+            case RD_DEFINED:
+                return R.color.artifact_defined;
+            case RD_IN_PROGRESS:
+                return R.color.artifact_in_progress;
+            case RD_COMPLETED:
+                return R.color.artifact_completed;
+            case RD_ACCEPTED:
+                return R.color.artifact_accepted;
+            default:
+                return R.color.artifact_defined;
         }
     }
 }

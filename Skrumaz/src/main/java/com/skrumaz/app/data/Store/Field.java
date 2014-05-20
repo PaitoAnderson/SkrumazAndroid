@@ -23,6 +23,7 @@ public interface Field {
     String MODIFIED_DATE = "ModifiedDate";
     String REFRESH_DATE = "RefreshDate";
     String UPDATED = "Updated";
+    String OWNER_NAME = "OwnerName";
     String DEFINITION_ID = "DefinitionID";
     String ELEMENT_NAME = "ElementName";
 }

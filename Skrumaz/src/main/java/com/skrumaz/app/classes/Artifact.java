@@ -1,8 +1,7 @@
 package com.skrumaz.app.classes;
 
-import java.util.Date;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,50 +17,11 @@ public class Artifact {
     private Boolean Blocked;
     private Status Status;
     private Date LastUpdate;
+    private String OwnerName;
 
     @Override
     public String toString() {
         return String.valueOf(this.Name);
-    }
-
-    public static class OrderByRank implements Comparator<Artifact> {
-
-        @Override
-        public int compare(Artifact o1, Artifact o2) {
-            return o1.getRank().compareTo(o2.getRank());
-        }
-    }
-
-    public static class OrderByState implements Comparator<Artifact> {
-
-        @Override
-        public int compare(Artifact o1, Artifact o2) {
-            return o2.getStatus().compareTo(o1.getStatus());
-        }
-    }
-
-    public static class OrderById implements Comparator<Artifact> {
-
-        @Override
-        public int compare(Artifact o1, Artifact o2) {
-            return o2.getFormattedID().compareTo(o1.getFormattedID());
-        }
-    }
-
-    public static class OrderByName implements Comparator<Artifact> {
-
-        @Override
-        public int compare(Artifact o1, Artifact o2) {
-            return o1.getName().compareTo(o2.getName());
-        }
-    }
-
-    public static class OrderByModified implements Comparator<Artifact> {
-
-        @Override
-        public int compare(Artifact o1, Artifact o2) {
-            return o2.getLastUpdate().compareTo(o1.getLastUpdate());
-        }
     }
 
     public Artifact(String name) {
@@ -130,5 +90,13 @@ public class Artifact {
 
     public void setLastUpdate(Date lastUpdate) {
         LastUpdate = lastUpdate;
+    }
+
+    public String getOwnerName() {
+        return OwnerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        OwnerName = ownerName;
     }
 }

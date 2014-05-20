@@ -24,10 +24,6 @@ public class IterationCard extends Card {
 
     private Iteration mIteration;
 
-    protected TextView mIterationName;
-    protected TextView mIterationStatusName;
-    protected ImageView mIterationStatusColor;
-
     public IterationCard(Activity activity, Iteration iteration) {
         this(activity, R.layout.card_iteration, iteration);
     }
@@ -59,12 +55,12 @@ public class IterationCard extends Card {
 
         // Set Iteration Data Elements to Card
 
-        mIterationName = (TextView) parent.findViewById(R.id.iterationName);
-        mIterationStatusName = (TextView) parent.findViewById(R.id.iterationStatusName);
-        mIterationStatusColor = (ImageView) parent.findViewById(R.id.iterationStatusColor);
+        TextView iterationName = (TextView) parent.findViewById(R.id.iterationName);
+        TextView iterationStatusName = (TextView) parent.findViewById(R.id.iterationStatusName);
+        ImageView iterationStatusColor = (ImageView) parent.findViewById(R.id.iterationStatusColor);
 
-        mIterationName.setText(mIteration.getName());
-        mIterationStatusName.setText(IterationStatusLookup.iterationStatusToString(mIteration.getIterationStatus()));
-        mIterationStatusColor.setBackgroundColor(getContext().getResources().getColor(IterationStatusLookup.iterationStatusToColor(mIteration.getIterationStatus())));
+        iterationName.setText(mIteration.getName());
+        iterationStatusName.setText(IterationStatusLookup.iterationStatusToString(mIteration.getIterationStatus()));
+        iterationStatusColor.setBackgroundColor(getContext().getResources().getColor(IterationStatusLookup.iterationStatusToColor(mIteration.getIterationStatus())));
     }
 }

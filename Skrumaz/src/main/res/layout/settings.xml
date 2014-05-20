@@ -17,12 +17,6 @@
             android:defaultValue="Rank" />
 
         <CheckBoxPreference
-            android:title="@string/pref_title_ids"
-            android:summary="@string/pref_summary_ids"
-            android:key="@string/pref_key_ids"
-            android:defaultValue="false" />
-
-        <CheckBoxPreference
             android:title="@string/pref_title_team"
             android:summary="@string/pref_summary_team"
             android:key="@string/pref_key_team"

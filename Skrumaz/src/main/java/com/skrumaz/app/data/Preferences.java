@@ -140,12 +140,6 @@ public class Preferences {
         return prefs.getString("defaultSort", "Rank");
     }
 
-    // Show Formatted ID's with US/DE/TA's
-    public static boolean showFormattedID(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        return prefs.getBoolean("showIDs", false);
-    }
-
     // Show Artifacts for all Owners in Iteration
     public static boolean showAllOwners(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
@@ -156,7 +150,6 @@ public class Preferences {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor prefsEditor = prefs.edit();
         prefsEditor.putString("defaultSort", "Rank");
-        prefsEditor.putBoolean("showIDs", false);
         prefsEditor.putBoolean("showTeam", false);
         prefsEditor.putLong("dataExpiry", 0);
         prefsEditor.putString("username", "");

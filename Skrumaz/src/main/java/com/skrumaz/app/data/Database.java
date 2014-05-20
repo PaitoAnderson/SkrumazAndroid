@@ -18,10 +18,11 @@ public class Database extends SQLiteOpenHelper {
 
     // Database Versions
     private static final int SKRUMAZ_100 = 10;
+    private static final int SKRUMAZ_106 = 11;
 
     // Database Setup
     private static final String DATABASE_NAME = "Skrumaz.db";
-    private static final int DATABASE_VERSION = SKRUMAZ_100;
+    private static final int DATABASE_VERSION = SKRUMAZ_106;
 
     // Database Create SQL
     private static final String CREATE_TABLE_USERS = "CREATE TABLE " + Table.USERS + "("
@@ -47,7 +48,7 @@ public class Database extends SQLiteOpenHelper {
             + Field.FORMATTED_ID + " VARCHAR(15) PRIMARY KEY, " + Field.ITERATION_ID + " LONG, "
             + Field.TITLE + " TEXT, " + Field.BLOCKED + " BOOLEAN, "
             + Field.RANK + " VARCHAR(65), " + Field.STATUS + " VARCHAR(12), "
-            + Field.MODIFIED_DATE + " LONG)";
+            + Field.MODIFIED_DATE + " LONG, " + Field.OWNER_NAME + " STRING)";
 
     private static final String CREATE_TABLE_TASKS = "CREATE TABLE " + Table.TASKS + "("
             + Field.FORMATTED_ID + " VARCHAR(15) PRIMARY KEY, " + Field.PARENT_FORMATTED_ID + " VARCHAR(15), "
@@ -99,9 +100,9 @@ public class Database extends SQLiteOpenHelper {
         Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
                 + newVersion + ", which will destroy all old data");
 
-        // Upgrade to Skrumaz 1.0
+        // Upgrade to Skrumaz 1.0.6
         switch (newVersion) {
-            case SKRUMAZ_100:
+            case SKRUMAZ_106:
                 emptyDatabase(db);
         }
     }

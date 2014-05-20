@@ -11,24 +11,11 @@
         android:layout_height="match_parent"
         android:background="@android:color/background_light" >
 
-        <ExpandableListView
+        <it.gmariotti.cardslib.library.view.CardListView
             android:id="@+id/listContainer"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:cacheColorHint="@android:color/transparent"
-            android:divider="#00000000"
-            android:dividerHeight="0dp"
-            android:fadingEdge="none"
-            android:persistentDrawingCache="scrolling"
-            android:smoothScrollbar="false"
-            android:padding="0dp"
-            android:layout_margin="0dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true">
-        </ExpandableListView>
+            android:background="@color/background_cards"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
 

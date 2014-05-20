@@ -65,10 +65,6 @@
         <item>Modified</item>
     </string-array>
 
-    <string name="pref_title_ids">Show IDs</string>
-    <string name="pref_key_ids">showIDs</string>
-    <string name="pref_summary_ids">Show IDs for Stories, Defects and Tasks</string>
-
     <string name="pref_title_team">Beyond Me</string>
     <string name="pref_key_team">showTeam</string>
     <string name="pref_summary_team">Show items even if your aren\'t the owner</string>
