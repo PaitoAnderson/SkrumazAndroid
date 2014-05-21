@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="artifact_column_count" format="integer" type="dimen">2</item>
+
+    <item name="iteration_column_count" format="integer" type="dimen">2</item>
+
+    <item name="project_column_count" format="integer" type="dimen">2</item>
+</resources>

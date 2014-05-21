@@ -29,8 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
-import it.gmariotti.cardslib.library.view.CardListView;
+import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
+import it.gmariotti.cardslib.library.view.CardGridView;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.DefaultHeaderTransformer;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
@@ -41,10 +41,10 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
  */
 public class Iterations extends Fragment implements OnRefreshListener {
 
-    private CardListView cardListView;
+    private CardGridView cardGridView;
     private LinearLayout processContainer;
     private ProgressBar progressSpinner;
-    private CardArrayAdapter cardArrayAdapter;
+    private CardGridArrayAdapter cardGridArrayAdapter;
     private Context mContext;
     private List<Card> iterationCards = new ArrayList<Card>();
     private PullToRefreshLayout mPullToRefreshLayout;
@@ -70,12 +70,12 @@ public class Iterations extends Fragment implements OnRefreshListener {
         View iterationsView = inflater.inflate(R.layout.activity_iteration_list, container, false);
 
         // Find things in the View
-        cardListView = (CardListView) iterationsView.findViewById(R.id.listContainer);
+        cardGridView = (CardGridView) iterationsView.findViewById(R.id.listContainer);
         processContainer = (LinearLayout) iterationsView.findViewById(R.id.processContainer);
         progressText = (TextView) iterationsView.findViewById(R.id.progressText);
         progressSpinner = (ProgressBar) iterationsView.findViewById(R.id.progressSpinner);
-        cardArrayAdapter = new CardArrayAdapter(getActivity().getBaseContext(), iterationCards);
-        cardListView.setAdapter(cardArrayAdapter);
+        cardGridArrayAdapter = new CardGridArrayAdapter(getActivity().getBaseContext(), iterationCards);
+        cardGridView.setAdapter(cardGridArrayAdapter);
 
         // Remove spinner select Workspace / Project from
         final ActionBar actionBar = getActivity().getActionBar();
@@ -195,12 +195,12 @@ public class Iterations extends Fragment implements OnRefreshListener {
                 progressText.setText("No Iterations.");
             } else {
                 processContainer.setVisibility(View.GONE);
-                cardListView.setVisibility(View.VISIBLE);
+                cardGridView.setVisibility(View.VISIBLE);
             }
 
             // Notify refresh finished
             mPullToRefreshLayout.setRefreshComplete();
-            cardArrayAdapter.notifyDataSetChanged();
+            cardGridArrayAdapter.notifyDataSetChanged();
 
             super.onPostExecute(result);
         }
@@ -227,7 +227,7 @@ public class Iterations extends Fragment implements OnRefreshListener {
         progressSpinner.setVisibility(View.VISIBLE);
         progressText.setVisibility(View.VISIBLE);
         progressText.setText("Getting Items..."); // Text updated using SetProgress()
-        cardListView.setVisibility(View.GONE);
+        cardGridView.setVisibility(View.GONE);
     }
 
     public void finishLoading() {
@@ -238,13 +238,13 @@ public class Iterations extends Fragment implements OnRefreshListener {
                 progressText.setText("No Iterations.");
             } else {
                 processContainer.setVisibility(View.GONE);
-                cardListView.setVisibility(View.VISIBLE);
+                cardGridView.setVisibility(View.VISIBLE);
             }
         }
 
         // Notify refresh finished
         mPullToRefreshLayout.setRefreshComplete();
-        cardArrayAdapter.notifyDataSetChanged();
+        cardGridArrayAdapter.notifyDataSetChanged();
     }
 
     @Override

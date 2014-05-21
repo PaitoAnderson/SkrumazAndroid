@@ -6,4 +6,10 @@
     <dimen name="side_panel_menu_item_min_height">64.0dip</dimen>
 
     <dimen name="card_base_empty_height">0dp</dimen>
+
+    <item name="artifact_column_count" format="integer" type="dimen">1</item>
+
+    <item name="iteration_column_count" format="integer" type="dimen">1</item>
+
+    <item name="project_column_count" format="integer" type="dimen">1</item>
 </resources>

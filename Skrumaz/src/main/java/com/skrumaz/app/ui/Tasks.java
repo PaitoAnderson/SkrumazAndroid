@@ -31,9 +31,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import it.gmariotti.cardslib.library.extra.staggeredgrid.internal.CardGridStaggeredArrayAdapter;
+import it.gmariotti.cardslib.library.extra.staggeredgrid.view.CardGridStaggeredView;
 import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
-import it.gmariotti.cardslib.library.view.CardListView;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.DefaultHeaderTransformer;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
@@ -44,10 +44,10 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
  */
 public class Tasks extends Fragment implements OnRefreshListener {
 
-    private CardListView cardListView;
+    private CardGridStaggeredView cardGridStaggeredView;
     private LinearLayout processContainer;
     private ProgressBar progressSpinner;
-    private CardArrayAdapter cardArrayAdapter;
+    private CardGridStaggeredArrayAdapter cardGridStaggeredArrayAdapter;
     private Context mContext;
     private List<Card> artifactCards = new ArrayList<Card>();
     private PullToRefreshLayout mPullToRefreshLayout;
@@ -73,12 +73,12 @@ public class Tasks extends Fragment implements OnRefreshListener {
         View tasksView = inflater.inflate(R.layout.activity_artifact_list, container, false);
 
         // Find things in the View
-        cardListView = (CardListView) tasksView.findViewById(R.id.listContainer);
+        cardGridStaggeredView = (CardGridStaggeredView) tasksView.findViewById(R.id.listContainer);
         processContainer = (LinearLayout) tasksView.findViewById(R.id.processContainer);
         progressText = (TextView) tasksView.findViewById(R.id.progressText);
         progressSpinner = (ProgressBar) tasksView.findViewById(R.id.progressSpinner);
-        cardArrayAdapter = new CardArrayAdapter(getActivity().getBaseContext(), artifactCards);
-        cardListView.setAdapter(cardArrayAdapter);
+        cardGridStaggeredArrayAdapter = new CardGridStaggeredArrayAdapter(getActivity().getBaseContext(), artifactCards);
+        cardGridStaggeredView.setAdapter(cardGridStaggeredArrayAdapter);
 
         // Remove spinner select Workspace / Project from
         final ActionBar actionBar = getActivity().getActionBar();
@@ -187,7 +187,7 @@ public class Tasks extends Fragment implements OnRefreshListener {
                 progressText.setText("No Items in Current Iteration.");
             } else {
                 processContainer.setVisibility(View.GONE);
-                cardListView.setVisibility(View.VISIBLE);
+                cardGridStaggeredView.setVisibility(View.VISIBLE);
 
                 // Sort Artifacts
                 sortByDefault();
@@ -195,7 +195,7 @@ public class Tasks extends Fragment implements OnRefreshListener {
 
             // Notify refresh finished
             mPullToRefreshLayout.setRefreshComplete();
-            cardArrayAdapter.notifyDataSetChanged();
+            cardGridStaggeredArrayAdapter.notifyDataSetChanged();
 
             super.onPostExecute(result);
         }
@@ -220,7 +220,7 @@ public class Tasks extends Fragment implements OnRefreshListener {
         progressSpinner.setVisibility(View.VISIBLE);
         progressText.setVisibility(View.VISIBLE);
         progressText.setText("Getting Items..."); // Text updated using SetProgress()
-        cardListView.setVisibility(View.GONE);
+        cardGridStaggeredView.setVisibility(View.GONE);
     }
 
     public void finishLoading() {
@@ -231,7 +231,7 @@ public class Tasks extends Fragment implements OnRefreshListener {
                 progressText.setText("No Items in Current Iteration.");
             } else {
                 processContainer.setVisibility(View.GONE);
-                cardListView.setVisibility(View.VISIBLE);
+                cardGridStaggeredView.setVisibility(View.VISIBLE);
 
                 // Sort Artifacts
                 sortByDefault();
@@ -240,7 +240,7 @@ public class Tasks extends Fragment implements OnRefreshListener {
 
         // Notify refresh finished
         mPullToRefreshLayout.setRefreshComplete();
-        cardArrayAdapter.notifyDataSetChanged();
+        cardGridStaggeredArrayAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -255,23 +255,23 @@ public class Tasks extends Fragment implements OnRefreshListener {
         switch (item.getItemId()) {
             case R.id.sort_rank:
                 Collections.sort(artifactCards, new ArtifactCard.OrderByRank());
-                cardArrayAdapter.notifyDataSetChanged();
+                cardGridStaggeredArrayAdapter.notifyDataSetChanged();
                 break;
             case R.id.sort_state:
                 Collections.sort(artifactCards, new ArtifactCard.OrderByState());
-                cardArrayAdapter.notifyDataSetChanged();
+                cardGridStaggeredArrayAdapter.notifyDataSetChanged();
                 break;
             case R.id.sort_id:
                 Collections.sort(artifactCards, new ArtifactCard.OrderById());
-                cardArrayAdapter.notifyDataSetChanged();
+                cardGridStaggeredArrayAdapter.notifyDataSetChanged();
                 break;
             case R.id.sort_name:
                 Collections.sort(artifactCards, new ArtifactCard.OrderByName());
-                cardArrayAdapter.notifyDataSetChanged();
+                cardGridStaggeredArrayAdapter.notifyDataSetChanged();
                 break;
             case R.id.sort_modified:
                 Collections.sort(artifactCards, new ArtifactCard.OrderByModified());
-                cardArrayAdapter.notifyDataSetChanged();
+                cardGridStaggeredArrayAdapter.notifyDataSetChanged();
                 break;
             case R.id.action_refresh:
                 // Initiate API Requests

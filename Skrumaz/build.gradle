@@ -43,6 +43,7 @@ dependencies {
     compile project(':Skrumaz:libs:ViewPageIndicator')
     compile('com.github.chrisbanes.actionbarpulltorefresh:library:+')
     compile('com.github.gabrielemariotti.cards:library:+')
+    compile('com.github.gabrielemariotti.cards:library-extra:+')
     compile('de.keyboardsurfer.android.widget:crouton:+') {
         exclude group: 'com.google.android', module: 'support-v4'
     }
