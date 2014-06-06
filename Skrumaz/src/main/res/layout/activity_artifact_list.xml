@@ -14,7 +14,7 @@
         <it.gmariotti.cardslib.library.extra.staggeredgrid.view.CardGridStaggeredView
             xmlns:card="http://schemas.android.com/apk/res-auto"
             android:id="@+id/listContainer"
-            android:background="@color/background_cards"
+            android:background="@color/background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             card:column_count_portrait="@dimen/artifact_column_count"

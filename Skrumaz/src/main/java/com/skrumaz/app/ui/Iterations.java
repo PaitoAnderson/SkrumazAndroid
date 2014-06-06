@@ -77,6 +77,11 @@ public class Iterations extends Fragment implements OnRefreshListener {
         cardGridArrayAdapter = new CardGridArrayAdapter(getActivity().getBaseContext(), iterationCards);
         cardGridView.setAdapter(cardGridArrayAdapter);
 
+        // Setup Loading Animation
+        //AnimationAdapter animCardArrayAdapter = new LoadCardAnimationAdapter(cardGridArrayAdapter);
+        //animCardArrayAdapter.setAbsListView(cardGridView);
+        //cardGridView.setExternalAdapter(animCardArrayAdapter, cardGridArrayAdapter);
+
         // Remove spinner select Workspace / Project from
         final ActionBar actionBar = getActivity().getActionBar();
         actionBar.setDisplayShowTitleEnabled(true);

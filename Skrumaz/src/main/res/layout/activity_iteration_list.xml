@@ -13,7 +13,7 @@
 
         <it.gmariotti.cardslib.library.view.CardGridView
             android:id="@+id/listContainer"
-            android:background="@color/background_cards"
+            android:background="@color/background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:numColumns="@dimen/iteration_column_count"

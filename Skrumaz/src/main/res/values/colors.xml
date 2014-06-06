@@ -10,9 +10,8 @@
 
     <color name="drawer_bg_color">#fff7f7f7</color>
 
-    <color name="background">#eeeeee</color>
+    <color name="background">#EEEEEE</color>
     <color name="background_light">#fffafafa</color>
-    <color name="background_cards">#f4f4f4</color>
 
     <color name="iteration_planning">#D95467</color>
     <color name="iteration_committed">#EBAE4D</color>
