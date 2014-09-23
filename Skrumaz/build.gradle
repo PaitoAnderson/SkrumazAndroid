@@ -36,8 +36,8 @@ android {
 }
 
 dependencies {
-    compile project(':Skrumaz:libs:UserVoiceSDK')
     compile project(':Skrumaz:libs:ViewPageIndicator')
+    compile('com.uservoice:uservoice-android-sdk:+')
     compile('com.github.chrisbanes.actionbarpulltorefresh:library:+')
     compile('com.github.gabrielemariotti.cards:library:+')
     compile('com.github.gabrielemariotti.cards:library-extra:+')
