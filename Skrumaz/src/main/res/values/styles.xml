@@ -7,10 +7,6 @@
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         -->
-    </style>
-
-    <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
 
         <item name="android:actionBarStyle">@style/ActionBarTheme</item>
 
@@ -47,6 +43,11 @@
         <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemTheme</item>
 
         <item name="android:actionOverflowButtonStyle">@style/OverflowTheme</item>
+    </style>
+
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+
     </style>
 
     <style name="PreferencesTheme" parent="AppTheme" />
