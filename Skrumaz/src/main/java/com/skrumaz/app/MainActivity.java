@@ -9,14 +9,17 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.view.GravityCompat;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.skrumaz.app.classes.User;
@@ -33,11 +36,15 @@ import com.uservoice.uservoicesdk.UserVoice;
 /**
  * Created by Paito Anderson on 2014-03-16.
  */
-public class MainActivity extends Activity {
+public class MainActivity extends ActionBarActivity {
+
+    private Toolbar toolbar;
     private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
+
     private RelativeLayout mDrawer;
     private ListView mDrawerList;
-    private ActionBarDrawerToggle mDrawerToggle;
+
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private String[] mMenuTitles;
@@ -61,15 +68,13 @@ public class MainActivity extends Activity {
 
         mTitle = mDrawerTitle = getTitle();
         mMenuTitles = getResources().getStringArray(R.array.menu_array);
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawer = (RelativeLayout) findViewById(R.id.left_drawer);
         mDrawerProfile = (CircularImageView) findViewById(R.id.left_drawer_profile);
         mDrawerName = (TextView) findViewById(R.id.left_drawer_name);
         mDrawerEmail = (TextView) findViewById(R.id.left_drawer_email);
         mDrawerList = (ListView) findViewById(R.id.left_drawer_list);
-
-        // set a custom shadow that overlays the main content when the drawer opens
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         // Set Context variable to self
         mContext = this;
@@ -84,29 +89,36 @@ public class MainActivity extends Activity {
             populateUser();
         }
 
-        // set up the drawer's list view with items and click listener
+        // Set up the drawer's list view with items and click listener
         mDrawerList.setAdapter(new DrawerAdapter(MainActivity.this, mMenuTitles));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        // enable ActionBar app icon to behave as action to toggle nav drawer
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+        // Toolbar
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this,                  /* host Activity */
-                mDrawerLayout,         /* DrawerLayout object */
-                R.drawable.ic_drawer,  /* nav drawer image to replace 'Up' caret */
-                R.string.drawer_open,  /* "open drawer" description for accessibility */
-                R.string.drawer_close  /* "close drawer" description for accessibility */
-        ) {
-            public void onDrawerClosed(View view) {
-                getActionBar().setTitle(mTitle);
-            }
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close ) {
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                toolbar.setTitle(mTitle);
 
+                // Show Spinner
+                if (mTitle.equals("")) {
+                    Spinner spinner = (Spinner) findViewById(R.id.spinner);
+                    spinner.setVisibility(View.VISIBLE);
+                }
+            }
+            @Override
             public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle(mDrawerTitle);
+                super.onDrawerOpened(drawerView);
+                toolbar.setTitle(mDrawerTitle);
+
+                // Hide Spinner
+                Spinner spinner = (Spinner) findViewById(R.id.spinner);
+                spinner.setVisibility(View.GONE);
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -208,8 +220,7 @@ public class MainActivity extends Activity {
                 fragment = new Projects();
                 break;
             case 3:
-                Intent intent = new Intent(this, Settings.class);
-                startActivity(intent);
+                fragment = new Settings();
                 break;
             case 4:
                 // UserVoice library
@@ -242,7 +253,7 @@ public class MainActivity extends Activity {
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
-        getActionBar().setTitle(mTitle);
+        toolbar.setTitle(mTitle);
     }
 
     private void populateUser() {

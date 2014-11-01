@@ -18,10 +18,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Welcome" android:theme="@android:style/Theme.Holo.Light.NoActionBar" android:screenOrientation="portrait" />
+        <activity android:name=".Welcome" android:theme="@style/Theme.AppCompat.Light.NoActionBar" android:screenOrientation="portrait" />
         <activity android:name=".Login" />
         <activity android:name=".Create" android:screenOrientation="portrait" />
-        <activity android:name=".Settings" android:theme="@style/PreferencesTheme" />
 
         <activity android:name="com.uservoice.uservoicesdk.activity.PortalActivity" android:theme="@style/HelpTheme" />
         <activity android:name="com.uservoice.uservoicesdk.activity.ForumActivity" android:theme="@style/HelpTheme" />

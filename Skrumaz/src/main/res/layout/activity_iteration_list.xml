@@ -4,24 +4,20 @@
     android:background="@color/primary_color"
     style="@style/FrameLayoutTheme">
 
-    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+    <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/ptr_layout"
+        android:id="@+id/swipe_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/background_light">
+        android:layout_height="match_parent">
 
-        <it.gmariotti.cardslib.library.view.CardGridView
-            android:id="@+id/listContainer"
-            android:background="@color/background"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/iterationList"
+            android:scrollbars="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:numColumns="@dimen/iteration_column_count"
-            android:verticalSpacing="3dp"
-            android:horizontalSpacing="2dp"
-            android:gravity="center" />
+            android:background="@color/background" />
 
-    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/processContainer"

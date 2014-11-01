@@ -1,93 +1,55 @@
 package com.skrumaz.app.ui.cards;
 
-import android.app.Activity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.skrumaz.app.R;
 import com.skrumaz.app.classes.Artifact;
-import com.skrumaz.app.utils.ArtifactStatusLookup;
 
 import java.util.Comparator;
-
-import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.ViewToClickToExpand;
 
 /**
  * Created by Paito Anderson on 2014-05-19.
  */
-public class ArtifactCard extends Card {
+public class ArtifactCard extends Artifact {
 
-    private Artifact mArtifact;
-
-    public ArtifactCard(Activity activity, Artifact artifact) {
-        this(activity, R.layout.card_artifact, artifact);
+    public ArtifactCard(String name) {
+        super(name);
     }
 
-    public ArtifactCard(final Activity activity, int innerLayout, final Artifact artifact) {
-        super(activity, innerLayout);
-        mArtifact = artifact;
-    }
-
-    public static class OrderByRank implements Comparator<Card> {
+    public static class OrderByRank implements Comparator<Artifact> {
 
         @Override
-        public int compare(Card o1, Card o2) {
-            return ((ArtifactCard) o1).mArtifact.getRank().compareTo(((ArtifactCard) o2).mArtifact.getRank());
+        public int compare(Artifact o1, Artifact o2) {
+            return o1.getRank().compareTo(o2.getRank());
         }
     }
 
-    public static class OrderByState implements Comparator<Card> {
+    public static class OrderByState implements Comparator<Artifact> {
 
         @Override
-        public int compare(Card o1, Card o2) {
-            return ((ArtifactCard) o2).mArtifact.getStatus().compareTo(((ArtifactCard) o1).mArtifact.getStatus());
+        public int compare(Artifact o1, Artifact o2) {
+            return o2.getStatus().compareTo(o1.getStatus());
         }
     }
 
-    public static class OrderById implements Comparator<Card> {
+    public static class OrderById implements Comparator<Artifact> {
 
         @Override
-        public int compare(Card o1, Card o2) {
-            return ((ArtifactCard) o2).mArtifact.getFormattedID().compareTo(((ArtifactCard) o1).mArtifact.getFormattedID());
+        public int compare(Artifact o1, Artifact o2) {
+            return o2.getFormattedID().compareTo(o1.getFormattedID());
         }
     }
 
-    public static class OrderByName implements Comparator<Card> {
+    public static class OrderByName implements Comparator<Artifact> {
 
         @Override
-        public int compare(Card o1, Card o2) {
-            return ((ArtifactCard) o1).mArtifact.getName().compareTo(((ArtifactCard) o2).mArtifact.getName());
+        public int compare(Artifact o1, Artifact o2) {
+            return o1.getName().compareTo(o2.getName());
         }
     }
 
-    public static class OrderByModified implements Comparator<Card> {
+    public static class OrderByModified implements Comparator<Artifact> {
 
         @Override
-        public int compare(Card o1, Card o2) {
-            return ((ArtifactCard) o2).mArtifact.getLastUpdate().compareTo(((ArtifactCard) o1).mArtifact.getLastUpdate());
+        public int compare(Artifact o1, Artifact o2) {
+            return o2.getLastUpdate().compareTo(o1.getLastUpdate());
         }
-    }
-
-    @Override
-    public void setupInnerViewElements(ViewGroup parent, View view) {
-
-        // Set Artifact Data Elements to Card
-
-        TextView artifactName = (TextView) parent.findViewById(R.id.artifactName);
-        TextView artifactStatusName = (TextView) parent.findViewById(R.id.artifactStatusName);
-        TextView artifactOwnerName = (TextView) parent.findViewById(R.id.artifactOwnerName);
-        ImageView artifactStatusColor = (ImageView) parent.findViewById(R.id.artifactStatusColor);
-
-        artifactName.setText(mArtifact.getName());
-        artifactStatusName.setText(mArtifact.getFormattedID() + " - " + ArtifactStatusLookup.statusToString(mArtifact.getStatus()));
-        artifactOwnerName.setText(mArtifact.getOwnerName());
-        artifactStatusColor.setBackgroundColor(getContext().getResources().getColor(ArtifactStatusLookup.statusToColor(mArtifact.getStatus())));
-
-        // On Click Expand Section
-        ViewToClickToExpand viewToClickToExpand = ViewToClickToExpand.builder().setupView(view);
-        setViewToClickToExpand(viewToClickToExpand);
     }
 }

@@ -1,11 +1,13 @@
 package com.skrumaz.app;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
@@ -45,7 +47,7 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 /**
  * Created by Paito Anderson on 1/25/2014.
  */
-public class Create extends Activity {
+public class Create extends ActionBarActivity {
 
     // TAG for logging
     private static final String TAG = "CREATE";
@@ -57,7 +59,6 @@ public class Create extends Activity {
     private TextView progressText;
     private ProgressBar progressSpinner;
     private Boolean continueRequests = true;
-    private String breakingError = "";
 
     private String createName;
     private String createType;
@@ -88,8 +89,12 @@ public class Create extends Activity {
         // Set Context variable to self
         mContext = this;
 
+        // Setup Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         // Add back button icon
-        ActionBar actionbar = getActionBar();
+        ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setTitle("Create " + createName);
 
@@ -111,6 +116,7 @@ public class Create extends Activity {
         protected void onPostExecute(Boolean result) {
             if (!continueRequests) {
                 progressSpinner.setVisibility(View.GONE);
+                String breakingError = "";
                 progressText.setText(breakingError);
             }
 

@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Base64;
 import android.util.Log;
@@ -33,7 +35,7 @@ import java.net.HttpURLConnection;
 /**
  * Created by Paito Anderson on 2013-09-29.
  */
-public class Login extends Activity {
+public class Login extends ActionBarActivity {
 
     private ProgressDialog dialog;
     private EditText username;
@@ -79,12 +81,10 @@ public class Login extends Activity {
             }
         });
 
-        // Add back button icon
-        ActionBar actionbar = getActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        actionbar.setTitle("Login");
-
-        super.onCreate(savedInstanceState);
+        // Setup Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("Login");
     }
 
     @Override

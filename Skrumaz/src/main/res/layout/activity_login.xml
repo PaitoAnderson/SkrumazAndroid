@@ -1,8 +1,12 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
-    android:background="@color/primary_color"
-    style="@style/FrameLayoutTheme">
+    tools:context=".Login">
+
+    <!-- Toolbar -->
+    <include layout="@layout/toolbar" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
@@ -52,4 +56,4 @@
             android:textStyle="bold" />
 
     </LinearLayout>
-</FrameLayout>
+</LinearLayout>
