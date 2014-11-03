@@ -1,17 +1,13 @@
-package com.skrumaz.app.ui.cards;
+package com.skrumaz.app.utils;
 
 import com.skrumaz.app.classes.Artifact;
 
 import java.util.Comparator;
 
 /**
- * Created by Paito Anderson on 2014-05-19.
+ * Created by Paito Anderson on 14-11-02.
  */
-public class ArtifactCard extends Artifact {
-
-    public ArtifactCard(String name) {
-        super(name);
-    }
+public class ArtifactSort {
 
     public static class OrderByRank implements Comparator<Artifact> {
 

@@ -55,8 +55,6 @@
         <item name="android:actionBarStyle">@style/ActionBarTheme</item>
     </style>
 
-    <style name="FrameLayoutTheme" />
-
     <!-- Custom styles. -->
     <style name="ActionBarTheme" parent="@android:style/Widget.Holo.Light.ActionBar">
         <item name="android:background">@color/primary_color</item>

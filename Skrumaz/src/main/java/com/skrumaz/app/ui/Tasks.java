@@ -29,7 +29,7 @@ import com.skrumaz.app.data.Preferences;
 import com.skrumaz.app.data.Store.Artifacts;
 import com.skrumaz.app.data.WebService.GetArtifacts;
 import com.skrumaz.app.ui.adapters.ArtifactAdapter;
-import com.skrumaz.app.ui.cards.ArtifactCard;
+import com.skrumaz.app.utils.ArtifactSort;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -244,23 +244,23 @@ public class Tasks extends Fragment implements SwipeRefreshLayout.OnRefreshListe
         // Handle action buttons
         switch (item.getItemId()) {
             case R.id.sort_rank:
-                Collections.sort(artifactCards, new ArtifactCard.OrderByRank());
+                Collections.sort(artifactCards, new ArtifactSort.OrderByRank());
                 recyclerViewAdapter.notifyDataSetChanged();
                 break;
             case R.id.sort_state:
-                Collections.sort(artifactCards, new ArtifactCard.OrderByState());
+                Collections.sort(artifactCards, new ArtifactSort.OrderByState());
                 recyclerViewAdapter.notifyDataSetChanged();
                 break;
             case R.id.sort_id:
-                Collections.sort(artifactCards, new ArtifactCard.OrderById());
+                Collections.sort(artifactCards, new ArtifactSort.OrderById());
                 recyclerViewAdapter.notifyDataSetChanged();
                 break;
             case R.id.sort_name:
-                Collections.sort(artifactCards, new ArtifactCard.OrderByName());
+                Collections.sort(artifactCards, new ArtifactSort.OrderByName());
                 recyclerViewAdapter.notifyDataSetChanged();
                 break;
             case R.id.sort_modified:
-                Collections.sort(artifactCards, new ArtifactCard.OrderByModified());
+                Collections.sort(artifactCards, new ArtifactSort.OrderByModified());
                 recyclerViewAdapter.notifyDataSetChanged();
                 break;
             case R.id.action_refresh:
@@ -277,15 +277,15 @@ public class Tasks extends Fragment implements SwipeRefreshLayout.OnRefreshListe
         String defaultSort = Preferences.getDefaultSort(mContext);
 
         if (defaultSort.equalsIgnoreCase("rank")) {
-            Collections.sort(artifactCards, new ArtifactCard.OrderByRank());
+            Collections.sort(artifactCards, new ArtifactSort.OrderByRank());
         } else if (defaultSort.equalsIgnoreCase("state")) {
-            Collections.sort(artifactCards, new ArtifactCard.OrderByState());
+            Collections.sort(artifactCards, new ArtifactSort.OrderByState());
         } else if (defaultSort.equalsIgnoreCase("id")) {
-            Collections.sort(artifactCards, new ArtifactCard.OrderById());
+            Collections.sort(artifactCards, new ArtifactSort.OrderById());
         } else if (defaultSort.equalsIgnoreCase("name")) {
-            Collections.sort(artifactCards, new ArtifactCard.OrderByName());
+            Collections.sort(artifactCards, new ArtifactSort.OrderByName());
         } else if (defaultSort.equalsIgnoreCase("modified")) {
-            Collections.sort(artifactCards, new ArtifactCard.OrderByModified());
+            Collections.sort(artifactCards, new ArtifactSort.OrderByModified());
         }
     }
 
