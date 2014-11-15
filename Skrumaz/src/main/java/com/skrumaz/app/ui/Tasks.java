@@ -2,6 +2,7 @@ package com.skrumaz.app.ui;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -30,6 +31,7 @@ import com.skrumaz.app.data.Store.Artifacts;
 import com.skrumaz.app.data.WebService.GetArtifacts;
 import com.skrumaz.app.ui.adapters.ArtifactAdapter;
 import com.skrumaz.app.utils.ArtifactSort;
+import com.skrumaz.app.utils.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -83,6 +85,20 @@ public class Tasks extends Fragment implements SwipeRefreshLayout.OnRefreshListe
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        // Setup Card Clicks
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(mContext, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+
+                        // Send to Task View
+                        Intent viewTask = new Intent(mContext, com.skrumaz.app.ui.Artifact.class);
+                        viewTask.putExtra("ArtifactName", artifactCards.get(position).getFormattedID());
+                        startActivity(viewTask);
+                        getActivity().overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
+                    }
+                })
+        );
 
         // Swipe to Refresh Library - Initialize
         mSwipeRefreshLayout = (SwipeRefreshLayout) tasksView.findViewById(R.id.swipe_container);

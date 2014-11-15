@@ -7,7 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp"
-    card_view:cardCornerRadius="4dp">
+    card_view:cardCornerRadius="4dp"
+    card_view:cardUseCompatPadding="true">
 
     <LinearLayout
         android:id="@+id/content"
@@ -33,6 +34,7 @@
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dip"
+            android:layout_marginStart="8dip"
             android:layout_weight="98"
             android:orientation="vertical" >
 

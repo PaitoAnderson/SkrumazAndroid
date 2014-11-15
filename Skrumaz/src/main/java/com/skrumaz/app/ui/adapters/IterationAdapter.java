@@ -52,9 +52,7 @@ public class IterationAdapter extends RecyclerView.Adapter<IterationAdapter.View
         CardView view = (CardView)LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.card_iteration, viewGroup,false);
 
-        ViewHolder viewHolder = new ViewHolder(view);
-
-        return viewHolder;
+        return new ViewHolder(view);
     }
 
     @Override

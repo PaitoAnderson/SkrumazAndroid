@@ -19,10 +19,11 @@ public class Database extends SQLiteOpenHelper {
     // Database Versions
     private static final int SKRUMAZ_100 = 10;
     private static final int SKRUMAZ_106 = 11;
+    private static final int SKRUMAZ_108 = 12;
 
     // Database Setup
     private static final String DATABASE_NAME = "Skrumaz.db";
-    private static final int DATABASE_VERSION = SKRUMAZ_106;
+    private static final int DATABASE_VERSION = SKRUMAZ_108;
 
     // Database Create SQL
     private static final String CREATE_TABLE_USERS = "CREATE TABLE " + Table.USERS + "("
@@ -48,7 +49,7 @@ public class Database extends SQLiteOpenHelper {
             + Field.FORMATTED_ID + " VARCHAR(15) PRIMARY KEY, " + Field.ITERATION_ID + " LONG, "
             + Field.TITLE + " TEXT, " + Field.BLOCKED + " BOOLEAN, "
             + Field.RANK + " VARCHAR(65), " + Field.STATUS + " VARCHAR(12), "
-            + Field.MODIFIED_DATE + " LONG, " + Field.OWNER_NAME + " STRING)";
+            + Field.MODIFIED_DATE + " LONG, " + Field.OWNER_NAME + " STRING, " + Field.DESCRIPTION + " TEXT)";
 
     private static final String CREATE_TABLE_TASKS = "CREATE TABLE " + Table.TASKS + "("
             + Field.FORMATTED_ID + " VARCHAR(15) PRIMARY KEY, " + Field.PARENT_FORMATTED_ID + " VARCHAR(15), "
@@ -100,11 +101,33 @@ public class Database extends SQLiteOpenHelper {
         Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
                 + newVersion + ", which will destroy all old data");
 
-        // Upgrade to Skrumaz 1.0.6
-        switch (newVersion) {
+        // Upgrade to Skrumaz
+        switch (oldVersion) {
             case SKRUMAZ_106:
                 emptyDatabase(db);
+                break;
+            case SKRUMAZ_108:
+                newArtifacts(db);
+                break;
+            default:
+                emptyDatabase(db);
+                break;
         }
+    }
+
+    private void newArtifacts(SQLiteDatabase db) {
+
+        // Drop Tasks / Artifacts Tables
+        db.execSQL("DROP TABLE IF EXISTS " + Table.TASKS);
+        db.execSQL("DROP TABLE IF EXISTS " + Table.ARTIFACTS);
+
+        // Create Artifacts Table
+        Log.v(TAG, CREATE_TABLE_ARTIFACTS);
+        db.execSQL(CREATE_TABLE_ARTIFACTS);
+
+        // Create Tasks Table
+        Log.v(TAG, CREATE_TABLE_TASKS);
+        db.execSQL(CREATE_TABLE_TASKS);
     }
 
     public void emptyDatabasePref() {

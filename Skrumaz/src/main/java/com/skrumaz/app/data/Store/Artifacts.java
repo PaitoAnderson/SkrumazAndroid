@@ -73,6 +73,7 @@ public class Artifacts extends Database {
             artifactValues.put(Field.STATUS, ArtifactStatusLookup.statusToString(artifact.getStatus()));
             artifactValues.put(Field.MODIFIED_DATE, artifact.getLastUpdate().getTime());
             artifactValues.put(Field.OWNER_NAME, artifact.getOwnerName());
+            artifactValues.put(Field.DESCRIPTION, artifact.getDescription());
 
             // Insert Row
             try {
@@ -107,10 +108,9 @@ public class Artifacts extends Database {
     }
 
     /*
-     * Pull all Artifacts / Tasks from the database and put them in a usable list
+     * Pull all Artifacts / Tasks from the database and put them in a usable list based on iteration id
      */
     public List<Artifact> getArtifacts(Long iterationId) {
-        List<Artifact> artifacts = new ArrayList<Artifact>();
 
         // Open Database connection
         SQLiteDatabase db = this.getReadableDatabase();
@@ -118,6 +118,54 @@ public class Artifacts extends Database {
         // Populate artifacts from Database
         Cursor cursor = db.query(Table.ARTIFACTS + " WHERE (" + Field.ITERATION_ID + " = " + iterationId + ") ORDER BY " + Field.RANK + " ASC",
                 new String[] { "*" }, null, null, null, null, null, null);
+
+        // Create list of Artifacts
+        List<Artifact> artifacts = createArtifactsFromQuery(db, cursor);
+
+        // Close Cursor
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+
+        // Close Database connection
+        db.releaseReference();
+
+        return artifacts;
+    }
+
+    /*
+ * Pull all Artifacts / Tasks from the database and put them in a usable list based on iteration id
+ */
+    public Artifact getArtifact(String formattedId) {
+
+        // Open Database connection
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Populate artifacts from Database
+        Cursor cursor = db.query(Table.ARTIFACTS + " WHERE (" + Field.FORMATTED_ID + " = '" + formattedId + "')",
+                new String[] { "*" }, null, null, null, null, null, null);
+
+        // Create list of Artifacts
+        List<Artifact> artifacts = createArtifactsFromQuery(db, cursor);
+
+        // Close Cursor
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+
+        // Close Database connection
+        db.releaseReference();
+
+        // Return first object
+        if (artifacts.size() > 0) return artifacts.get(0);
+
+        return new Artifact("Not Found.");
+    }
+
+    private List<Artifact> createArtifactsFromQuery(SQLiteDatabase db, Cursor cursor)
+    {
+        List<Artifact> artifacts = new ArrayList<Artifact>();
+
         if (cursor.moveToFirst()) {
             do {
                 Artifact artifact = new Artifact(cursor.getString(2));
@@ -127,6 +175,7 @@ public class Artifacts extends Database {
                 artifact.setStatus(ArtifactStatusLookup.stringToStatus(cursor.getString(5)));
                 artifact.setLastUpdate(new Date(cursor.getLong(6)));
                 artifact.setOwnerName(cursor.getString(7));
+                artifact.setDescription(cursor.getString(8));
 
                 Cursor cursor1 = db.query(Table.TASKS + " WHERE (" + Field.PARENT_FORMATTED_ID + " = '" + artifact.getFormattedID() + "')",
                         new String[] { "*" }, null, null, null, null, null);
@@ -141,17 +190,9 @@ public class Artifacts extends Database {
                 if (cursor1 != null && !cursor1.isClosed()) {
                     cursor1.close();
                 }
-
                 artifacts.add(artifact);
-
             } while (cursor.moveToNext());
         }
-        if (cursor != null && !cursor.isClosed()) {
-            cursor.close();
-        }
-
-        // Close Database connection
-        db.releaseReference();
 
         return artifacts;
     }

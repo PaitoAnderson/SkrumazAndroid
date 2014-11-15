@@ -26,4 +26,5 @@ public interface Field {
     String OWNER_NAME = "OwnerName";
     String DEFINITION_ID = "DefinitionID";
     String ELEMENT_NAME = "ElementName";
+    String DESCRIPTION = "Description";
 }

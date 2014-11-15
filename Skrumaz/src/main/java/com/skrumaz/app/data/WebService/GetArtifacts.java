@@ -142,9 +142,9 @@ public class GetArtifacts {
             whereQuery = "(" + whereQuery + "%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(context) + "%22))";
         }
 
-        HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate,Owner");
+        HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate,Owner,Description");
 
-             Log.d("GetArtifacts","https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate,Owner&pretty=true");
+             Log.d("GetArtifacts","https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate,Owner,Description&pretty=true");
 
         // Setup HTTP Headers / Authorization
         get.setHeader("Accept", "application/json");
@@ -177,6 +177,7 @@ public class GetArtifacts {
                     userStory.setBlocked(userStoriesArray.getJSONObject(i).getBoolean("Blocked"));
                     userStory.setStatus(ArtifactStatusLookup.stringToStatus(userStoriesArray.getJSONObject(i).getString("ScheduleState")));
                     userStory.setLastUpdate(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(userStoriesArray.getJSONObject(i).getString("LastUpdateDate")));
+                    userStory.setDescription(userStoriesArray.getJSONObject(i).getString("Description"));
 
                     // Iterate though Tasks for User Story
                     for (int j = 0; j < userStoriesArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getInt("Count"); j++)
@@ -227,9 +228,9 @@ public class GetArtifacts {
             whereQuery = "(" + whereQuery + "%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(context) + "%22))";
         }
 
-        HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate,Owner");
+        HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate,Owner,Description");
 
-             Log.d("GetArtifacts","https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate,Owner&pretty=true");
+             Log.d("GetArtifacts","https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate,Owner,Description&pretty=true");
 
         // Setup HTTP Headers / Authorization
         get.setHeader("Accept", "application/json");
@@ -262,6 +263,7 @@ public class GetArtifacts {
                     defect.setBlocked(defectsArray.getJSONObject(i).getBoolean("Blocked"));
                     defect.setStatus(ArtifactStatusLookup.stringToStatus(defectsArray.getJSONObject(i).getString("ScheduleState")));
                     defect.setLastUpdate(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(defectsArray.getJSONObject(i).getString("LastUpdateDate")));
+                    defect.setDescription(defectsArray.getJSONObject(i).getString("Description"));
 
                     // Iterate though Tasks for Defect
                     for (int j = 0; j < defectsArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getInt("Count"); j++)

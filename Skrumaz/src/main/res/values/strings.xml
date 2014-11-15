@@ -47,6 +47,8 @@
 
     <string name="tip_swipe_down">Tip: You can swipe down to refresh.</string>
 
+    <string name="no_results">No Results</string>
+
     <string name="pref_configuration">Configuration</string>
     <string name="pref_about">About</string>
 
