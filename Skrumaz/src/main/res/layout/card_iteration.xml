@@ -1,47 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/content"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_gravity="center"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:layout_marginTop="10dp"
-    android:layout_marginBottom="10dp"
-    android:weightSum="100" >
-
-    <ImageView
-        android:id="@+id/iterationStatusColor"
-        android:layout_width="0dip"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
-        android:adjustViewBounds="true"
-        android:baselineAlignBottom="true"
-        android:scaleType="centerCrop" />
+    android:padding="10dp"
+    card_view:cardCornerRadius="4dp"
+    card_view:cardUseCompatPadding="true">
 
     <LinearLayout
-        android:id="@+id/contentLayout"
-        android:layout_width="0dip"
+        android:id="@+id/content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dip"
-        android:layout_weight="98"
-        android:orientation="vertical" >
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:weightSum="100">
 
-        <TextView
-            android:id="@+id/iterationName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/SansSerifThin"
-            android:textSize="22sp"
-            android:maxLines="1"
-            android:ellipsize="end"/>
+        <ImageView
+            android:id="@+id/iterationStatusColor"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:adjustViewBounds="true"
+            android:baselineAlignBottom="true"
+            android:scaleType="centerCrop" />
 
-        <TextView
-            android:id="@+id/iterationStatusName"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/contentLayout"
+            android:layout_width="0dip"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            style="@style/SansSerifLight"
-            android:textSize="16sp" />
+            android:layout_marginLeft="8dip"
+            android:layout_marginStart="8dip"
+            android:layout_weight="98"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/iterationName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/SansSerifThin"
+                android:textSize="22sp"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+
+            <TextView
+                android:id="@+id/iterationStatusName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                style="@style/SansSerifLight"
+                android:textSize="16sp" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</android.support.v7.widget.CardView>

@@ -1,10 +1,14 @@
 package com.skrumaz.app.ui;
 
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,36 +25,34 @@ import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.Tracker;
 import com.skrumaz.app.R;
+import com.skrumaz.app.classes.Artifact;
 import com.skrumaz.app.data.Preferences;
 import com.skrumaz.app.data.Store.Artifacts;
 import com.skrumaz.app.data.WebService.GetArtifacts;
-import com.skrumaz.app.ui.cards.ArtifactCard;
-import com.skrumaz.app.ui.factories.ArtifactFactory;
+import com.skrumaz.app.ui.adapters.ArtifactAdapter;
+import com.skrumaz.app.utils.ArtifactSort;
+import com.skrumaz.app.utils.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import it.gmariotti.cardslib.library.extra.staggeredgrid.internal.CardGridStaggeredArrayAdapter;
-import it.gmariotti.cardslib.library.extra.staggeredgrid.view.CardGridStaggeredView;
-import it.gmariotti.cardslib.library.internal.Card;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.DefaultHeaderTransformer;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-
 /**
  * Created by Paito Anderson on 2014-03-16.
  */
-public class Tasks extends Fragment implements OnRefreshListener {
+public class Tasks extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    private CardGridStaggeredView cardGridStaggeredView;
+    private Context mContext;
+    private List<Artifact> artifactCards = new ArrayList<Artifact>();
+
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter recyclerViewAdapter;
+
     private LinearLayout processContainer;
     private ProgressBar progressSpinner;
-    private CardGridStaggeredArrayAdapter cardGridStaggeredArrayAdapter;
-    private Context mContext;
-    private List<Card> artifactCards = new ArrayList<Card>();
-    private PullToRefreshLayout mPullToRefreshLayout;
+
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
     private Tracker mTracker;
 
     public TextView progressText;
@@ -73,31 +75,35 @@ public class Tasks extends Fragment implements OnRefreshListener {
         View tasksView = inflater.inflate(R.layout.activity_artifact_list, container, false);
 
         // Find things in the View
-        cardGridStaggeredView = (CardGridStaggeredView) tasksView.findViewById(R.id.listContainer);
+        recyclerView = (RecyclerView) tasksView.findViewById(R.id.artifactList);
         processContainer = (LinearLayout) tasksView.findViewById(R.id.processContainer);
         progressText = (TextView) tasksView.findViewById(R.id.progressText);
         progressSpinner = (ProgressBar) tasksView.findViewById(R.id.progressSpinner);
-        cardGridStaggeredArrayAdapter = new CardGridStaggeredArrayAdapter(getActivity().getBaseContext(), artifactCards);
-        cardGridStaggeredView.setAdapter(cardGridStaggeredArrayAdapter);
+        recyclerViewAdapter = new ArtifactAdapter(getActivity().getBaseContext(), artifactCards);
 
-        // Remove spinner select Workspace / Project from
-        final ActionBar actionBar = getActivity().getActionBar();
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(recyclerViewAdapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        // Disable Group Indicator
-        //listView.setGroupIndicator(null);
+        // Setup Card Clicks
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(mContext, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
 
-        // Pull to Refresh Library - Initialize
-        mPullToRefreshLayout = (PullToRefreshLayout) tasksView.findViewById(R.id.ptr_layout);
-        ActionBarPullToRefresh.from(getActivity())
-                .allChildrenArePullable()
-                .listener(this)
-                .setup(mPullToRefreshLayout);
+                        // Send to Task View
+                        Intent viewTask = new Intent(mContext, com.skrumaz.app.ui.Artifact.class);
+                        viewTask.putExtra("ArtifactName", artifactCards.get(position).getFormattedID());
+                        startActivity(viewTask);
+                        getActivity().overridePendingTransition(R.anim.slide_in_right, android.R.anim.fade_out);
+                    }
+                })
+        );
 
-        // Pull to Refresh Library - Set ProgressBar color.
-        DefaultHeaderTransformer transformer = ((DefaultHeaderTransformer)mPullToRefreshLayout.getHeaderTransformer());
-        transformer.setProgressBarColor(getResources().getColor(R.color.accent_color));
+        // Swipe to Refresh Library - Initialize
+        mSwipeRefreshLayout = (SwipeRefreshLayout) tasksView.findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_color);
 
         // Notify System we have our own menu items
         setHasOptionsMenu(true);
@@ -118,7 +124,7 @@ public class Tasks extends Fragment implements OnRefreshListener {
     }
 
     @Override
-    public void onRefreshStarted(View view) {
+    public void onRefresh() {
         populateExpandableListView(true);
     }
 
@@ -162,7 +168,7 @@ public class Tasks extends Fragment implements OnRefreshListener {
         @Override
         protected Boolean doInBackground(String... params) {
 
-            artifactCards.addAll(ArtifactFactory.getArtifactCards(getActivity(), new GetArtifacts().FetchItems(mContext)));
+            artifactCards.addAll(new GetArtifacts().FetchItems(mContext));
 
             return null;
         }
@@ -187,15 +193,15 @@ public class Tasks extends Fragment implements OnRefreshListener {
                 progressText.setText("No Items in Current Iteration.");
             } else {
                 processContainer.setVisibility(View.GONE);
-                cardGridStaggeredView.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
 
                 // Sort Artifacts
                 sortByDefault();
             }
 
             // Notify refresh finished
-            mPullToRefreshLayout.setRefreshComplete();
-            cardGridStaggeredArrayAdapter.notifyDataSetChanged();
+            mSwipeRefreshLayout.setRefreshing(false);
+            recyclerViewAdapter.notifyDataSetChanged();
 
             super.onPostExecute(result);
         }
@@ -206,7 +212,7 @@ public class Tasks extends Fragment implements OnRefreshListener {
             // Pull Artifacts and Tasks from SQLite
             Artifacts db = new Artifacts(mContext);
             artifactCards.clear();
-            artifactCards.addAll(ArtifactFactory.getArtifactCards(getActivity(), db.getArtifacts(Preferences.getIterationId(mContext, true))));
+            artifactCards.addAll(db.getArtifacts(Preferences.getIterationId(mContext, true)));
             db.close();
 
             return null;
@@ -220,7 +226,7 @@ public class Tasks extends Fragment implements OnRefreshListener {
         progressSpinner.setVisibility(View.VISIBLE);
         progressText.setVisibility(View.VISIBLE);
         progressText.setText("Getting Items..."); // Text updated using SetProgress()
-        cardGridStaggeredView.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
     }
 
     public void finishLoading() {
@@ -231,7 +237,7 @@ public class Tasks extends Fragment implements OnRefreshListener {
                 progressText.setText("No Items in Current Iteration.");
             } else {
                 processContainer.setVisibility(View.GONE);
-                cardGridStaggeredView.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
 
                 // Sort Artifacts
                 sortByDefault();
@@ -239,8 +245,8 @@ public class Tasks extends Fragment implements OnRefreshListener {
         }
 
         // Notify refresh finished
-        mPullToRefreshLayout.setRefreshComplete();
-        cardGridStaggeredArrayAdapter.notifyDataSetChanged();
+        mSwipeRefreshLayout.setRefreshing(false);
+        recyclerViewAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -254,24 +260,24 @@ public class Tasks extends Fragment implements OnRefreshListener {
         // Handle action buttons
         switch (item.getItemId()) {
             case R.id.sort_rank:
-                Collections.sort(artifactCards, new ArtifactCard.OrderByRank());
-                cardGridStaggeredArrayAdapter.notifyDataSetChanged();
+                Collections.sort(artifactCards, new ArtifactSort.OrderByRank());
+                recyclerViewAdapter.notifyDataSetChanged();
                 break;
             case R.id.sort_state:
-                Collections.sort(artifactCards, new ArtifactCard.OrderByState());
-                cardGridStaggeredArrayAdapter.notifyDataSetChanged();
+                Collections.sort(artifactCards, new ArtifactSort.OrderByState());
+                recyclerViewAdapter.notifyDataSetChanged();
                 break;
             case R.id.sort_id:
-                Collections.sort(artifactCards, new ArtifactCard.OrderById());
-                cardGridStaggeredArrayAdapter.notifyDataSetChanged();
+                Collections.sort(artifactCards, new ArtifactSort.OrderById());
+                recyclerViewAdapter.notifyDataSetChanged();
                 break;
             case R.id.sort_name:
-                Collections.sort(artifactCards, new ArtifactCard.OrderByName());
-                cardGridStaggeredArrayAdapter.notifyDataSetChanged();
+                Collections.sort(artifactCards, new ArtifactSort.OrderByName());
+                recyclerViewAdapter.notifyDataSetChanged();
                 break;
             case R.id.sort_modified:
-                Collections.sort(artifactCards, new ArtifactCard.OrderByModified());
-                cardGridStaggeredArrayAdapter.notifyDataSetChanged();
+                Collections.sort(artifactCards, new ArtifactSort.OrderByModified());
+                recyclerViewAdapter.notifyDataSetChanged();
                 break;
             case R.id.action_refresh:
                 // Initiate API Requests
@@ -287,15 +293,15 @@ public class Tasks extends Fragment implements OnRefreshListener {
         String defaultSort = Preferences.getDefaultSort(mContext);
 
         if (defaultSort.equalsIgnoreCase("rank")) {
-            Collections.sort(artifactCards, new ArtifactCard.OrderByRank());
+            Collections.sort(artifactCards, new ArtifactSort.OrderByRank());
         } else if (defaultSort.equalsIgnoreCase("state")) {
-            Collections.sort(artifactCards, new ArtifactCard.OrderByState());
+            Collections.sort(artifactCards, new ArtifactSort.OrderByState());
         } else if (defaultSort.equalsIgnoreCase("id")) {
-            Collections.sort(artifactCards, new ArtifactCard.OrderById());
+            Collections.sort(artifactCards, new ArtifactSort.OrderById());
         } else if (defaultSort.equalsIgnoreCase("name")) {
-            Collections.sort(artifactCards, new ArtifactCard.OrderByName());
+            Collections.sort(artifactCards, new ArtifactSort.OrderByName());
         } else if (defaultSort.equalsIgnoreCase("modified")) {
-            Collections.sort(artifactCards, new ArtifactCard.OrderByModified());
+            Collections.sort(artifactCards, new ArtifactSort.OrderByModified());
         }
     }
 

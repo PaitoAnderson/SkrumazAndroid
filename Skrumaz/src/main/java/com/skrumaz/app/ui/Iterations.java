@@ -1,10 +1,15 @@
 package com.skrumaz.app.ui;
 
-import android.app.ActionBar;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,33 +27,31 @@ import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.Tracker;
 import com.skrumaz.app.R;
+import com.skrumaz.app.classes.Iteration;
 import com.skrumaz.app.data.Preferences;
 import com.skrumaz.app.data.WebService.GetIterations;
-import com.skrumaz.app.ui.factories.IterationFactory;
+import com.skrumaz.app.ui.adapters.IterationAdapter;
+import com.skrumaz.app.utils.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
-import it.gmariotti.cardslib.library.view.CardGridView;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.DefaultHeaderTransformer;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-
 /**
  * Created by Paito Anderson on 2014-03-16.
  */
-public class Iterations extends Fragment implements OnRefreshListener {
+public class Iterations extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    private CardGridView cardGridView;
+    private Context mContext;
+    private List<Iteration> iterationCards = new ArrayList<Iteration>();
+
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter recyclerViewAdapter;
+
     private LinearLayout processContainer;
     private ProgressBar progressSpinner;
-    private CardGridArrayAdapter cardGridArrayAdapter;
-    private Context mContext;
-    private List<Card> iterationCards = new ArrayList<Card>();
-    private PullToRefreshLayout mPullToRefreshLayout;
+
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
     private Tracker mTracker;
 
     public TextView progressText;
@@ -60,6 +64,10 @@ public class Iterations extends Fragment implements OnRefreshListener {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        // Find Spinner and hide
+        Spinner spinner = (Spinner) getActivity().findViewById(R.id.spinner);
+        spinner.setVisibility(View.GONE);
+
         // Set Title
         getActivity().setTitle("Iterations");
 
@@ -70,12 +78,34 @@ public class Iterations extends Fragment implements OnRefreshListener {
         View iterationsView = inflater.inflate(R.layout.activity_iteration_list, container, false);
 
         // Find things in the View
-        cardGridView = (CardGridView) iterationsView.findViewById(R.id.listContainer);
+        recyclerView = (RecyclerView) iterationsView.findViewById(R.id.iterationList);
         processContainer = (LinearLayout) iterationsView.findViewById(R.id.processContainer);
         progressText = (TextView) iterationsView.findViewById(R.id.progressText);
         progressSpinner = (ProgressBar) iterationsView.findViewById(R.id.progressSpinner);
-        cardGridArrayAdapter = new CardGridArrayAdapter(getActivity().getBaseContext(), iterationCards);
-        cardGridView.setAdapter(cardGridArrayAdapter);
+        recyclerViewAdapter = new IterationAdapter(getActivity().getBaseContext(), iterationCards);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(recyclerViewAdapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        // Setup Card Clicks
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(mContext, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        // Set Iteration Id to use
+                        Preferences.setIterationId(mContext, iterationCards.get(position).getOid());
+
+                        // Send to Task List
+                        Fragment fragment = new Tasks();
+                        FragmentManager fragmentManager = getActivity().getFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction().replace(R.id.content_frame, fragment);
+                        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, 0, android.R.anim.fade_out, 0);
+                        fragmentTransaction.addToBackStack("Iterations");
+                        fragmentTransaction.commit();
+                    }
+                })
+        );
 
         // Setup Loading Animation
         //AnimationAdapter animCardArrayAdapter = new LoadCardAnimationAdapter(cardGridArrayAdapter);
@@ -83,23 +113,17 @@ public class Iterations extends Fragment implements OnRefreshListener {
         //cardGridView.setExternalAdapter(animCardArrayAdapter, cardGridArrayAdapter);
 
         // Remove spinner select Workspace / Project from
-        final ActionBar actionBar = getActivity().getActionBar();
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        //final ActionBar actionBar = getActivity().getActionBar();
+        //actionBar.setDisplayShowTitleEnabled(true);
+        //actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 
         // Notify System we have our own menu items
         setHasOptionsMenu(true);
 
-        // Pull to Refresh Library - Initialize
-        mPullToRefreshLayout = (PullToRefreshLayout) iterationsView.findViewById(R.id.ptr_layout);
-        ActionBarPullToRefresh.from(getActivity())
-                .allChildrenArePullable()
-                .listener(this)
-                .setup(mPullToRefreshLayout);
-
-        // Pull to Refresh Library - Set ProgressBar color.
-        DefaultHeaderTransformer transformer = ((DefaultHeaderTransformer)mPullToRefreshLayout.getHeaderTransformer());
-        transformer.setProgressBarColor(getResources().getColor(R.color.accent_color));
+        // Swipe to Refresh Library - Initialize
+        mSwipeRefreshLayout = (SwipeRefreshLayout) iterationsView.findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_color);
 
         // Return View
         return iterationsView;
@@ -136,7 +160,7 @@ public class Iterations extends Fragment implements OnRefreshListener {
     }
 
     @Override
-    public void onRefreshStarted(View view) {
+    public void onRefresh() {
         populateListView(true);
     }
 
@@ -175,7 +199,7 @@ public class Iterations extends Fragment implements OnRefreshListener {
         @Override
         protected Boolean doInBackground(String... params) {
 
-            iterationCards.addAll(IterationFactory.getIterationCards(getActivity(), new GetIterations().FetchItems(mContext)));
+            iterationCards.addAll(new GetIterations().FetchItems(mContext));
 
             return null;
         }
@@ -200,12 +224,12 @@ public class Iterations extends Fragment implements OnRefreshListener {
                 progressText.setText("No Iterations.");
             } else {
                 processContainer.setVisibility(View.GONE);
-                cardGridView.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
             }
 
             // Notify refresh finished
-            mPullToRefreshLayout.setRefreshComplete();
-            cardGridArrayAdapter.notifyDataSetChanged();
+            mSwipeRefreshLayout.setRefreshing(false);
+            recyclerViewAdapter.notifyDataSetChanged();
 
             super.onPostExecute(result);
         }
@@ -216,10 +240,8 @@ public class Iterations extends Fragment implements OnRefreshListener {
             // Pull Artifacts and Tasks from SQLite
             com.skrumaz.app.data.Store.Iterations db = new com.skrumaz.app.data.Store.Iterations(mContext);
             iterationCards.clear();
-            iterationCards.addAll(IterationFactory.getIterationCards(getActivity(), db.getIterations(Preferences.getProjectId(mContext, true))));
+            iterationCards.addAll(db.getIterations(Preferences.getProjectId(mContext, true)));
             db.close();
-
-
 
             return null;
         }
@@ -232,7 +254,7 @@ public class Iterations extends Fragment implements OnRefreshListener {
         progressSpinner.setVisibility(View.VISIBLE);
         progressText.setVisibility(View.VISIBLE);
         progressText.setText("Getting Items..."); // Text updated using SetProgress()
-        cardGridView.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
     }
 
     public void finishLoading() {
@@ -243,13 +265,13 @@ public class Iterations extends Fragment implements OnRefreshListener {
                 progressText.setText("No Iterations.");
             } else {
                 processContainer.setVisibility(View.GONE);
-                cardGridView.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
             }
         }
 
         // Notify refresh finished
-        mPullToRefreshLayout.setRefreshComplete();
-        cardGridArrayAdapter.notifyDataSetChanged();
+        mSwipeRefreshLayout.setRefreshing(false);
+        recyclerViewAdapter.notifyDataSetChanged();
     }
 
     @Override

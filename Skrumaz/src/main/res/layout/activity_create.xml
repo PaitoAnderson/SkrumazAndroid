@@ -1,52 +1,62 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
-    android:background="@color/primary_color"
-    style="@style/FrameLayoutTheme">
+    tools:context=".Create">
 
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@android:color/background_light">
-        <LinearLayout
-            android:id="@+id/inputContainer"
+    <!-- Toolbar -->
+    <include layout="@layout/toolbar" />
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/primary_color">
+
+        <ScrollView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:background="@android:color/background_light">
+            <LinearLayout
+                android:id="@+id/inputContainer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="invisible" >
+
+            </LinearLayout>
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/processContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@android:color/background_light"
             android:gravity="center"
             android:orientation="vertical"
-            android:visibility="invisible" >
+            android:visibility="visible">
 
+            <ProgressBar
+                android:id="@+id/progressSpinner"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible" >
+            </ProgressBar>
+
+            <TextView
+                android:id="@+id/progressText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_results"
+                android:singleLine="false"
+                android:textColor="#919191"
+                android:textStyle="normal"
+                android:typeface="sans"
+                android:visibility="invisible" >
+            </TextView>
         </LinearLayout>
-    </ScrollView>
 
-    <LinearLayout
-        android:id="@+id/processContainer"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@android:color/background_light"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="visible">
-
-        <ProgressBar
-            android:id="@+id/progressSpinner"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="visible" >
-        </ProgressBar>
-
-        <TextView
-            android:id="@+id/progressText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+string/no_results"
-            android:singleLine="false"
-            android:textColor="#919191"
-            android:textStyle="normal"
-            android:typeface="sans"
-            android:visibility="invisible" >
-        </TextView>
-    </LinearLayout>
-
-</FrameLayout>
+    </FrameLayout>
+</LinearLayout>

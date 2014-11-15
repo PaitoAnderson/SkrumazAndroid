@@ -1,27 +1,22 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary_color"
-    style="@style/FrameLayoutTheme">
+    android:background="@color/primary_color">
 
-    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+    <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/ptr_layout"
+        android:id="@+id/swipe_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/background_light" >
+        android:layout_height="match_parent">
 
-        <it.gmariotti.cardslib.library.extra.staggeredgrid.view.CardGridStaggeredView
-            xmlns:card="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/listContainer"
-            android:background="@color/background"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/artifactList"
+            android:scrollbars="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            card:column_count_portrait="@dimen/artifact_column_count"
-            card:column_count_landscape="@dimen/artifact_column_count"
-            android:gravity="center" />
+            android:layout_height="match_parent"
+            android:background="@color/background" />
 
-    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/processContainer"

@@ -18,6 +18,7 @@ public class Artifact {
     private Status Status;
     private Date LastUpdate;
     private String OwnerName;
+    private String Description;
 
     @Override
     public String toString() {
@@ -98,5 +99,13 @@ public class Artifact {
 
     public void setOwnerName(String ownerName) {
         OwnerName = ownerName;
+    }
+
+    public String getDescription() {
+        return Description;
+    }
+
+    public void setDescription(String description) {
+        Description = description;
     }
 }

@@ -5,15 +5,19 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,28 +38,23 @@ import com.skrumaz.app.data.WebService.GetWorkspaces;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.DefaultHeaderTransformer;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-
 /**
  * Created by Paito Anderson on 2014-03-16.
  */
-public class Projects extends Fragment implements OnRefreshListener, ActionBar.OnNavigationListener {
+public class Projects extends Fragment implements SwipeRefreshLayout.OnRefreshListener, Spinner.OnItemSelectedListener {
 
     private ListView listView;
     private LinearLayout processContainer;
     private ProgressBar progressSpinner;
     private ProjectAdapter projectAdapter;
+    private Spinner workspaceSpinner;
     private WorkspaceAdapter workspaceAdapter;
     private boolean noWorkspaces = false;
     private boolean syntheticSelection = true;
     private Context mContext;
     private List<Project> projects = new ArrayList<Project>();
     private List<Workspace> dropdownValues;
-    private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
-    private PullToRefreshLayout mPullToRefreshLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private Tracker mTracker;
 
     public TextView progressText;
@@ -69,7 +68,7 @@ public class Projects extends Fragment implements OnRefreshListener, ActionBar.O
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Set Title
-        getActivity().setTitle("Projects");
+        getActivity().setTitle("");
 
         // Get Context
         mContext = getActivity();
@@ -98,32 +97,25 @@ public class Projects extends Fragment implements OnRefreshListener, ActionBar.O
             dropdownValues.add(temp);
         }
 
-        //Add spinner to select Workspace / Project from
-        final ActionBar actionBar = getActivity().getActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        // Find Spinner and make visible
+        workspaceSpinner = (Spinner) getActivity().findViewById(R.id.spinner);
+        workspaceSpinner.setVisibility(View.VISIBLE);
 
         // Specify a SpinnerAdapter to populate the dropdown list.
-        workspaceAdapter = new WorkspaceAdapter(actionBar.getThemedContext(), R.layout.spinner_item, R.id.workspaceName, dropdownValues);
+        workspaceAdapter = new WorkspaceAdapter(mContext, R.layout.spinner_item, R.id.workspaceName, dropdownValues);
 
         // Set up the dropdown list navigation in the action bar.
-        actionBar.setListNavigationCallbacks(workspaceAdapter, this);
+        workspaceSpinner.setAdapter(workspaceAdapter);
 
         updateActionbarSpinner();
 
-        // Pull to Refresh Library - Initialize
-        mPullToRefreshLayout = (PullToRefreshLayout) projectsView.findViewById(R.id.ptr_layout);
-        ActionBarPullToRefresh.from(getActivity())
-                .allChildrenArePullable()
-                .listener(this)
-                .setup(mPullToRefreshLayout);
+        // Swipe to Refresh Library - Initialize
+        mSwipeRefreshLayout = (SwipeRefreshLayout) projectsView.findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_color);
 
         // Notify System we have our own menu items
         setHasOptionsMenu(true);
-
-        // Pull to Refresh Library - Set ProgressBar color.
-        DefaultHeaderTransformer transformer = ((DefaultHeaderTransformer)mPullToRefreshLayout.getHeaderTransformer());
-        transformer.setProgressBarColor(getResources().getColor(R.color.accent_color));
 
         // Return View
         return projectsView;
@@ -141,7 +133,7 @@ public class Projects extends Fragment implements OnRefreshListener, ActionBar.O
     }
 
     @Override
-    public void onRefreshStarted(View view) {
+    public void onRefresh() {
         populateListView(true);
     }
 
@@ -165,11 +157,10 @@ public class Projects extends Fragment implements OnRefreshListener, ActionBar.O
     }
 
     @Override
-    public boolean onNavigationItemSelected(int position, long id) {
-
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (syntheticSelection) {
             syntheticSelection = false;
-            return true;
+            return;
         }
 
         if (!dropdownValues.isEmpty()) {
@@ -179,8 +170,6 @@ public class Projects extends Fragment implements OnRefreshListener, ActionBar.O
         }
 
         populateListView(false);
-
-        return true;
     }
 
     protected void populateListView(boolean forceRefresh) {
@@ -193,6 +182,11 @@ public class Projects extends Fragment implements OnRefreshListener, ActionBar.O
         if (forceRefresh || noWorkspaces) {
             new GetWorkspace().execute();
         }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        Log.e("Projects", "onNothingSelected not implemented.");
     }
 
     private class GetService extends AsyncTask<String, Integer, Boolean> {
@@ -250,7 +244,7 @@ public class Projects extends Fragment implements OnRefreshListener, ActionBar.O
             }
 
             // Notify refresh finished
-            mPullToRefreshLayout.setRefreshComplete();
+            mSwipeRefreshLayout.setRefreshing(false);
             projectAdapter.notifyDataSetChanged();
 
             super.onPostExecute(result);
@@ -315,7 +309,7 @@ public class Projects extends Fragment implements OnRefreshListener, ActionBar.O
         }
 
         // Notify refresh finished
-        mPullToRefreshLayout.setRefreshComplete();
+        mSwipeRefreshLayout.setRefreshing(false);
         projectAdapter.notifyDataSetChanged();
     }
 
@@ -336,13 +330,9 @@ public class Projects extends Fragment implements OnRefreshListener, ActionBar.O
     }*/
 
     private void updateActionbarSpinner() {
-        final ActionBar actionBar = getActivity().getActionBar();
         Long currentWorkspace = Preferences.getWorkspaceId(mContext, true);
         if (currentWorkspace > 0) {
-            int currentPosition = Workspace.findOid(dropdownValues, currentWorkspace);
-            if (actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_LIST) {
-                actionBar.setSelectedNavigationItem(currentPosition);
-            }
+            workspaceSpinner.setSelection(Workspace.findOid(dropdownValues, currentWorkspace));
         }
     }
 

@@ -1,15 +1,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary_color"
-    style="@style/FrameLayoutTheme">
+    android:background="@color/primary_color">
 
-    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+    <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/ptr_layout"
+        android:id="@+id/swipe_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/background_light">
+        android:layout_height="match_parent">
 
         <ListView
             android:id="@+id/listContainer"
@@ -27,10 +25,11 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true">
+            android:layout_alignParentRight="true"
+            android:background="@android:color/background_light">
         </ListView>
 
-    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/processContainer"
@@ -59,7 +58,5 @@
             android:typeface="sans"
             android:visibility="invisible" >
         </TextView>
-
     </LinearLayout>
-
 </FrameLayout>
