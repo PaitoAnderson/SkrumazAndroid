@@ -1,5 +1,6 @@
 package com.skrumaz.app;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -50,6 +51,8 @@ public class SpinnerAllowedValues extends DialogFragment {
     }
 
     // Constructor used
+    // This screen can't rotate so it's pretty safe..
+    @SuppressLint("ValidFragment")
     public SpinnerAllowedValues(Long fieldId, String fieldName) {
         this.fieldId = fieldId;
         this.fieldName = fieldName;
