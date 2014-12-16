@@ -187,7 +187,7 @@ public class Artifacts extends Database {
 
                     } while (cursor1.moveToNext());
                 }
-                if (cursor1 != null && !cursor1.isClosed()) {
+                if (!cursor1.isClosed()) {
                     cursor1.close();
                 }
                 artifacts.add(artifact);
@@ -217,11 +217,7 @@ public class Artifacts extends Database {
         // Close Database connection
         db.releaseReference();
 
-        if (currentDate.after(refreshDate)) {
-            return true;
-        } else {
-            return false;
-        }
+        return currentDate.after(refreshDate);
     }
 
     public void invalidArtifacts() {

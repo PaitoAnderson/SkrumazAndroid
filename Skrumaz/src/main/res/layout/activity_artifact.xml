@@ -44,10 +44,12 @@
                 android:layout_marginStart="2dip"
                 android:textStyle="bold"
                 android:textColor="@color/accent_color"/>
-            <WebView
+            <TextView
                 android:id="@+id/artifactDescription"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dip"
+                android:layout_marginStart="6dip"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -253,7 +253,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
-        toolbar.setTitle(mTitle);
+        if (toolbar != null) toolbar.setTitle(mTitle);
     }
 
     private void populateUser() {

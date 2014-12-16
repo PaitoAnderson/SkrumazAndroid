@@ -1,7 +1,5 @@
 package com.skrumaz.app.ui;
 
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -9,11 +7,8 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.text.Html;
 import android.view.MenuItem;
-import android.view.View;
-import android.webkit.WebView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.analytics.tracking.android.EasyTracker;
@@ -33,13 +28,10 @@ public class Artifact extends ActionBarActivity {
     // TAG for logging
     private static final String TAG = "ARTIFACT";
 
-    private Context mContext;
-
     private List<Task> taskCards = new ArrayList<Task>();
 
-    private LinearLayout viewContainer;
     private TextView artifactTitle;
-    private WebView artifactDescription;
+    private TextView artifactDescription;
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter recyclerViewAdapter;
@@ -54,20 +46,17 @@ public class Artifact extends ActionBarActivity {
         Bundle extras = getIntent().getExtras();
         artifactName = extras.getString("ArtifactName");
 
-        // Find Objects in View
-        viewContainer = (LinearLayout) findViewById(R.id.viewContainer);
-        artifactTitle = (TextView) findViewById(R.id.artifactTitle);
-        artifactDescription = (WebView) findViewById(R.id.artifactDescription);
+        // Query Data
+        com.skrumaz.app.classes.Artifact artifact = new Artifacts(this).getArtifact(artifactName);
+        taskCards.addAll(artifact.getTasks());
+
+        // Setup Tasks
         recyclerView = (RecyclerView) findViewById(R.id.taskList);
-        recyclerViewAdapter = new TaskAdapter(this.getBaseContext(), taskCards);
+        recyclerViewAdapter = new TaskAdapter(taskCards);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(recyclerViewAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        // Set Context variable to self
-        mContext = this;
 
         // Setup Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -76,13 +65,13 @@ public class Artifact extends ActionBarActivity {
         // Add back button icon
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setTitle(artifact.getFormattedID().trim() + " - " + artifact.getName().trim());
 
         // Add Data
-        com.skrumaz.app.classes.Artifact artifact = new Artifacts(this).getArtifact(artifactName);
-        taskCards.addAll(artifact.getTasks());
-        actionbar.setTitle(artifact.getFormattedID().trim() + " - " + artifact.getName().trim());
+        artifactTitle = (TextView) findViewById(R.id.artifactTitle);
+        artifactDescription = (TextView) findViewById(R.id.artifactDescription);
         artifactTitle.setText(artifact.getName());
-        artifactDescription.loadDataWithBaseURL("", artifact.getDescription(), "text/html", "UTF-8", "");
+        artifactDescription.setText(Html.fromHtml(artifact.getDescription()));
 
         // Notify adapter we added tasks
         recyclerViewAdapter.notifyDataSetChanged();
