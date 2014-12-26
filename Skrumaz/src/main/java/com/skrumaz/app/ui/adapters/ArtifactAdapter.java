@@ -66,6 +66,6 @@ public class ArtifactAdapter extends RecyclerView.Adapter<ArtifactAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return mArtifacts.size();
+        return mArtifacts == null ? 0 : mArtifacts.size();
     }
 }

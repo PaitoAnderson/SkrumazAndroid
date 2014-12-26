@@ -64,6 +64,6 @@ public class IterationAdapter extends RecyclerView.Adapter<IterationAdapter.View
 
     @Override
     public int getItemCount() {
-        return mIterations.size();
+        return mIterations == null ? 0 : mIterations.size();
     }
 }

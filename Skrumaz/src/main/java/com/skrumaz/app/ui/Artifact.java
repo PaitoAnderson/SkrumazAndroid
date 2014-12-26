@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.method.ScrollingMovementMethod;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -34,7 +35,7 @@ public class Artifact extends ActionBarActivity {
     private TextView artifactDescription;
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter recyclerViewAdapter;
+    private TaskAdapter recyclerViewAdapter;
 
     private String artifactName;
 
@@ -51,12 +52,12 @@ public class Artifact extends ActionBarActivity {
         taskCards.addAll(artifact.getTasks());
 
         // Setup Tasks
-        recyclerView = (RecyclerView) findViewById(R.id.taskList);
-        recyclerViewAdapter = new TaskAdapter(taskCards);
-
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+        recyclerView = (RecyclerView) findViewById(R.id.artifactTasks);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        recyclerViewAdapter = new TaskAdapter(taskCards);
+        recyclerView.setAdapter(recyclerViewAdapter);
 
         // Setup Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -72,6 +73,7 @@ public class Artifact extends ActionBarActivity {
         artifactDescription = (TextView) findViewById(R.id.artifactDescription);
         artifactTitle.setText(artifact.getName());
         artifactDescription.setText(Html.fromHtml(artifact.getDescription()));
+        artifactDescription.setMovementMethod(new ScrollingMovementMethod());
 
         // Notify adapter we added tasks
         recyclerViewAdapter.notifyDataSetChanged();

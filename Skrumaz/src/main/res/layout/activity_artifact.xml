@@ -4,65 +4,63 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent"
-    tools:context=".Task">
+    tools:context=".ui.Artifact">
 
     <!-- Toolbar -->
     <include layout="@layout/toolbar" />
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
+        android:id="@+id/viewContainer"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@android:color/background_light">
-        <LinearLayout
-            android:id="@+id/viewContainer"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:gravity="center"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="NAME:"
-                android:layout_marginLeft="2dip"
-                android:layout_marginStart="2dip"
-                android:textStyle="bold"
-                android:textColor="@color/accent_color"/>
-            <TextView
-                android:id="@+id/artifactTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/background_material_dark"
-                android:layout_marginLeft="6dip"
-                android:layout_marginStart="6dip"
-                android:textStyle="bold"
-                android:textSize="16sp"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="DESCRIPTION:"
-                android:layout_marginLeft="2dip"
-                android:layout_marginStart="2dip"
-                android:textStyle="bold"
-                android:textColor="@color/accent_color"/>
-            <TextView
-                android:id="@+id/artifactDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="6dip"
-                android:layout_marginStart="6dip"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TASKS:"
-                android:layout_marginLeft="2dip"
-                android:layout_marginStart="2dip"
-                android:textStyle="bold"
-                android:textColor="@color/accent_color"/>
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/taskList"
-                android:scrollbars="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </LinearLayout>
-    </ScrollView>
+        android:gravity="center"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="NAME:"
+            android:layout_marginLeft="2dip"
+            android:layout_marginStart="2dip"
+            android:textStyle="bold"
+            android:textColor="@color/accent_color"/>
+        <TextView
+            android:id="@+id/artifactTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/background_material_dark"
+            android:layout_marginLeft="6dip"
+            android:layout_marginStart="6dip"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="DESCRIPTION:"
+            android:layout_marginLeft="2dip"
+            android:layout_marginStart="2dip"
+            android:textStyle="bold"
+            android:textColor="@color/accent_color"/>
+        <TextView
+            android:id="@+id/artifactDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dip"
+            android:layout_marginStart="6dip"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="false"
+            android:maxLines="8"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TASKS:"
+            android:layout_marginLeft="2dip"
+            android:layout_marginStart="2dip"
+            android:textStyle="bold"
+            android:textColor="@color/accent_color"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/artifactTasks"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
 </LinearLayout>
