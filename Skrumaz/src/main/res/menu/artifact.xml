@@ -1,6 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item android:id="@+id/action_search"
+        android:title="@string/action_search"
+        android:orderInCategory="60"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="ifRoom"
+        android:visible="true" />
+
     <item android:id="@+id/create"
         android:title="@string/action_create"
         android:orderInCategory="70"

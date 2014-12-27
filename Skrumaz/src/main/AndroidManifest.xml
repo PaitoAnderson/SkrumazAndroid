@@ -22,6 +22,12 @@
         <activity android:name=".Login" />
         <activity android:name=".ui.Artifact" android:hardwareAccelerated="true" />
         <activity android:name=".Create" android:screenOrientation="portrait" />
+        <activity android:name=".ui.Search" android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable"/>
+        </activity>
 
         <activity android:name="com.uservoice.uservoicesdk.activity.PortalActivity" />
         <activity android:name="com.uservoice.uservoicesdk.activity.ForumActivity" />
@@ -30,6 +36,6 @@
         <activity android:name="com.uservoice.uservoicesdk.activity.ContactActivity" android:hardwareAccelerated="true" />
         <activity android:name="com.uservoice.uservoicesdk.activity.PostIdeaActivity" android:hardwareAccelerated="true" />
 
+        <meta-data android:name="android.app.default_searchable" android:value=".ui.Search" />
     </application>
-
 </manifest>

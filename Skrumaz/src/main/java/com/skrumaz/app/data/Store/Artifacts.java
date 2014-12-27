@@ -27,7 +27,7 @@ public class Artifacts extends Database {
     }
 
     /*
-     * Store all Artifacts in list with tasks
+     * Store all Artifacts in list with tasks (With Iteration)
      */
     public void storeArtifacts(List<Artifact> artifacts, Iteration iteration) {
 
@@ -48,63 +48,82 @@ public class Artifacts extends Database {
         try {
             // Update Record
             rows = db.update(Table.ITERATIONS, iterationValues, Field.ITERATION_ID + " = " + iteration.getOid(), null);
-        }
-
-        finally {
+        } finally {
             if (rows == 0) {
                 // Insert record
                 iterationValues.put(Field.ITERATION_ID, iteration.getOid());
                 iterationValues.put(Field.TITLE, iteration.getName());
                 iterationValues.put(Field.ITERATION_STATUS, IterationStatusLookup.iterationStatusToString(iteration.getIterationStatus()));
-                        db.insert(Table.ITERATIONS, null, iterationValues);
+                db.insert(Table.ITERATIONS, null, iterationValues);
             }
         }
 
+
         // Iterate though all artifacts (US/DE)
         for (Artifact artifact : artifacts) {
-
-            // Setup Values for Artifact
-            ContentValues artifactValues = new ContentValues();
-            artifactValues.put(Field.FORMATTED_ID, artifact.getFormattedID());
-            artifactValues.put(Field.ITERATION_ID, iteration.getOid());
-            artifactValues.put(Field.TITLE, artifact.getName());
-            artifactValues.put(Field.BLOCKED, artifact.isBlocked());
-            artifactValues.put(Field.RANK, artifact.getRank());
-            artifactValues.put(Field.STATUS, ArtifactStatusLookup.statusToString(artifact.getStatus()));
-            artifactValues.put(Field.MODIFIED_DATE, artifact.getLastUpdate().getTime());
-            artifactValues.put(Field.OWNER_NAME, artifact.getOwnerName());
-            artifactValues.put(Field.DESCRIPTION, artifact.getDescription());
-
-            // Insert Row
-            try {
-                db.insertOrThrow(Table.ARTIFACTS, null, artifactValues);
-            } catch (SQLiteConstraintException e) {
-                db.update(Table.ARTIFACTS, artifactValues, Field.FORMATTED_ID + " = '" + artifact.getFormattedID() + "'", null);
-            }
-
-            // Iterate though all tasks for this artifact (TA)
-            for (Task task : artifact.getTasks()) {
-
-                // Setup Values for Task
-                ContentValues taskValues = new ContentValues();
-                taskValues.put(Field.FORMATTED_ID, task.getFormattedID());
-                taskValues.put(Field.PARENT_FORMATTED_ID, artifact.getFormattedID());
-                taskValues.put(Field.TITLE, task.getName());
-                //taskValues.put(Field.BLOCKED, task.isBlocked());
-                //taskValues.put(Field.STATUS, StatusLookup.statusToString(task.getStatus()));
-                //taskValues.put(Field.MODIFIED_DATE, task.getLastUpdate().getTime());
-
-                // Insert Row
-                try {
-                    db.insertOrThrow(Table.TASKS, null, taskValues);
-                } catch (SQLiteConstraintException e) {
-                    db.update(Table.TASKS, taskValues, Field.FORMATTED_ID + " = '" + task.getFormattedID() + "'", null);
-                }
-            }
+            insertUpdateArtifact(artifact, iteration, db);
         }
 
         // Close database connection
         db.releaseReference();
+    }
+
+    /**
+     * Store all Artifacts in list with tasks (With-Out Iteration)
+     */
+    public void storeArtifact(List<Artifact> artifacts) {
+        // Open Database connection
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Iterate though all artifacts (US/DE)
+        for (Artifact artifact : artifacts) {
+            insertUpdateArtifact(artifact, null, db);
+        }
+
+        // Close Database connection
+        db.releaseReference();
+    }
+
+
+    private void insertUpdateArtifact(Artifact artifact, Iteration iteration, SQLiteDatabase db) {
+        // Setup Values for Artifact
+        ContentValues artifactValues = new ContentValues();
+        artifactValues.put(Field.FORMATTED_ID, artifact.getFormattedID());
+        if (iteration != null) artifactValues.put(Field.ITERATION_ID, iteration.getOid());
+        artifactValues.put(Field.TITLE, artifact.getName());
+        artifactValues.put(Field.BLOCKED, artifact.isBlocked());
+        artifactValues.put(Field.RANK, artifact.getRank());
+        artifactValues.put(Field.STATUS, ArtifactStatusLookup.statusToString(artifact.getStatus()));
+        artifactValues.put(Field.MODIFIED_DATE, artifact.getLastUpdate().getTime());
+        artifactValues.put(Field.OWNER_NAME, artifact.getOwnerName());
+        artifactValues.put(Field.DESCRIPTION, artifact.getDescription());
+
+        // Insert Row
+        try {
+            db.insertOrThrow(Table.ARTIFACTS, null, artifactValues);
+        } catch (SQLiteConstraintException e) {
+            db.update(Table.ARTIFACTS, artifactValues, Field.FORMATTED_ID + " = '" + artifact.getFormattedID() + "'", null);
+        }
+
+        // Iterate though all tasks for this artifact (TA)
+        for (Task task : artifact.getTasks()) {
+
+            // Setup Values for Task
+            ContentValues taskValues = new ContentValues();
+            taskValues.put(Field.FORMATTED_ID, task.getFormattedID());
+            taskValues.put(Field.PARENT_FORMATTED_ID, artifact.getFormattedID());
+            taskValues.put(Field.TITLE, task.getName());
+            //taskValues.put(Field.BLOCKED, task.isBlocked());
+            //taskValues.put(Field.STATUS, StatusLookup.statusToString(task.getStatus()));
+            //taskValues.put(Field.MODIFIED_DATE, task.getLastUpdate().getTime());
+
+            // Insert Row
+            try {
+                db.insertOrThrow(Table.TASKS, null, taskValues);
+            } catch (SQLiteConstraintException e) {
+                db.update(Table.TASKS, taskValues, Field.FORMATTED_ID + " = '" + task.getFormattedID() + "'", null);
+            }
+        }
     }
 
     /*

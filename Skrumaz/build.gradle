@@ -8,8 +8,8 @@ android {
         applicationId "com.skrumaz.app"
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 110
-        versionName "1.1.0"
+        versionCode 111
+        versionName "1.1.1"
     }
 
     signingConfigs {

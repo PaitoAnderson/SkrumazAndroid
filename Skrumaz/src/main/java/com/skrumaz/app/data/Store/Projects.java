@@ -112,6 +112,37 @@ public class Projects extends Database {
         return projects;
     }
 
+    /*
+     * Get Project from the database based on Project ID
+     */
+    public Project getProject(long projectId) {
+
+        Project project = null;
+
+        // Open Database connection
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Populate projects from Database
+        Cursor cursor = db.query(Table.PROJECTS + " WHERE (" + Field.PROJECT_ID + " = " + projectId + ")",
+                new String[] { "*" }, null, null, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                project = new Project();
+                project.setOid(cursor.getLong(0));
+                project.setName(cursor.getString(2));
+
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+
+        // Close Database connection
+        db.releaseReference();
+
+        return project;
+    }
+
     public boolean isValidProjects(long workspaceId) {
 
         // Open Database connection

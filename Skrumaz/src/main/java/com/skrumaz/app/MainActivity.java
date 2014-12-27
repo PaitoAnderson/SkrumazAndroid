@@ -28,6 +28,7 @@ import com.skrumaz.app.data.Store.Users;
 import com.skrumaz.app.data.WebService.GetUser;
 import com.skrumaz.app.ui.Iterations;
 import com.skrumaz.app.ui.Projects;
+import com.skrumaz.app.ui.Search;
 import com.skrumaz.app.ui.Tasks;
 import com.skrumaz.app.utils.CircularImageView;
 import com.uservoice.uservoicesdk.Config;
@@ -137,6 +138,9 @@ public class MainActivity extends ActionBarActivity {
         }
         // Handle action buttons
         switch (item.getItemId()) {
+            case R.id.action_search:
+                startActivity(new Intent(this, Search.class));
+                break;
             case R.id.create_us:
                 // Create User Story
                 Intent createUs = new Intent(this, Create.class);
