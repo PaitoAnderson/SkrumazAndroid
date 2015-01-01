@@ -13,11 +13,12 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class GetTypeDefinitions {
 
     public void FetchItems(Context context) {
 
-        List<TypeDefinition> typeDefinitions = new ArrayList<TypeDefinition>();
+        List<TypeDefinition> typeDefinitions = new ArrayList<>();
 
         // Setup HTTP Request
         DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -72,9 +73,7 @@ public class GetTypeDefinitions {
                 db.close();
             }
 
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
     }

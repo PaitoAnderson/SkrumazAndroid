@@ -43,7 +43,7 @@ import java.util.List;
 public class Tasks extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private Context mContext;
-    private List<Artifact> artifactCards = new ArrayList<Artifact>();
+    private List<Artifact> artifactCards = new ArrayList<>();
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter recyclerViewAdapter;

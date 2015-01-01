@@ -84,7 +84,7 @@ public class Iterations extends Database {
      * Pull all Iterations from the database and put them in a usable list
      */
     public List<Iteration> getIterations(long projectId) {
-        List<Iteration> iterations = new ArrayList<Iteration>();
+        List<Iteration> iterations = new ArrayList<>();
 
         // Open Database connection
         SQLiteDatabase db = this.getReadableDatabase();

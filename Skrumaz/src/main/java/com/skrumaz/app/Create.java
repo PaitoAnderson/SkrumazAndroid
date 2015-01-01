@@ -66,7 +66,7 @@ public class Create extends ActionBarActivity {
     JSONObject createObject = new JSONObject();
     private CreateResult createResult;
 
-    private List<AttributeDefinition> attributeDefinitions = new ArrayList<AttributeDefinition>();
+    private List<AttributeDefinition> attributeDefinitions = new ArrayList<>();
 
     private View activeView;
 

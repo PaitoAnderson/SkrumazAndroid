@@ -82,7 +82,7 @@ public class Projects extends Database {
      */
     public List<Project> getProjects(long workspaceId) {
 
-        List<Project> projects = new ArrayList<Project>();
+        List<Project> projects = new ArrayList<>();
 
         // Open Database connection
         SQLiteDatabase db = this.getReadableDatabase();

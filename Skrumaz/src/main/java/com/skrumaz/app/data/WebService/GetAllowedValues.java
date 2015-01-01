@@ -12,11 +12,12 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ import java.util.List;
  */
 public class GetAllowedValues {
 
-    private List<AllowedValue> allowedValues = new ArrayList<AllowedValue>();
+    private List<AllowedValue> allowedValues = new ArrayList<>();
 
     public List<AllowedValue> FetchItems(Context context, Long fieldId) {
 
@@ -73,9 +74,7 @@ public class GetAllowedValues {
                 }
             }
 
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
 

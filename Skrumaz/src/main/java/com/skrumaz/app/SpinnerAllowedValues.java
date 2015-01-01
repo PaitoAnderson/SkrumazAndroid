@@ -38,13 +38,10 @@ public class SpinnerAllowedValues extends DialogFragment {
     private ProgressBar progressSpinner;
     private Boolean continueRequests = true;
 
-    private AlertDialog alertDialog;
-    private View layoutView;
-
     private Long fieldId;
     private String fieldName;
 
-    private List<AllowedValue> allowedValues  = new ArrayList<AllowedValue>();
+    private List<AllowedValue> allowedValues  = new ArrayList<>();
 
     public SpinnerAllowedValues() {
         // Empty constructor required for DialogFragment
@@ -74,7 +71,7 @@ public class SpinnerAllowedValues extends DialogFragment {
 
         // Inflate View
         final LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-        layoutView = layoutInflater.inflate(R.layout.spinner_allowed_values, null);
+        View layoutView = layoutInflater.inflate(R.layout.spinner_allowed_values, null);
 
         processContainer = (LinearLayout) layoutView.findViewById(R.id.processContainer);
         inputContainer = (ListView) layoutView.findViewById(R.id.inputContainer);
@@ -82,7 +79,7 @@ public class SpinnerAllowedValues extends DialogFragment {
         progressSpinner = (ProgressBar) layoutView.findViewById(R.id.progressSpinner);
 
         // Setup / Build AlertDialog
-        alertDialog =  new  AlertDialog.Builder(layoutView.getContext())
+        AlertDialog alertDialog = new AlertDialog.Builder(layoutView.getContext())
                 .setView(layoutView)
                 .setTitle(fieldName)
                 .create();
@@ -148,7 +145,7 @@ public class SpinnerAllowedValues extends DialogFragment {
     public void populateListView() {
 
         // Create adapter from allowedValues
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                 getActivity(),
                 android.R.layout.simple_list_item_1,
                 AllowedValue.getOptionList(allowedValues));

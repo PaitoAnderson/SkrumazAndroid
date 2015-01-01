@@ -13,7 +13,7 @@ public class Artifact {
     private String FormattedID;
     private String Name;
     private String Rank;
-    private List<Task> Tasks = new ArrayList<Task>();
+    private List<Task> Tasks = new ArrayList<>();
     private Boolean Blocked;
     private Status Status;
     private Date LastUpdate;

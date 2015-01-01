@@ -17,7 +17,7 @@ public class AllowedValue {
 
     // Take list of AllowedValue and convert to ArrayList of string for adapter use.
     public static ArrayList<String> getOptionList(List<AllowedValue> inputList) {
-        ArrayList<String> returnList = new ArrayList<String>();
+        ArrayList<String> returnList = new ArrayList<>();
 
         for (AllowedValue allowedValue : inputList)
         {

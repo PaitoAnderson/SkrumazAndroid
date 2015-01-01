@@ -61,7 +61,7 @@ public class Workspaces extends Database {
      */
     public List<Workspace> getWorkspaces() {
 
-        List<Workspace> workspaces = new ArrayList<Workspace>();
+        List<Workspace> workspaces = new ArrayList<>();
 
         // Open Database connection
         SQLiteDatabase db = this.getReadableDatabase();

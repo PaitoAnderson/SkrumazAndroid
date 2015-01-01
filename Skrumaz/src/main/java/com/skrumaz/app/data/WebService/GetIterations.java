@@ -17,11 +17,12 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ import java.util.List;
  */
 public class GetIterations {
 
-    private List<Iteration> iterations = new ArrayList<Iteration>();
+    private List<Iteration> iterations = new ArrayList<>();
     private Project project = new Project();
 
     public List<Iteration> FetchItems(Context context) {
@@ -106,9 +107,7 @@ public class GetIterations {
                     Log.e("GetIterations", "Project Error: " + statusLine.getReasonPhrase());
                 }
 
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
         }
@@ -174,9 +173,7 @@ public class GetIterations {
                 Log.d("GetIterations", "Iteration Error: " + statusLine.getReasonPhrase());
             }
 
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
     }

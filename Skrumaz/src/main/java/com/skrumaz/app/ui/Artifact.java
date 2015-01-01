@@ -29,7 +29,7 @@ public class Artifact extends ActionBarActivity {
     // TAG for logging
     private static final String TAG = "ARTIFACT";
 
-    private List<Task> taskCards = new ArrayList<Task>();
+    private List<Task> taskCards = new ArrayList<>();
 
     private TextView artifactTitle;
     private TextView artifactDescription;

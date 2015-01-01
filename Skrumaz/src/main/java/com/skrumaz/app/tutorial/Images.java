@@ -12,7 +12,7 @@ public class Images {
     private ArrayList<Integer> imageId;
 
     public Images() {
-        imageId = new ArrayList<Integer>();
+        imageId = new ArrayList<>();
         imageId.add(R.drawable.slide1);
         imageId.add(R.drawable.slide2);
         imageId.add(R.drawable.slide3);

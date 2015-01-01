@@ -6,7 +6,6 @@ import android.util.Log;
 import com.skrumaz.app.data.Preferences;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -14,7 +13,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +31,7 @@ public class GetCookie {
 
         try {
             // Set Form Username / Password
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            List<NameValuePair> params = new ArrayList<>();
             params.add(new BasicNameValuePair("j_username", Preferences.getUsername(context)));
             params.add(new BasicNameValuePair("j_password", Preferences.getPassword(context)));
             post.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
@@ -44,10 +42,6 @@ public class GetCookie {
             // Get rid of content
             post.getEntity().consumeContent();
 
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

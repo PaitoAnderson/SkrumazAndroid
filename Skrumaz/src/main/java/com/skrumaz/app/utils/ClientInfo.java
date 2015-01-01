@@ -9,7 +9,7 @@ import org.apache.http.client.methods.HttpPut;
  */
 public class ClientInfo {
 
-    private static final String appVersionName = "1.0.7";
+    private static final String appVersionName = "1.1.1";
 
     public static HttpGet addHttpGetHeaders(HttpGet httpGet) {
         httpGet.setHeader("X-RallyIntegrationName", "Skrumaz");

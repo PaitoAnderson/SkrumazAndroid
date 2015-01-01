@@ -6,7 +6,6 @@ import android.util.Log;
 import com.skrumaz.app.MainActivity;
 import com.skrumaz.app.classes.Artifact;
 import com.skrumaz.app.classes.Project;
-import com.skrumaz.app.classes.Status;
 import com.skrumaz.app.classes.Task;
 import com.skrumaz.app.data.Preferences;
 import com.skrumaz.app.data.Store.Artifacts;
@@ -22,10 +21,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public class GetQueryResults {
 
     private static final String TAG = "GetQueryResults";
 
-    private List<Artifact> artifacts = new ArrayList<Artifact>();
+    private List<Artifact> artifacts = new ArrayList<>();
     private Project project = new Project();
 
     public List<Artifact> FetchItems(Context context, String query) {
@@ -91,9 +92,7 @@ public class GetQueryResults {
                     Log.e(TAG, "Search Error: " + statusLine.getReasonPhrase());
                 }
 
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
         }
@@ -186,9 +185,7 @@ public class GetQueryResults {
                 Log.d(TAG, "Search Error: " + statusLine.getReasonPhrase());
             }
 
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
+        } catch (IOException| JSONException | ParseException e) {
             e.printStackTrace();
         }
     }

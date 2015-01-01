@@ -19,10 +19,6 @@ import java.util.ArrayList;
  */
 public class Welcome extends FragmentActivity {
 
-    // Stuff for Tutorial Images
-    private FragmentPagerAdapter mAdapter;
-    private ViewPager mPager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,8 +43,8 @@ public class Welcome extends FragmentActivity {
             Images imageId = new Images();
             ArrayList<Integer> itemData = imageId.getImageItem();
 
-            mAdapter = new FragmentPagerAdapter(getSupportFragmentManager(), itemData);
-            mPager = (ViewPager) findViewById(R.id.pager);
+            FragmentPagerAdapter mAdapter = new FragmentPagerAdapter(getSupportFragmentManager(), itemData);
+            ViewPager mPager = (ViewPager) findViewById(R.id.pager);
             mPager.setAdapter(mAdapter);
 
             CirclePageIndicator indicator = (CirclePageIndicator) findViewById(R.id.indicator);

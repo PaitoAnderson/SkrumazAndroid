@@ -43,7 +43,7 @@ public class Search extends ActionBarActivity {
     private static final String TAG = "SEARCH";
 
     private Context mContext;
-    private List<Artifact> artifactCards = new ArrayList<Artifact>();
+    private List<Artifact> artifactCards = new ArrayList<>();
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter recyclerViewAdapter;

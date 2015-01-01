@@ -52,7 +52,7 @@ public class Projects extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     private boolean noWorkspaces = false;
     private boolean syntheticSelection = true;
     private Context mContext;
-    private List<Project> projects = new ArrayList<Project>();
+    private List<Project> projects = new ArrayList<>();
     private List<Workspace> dropdownValues;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private Tracker mTracker;

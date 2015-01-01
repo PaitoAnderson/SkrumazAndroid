@@ -12,7 +12,7 @@ public class CreateResult {
 
     public CreateResult() {
         this.Success = false;
-        this.Messages = new ArrayList<String>();
+        this.Messages = new ArrayList<>();
     }
 
     public Boolean getSuccess() {

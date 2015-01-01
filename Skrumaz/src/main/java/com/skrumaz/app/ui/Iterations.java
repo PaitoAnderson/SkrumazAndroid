@@ -42,7 +42,7 @@ import java.util.List;
 public class Iterations extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private Context mContext;
-    private List<Iteration> iterationCards = new ArrayList<Iteration>();
+    private List<Iteration> iterationCards = new ArrayList<>();
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter recyclerViewAdapter;

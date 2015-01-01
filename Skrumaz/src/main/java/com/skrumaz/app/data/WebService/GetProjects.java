@@ -15,11 +15,12 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ import java.util.List;
  */
 public class GetProjects {
 
-    private List<Project> projects = new ArrayList<Project>();
+    private List<Project> projects = new ArrayList<>();
     private Workspace workspace = new Workspace();
 
     public List<Project> FetchItems(Context context) {
@@ -106,9 +107,7 @@ public class GetProjects {
                     Log.d("GetProjects", "Workspace Error: " + statusLine.getReasonPhrase());
                 }
 
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
         }
@@ -183,9 +182,7 @@ public class GetProjects {
                     Log.d("GetProjects", "Project Error: " + statusLine.getReasonPhrase());
                 }
 
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
         }

@@ -183,7 +183,7 @@ public class Artifacts extends Database {
 
     private List<Artifact> createArtifactsFromQuery(SQLiteDatabase db, Cursor cursor)
     {
-        List<Artifact> artifacts = new ArrayList<Artifact>();
+        List<Artifact> artifacts = new ArrayList<>();
 
         if (cursor.moveToFirst()) {
             do {

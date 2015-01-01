@@ -22,9 +22,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ import java.util.List;
  */
 public class GetArtifacts {
 
-    private List<Artifact> artifacts = new ArrayList<Artifact>();
+    private List<Artifact> artifacts = new ArrayList<>();
     private Iteration iteration = new Iteration();
 
     public List<Artifact> FetchItems(Context context) {
@@ -115,9 +116,7 @@ public class GetArtifacts {
                     Log.e("GetArtifacts", "GI Error: " + statusLine.getReasonPhrase());
                 }
 
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
         }
@@ -204,9 +203,7 @@ public class GetArtifacts {
                 Log.d("GetArtifacts", "US Error: " + statusLine.getReasonPhrase());
             }
 
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
+        } catch (IOException | JSONException | ParseException e) {
             e.printStackTrace();
         }
     }
@@ -291,8 +288,6 @@ public class GetArtifacts {
                 Log.d("GetArtifacts", "DE Error: " + statusLine.getReasonPhrase());
             }
 
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -13,11 +13,12 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,7 +29,7 @@ import java.util.List;
  */
 public class GetFormAttributes {
 
-    List<AttributeDefinition> attributeDefinitions = new ArrayList<AttributeDefinition>();
+    List<AttributeDefinition> attributeDefinitions = new ArrayList<>();
 
     public List<AttributeDefinition> FetchItems(Context context, Long typeDefinition) {
 
@@ -85,9 +86,7 @@ public class GetFormAttributes {
                 }
             }
 
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
 
@@ -125,7 +124,7 @@ public class GetFormAttributes {
     private List<AttributeDefinition> orderFormAttributes(List<AttributeDefinition> attributeDefinitions)
     {
         // How items should be re-ordered
-        List<String> orderNames = new ArrayList<String>();
+        List<String> orderNames = new ArrayList<>();
 
         /**
          * GENERAL
