@@ -40,13 +40,11 @@ import java.util.List;
  */
 public class Search extends ActionBarActivity {
 
-    private static final String TAG = "SEARCH";
-
     private Context mContext;
     private List<Artifact> artifactCards = new ArrayList<>();
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter recyclerViewAdapter;
+    private ArtifactAdapter recyclerViewAdapter;
 
     private LinearLayout processContainer;
     private ProgressBar progressSpinner;

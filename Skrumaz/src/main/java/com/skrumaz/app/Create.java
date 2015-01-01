@@ -363,6 +363,8 @@ public class Create extends ActionBarActivity {
             case OBJECT:
                 attributeDefinitions.get(activeView.getId()).setReturnValue(input.getOid().toString());
                 break;
+            default:
+                break;
         }
     }
 

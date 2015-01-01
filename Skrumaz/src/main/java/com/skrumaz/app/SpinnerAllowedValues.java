@@ -27,9 +27,6 @@ import java.util.List;
  */
 public class SpinnerAllowedValues extends DialogFragment {
 
-    // TAG for logging
-    private static final String TAG = "SPINNERALLOWEDVALUES";
-
     private Context mContext;
 
     private LinearLayout processContainer;

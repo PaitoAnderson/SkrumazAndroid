@@ -45,7 +45,7 @@ public class Iterations extends Fragment implements SwipeRefreshLayout.OnRefresh
     private List<Iteration> iterationCards = new ArrayList<>();
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter recyclerViewAdapter;
+    private IterationAdapter recyclerViewAdapter;
 
     private LinearLayout processContainer;
     private ProgressBar progressSpinner;

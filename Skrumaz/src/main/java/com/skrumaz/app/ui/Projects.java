@@ -1,6 +1,5 @@
 package com.skrumaz.app.ui;
 
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.AsyncTask;

@@ -17,7 +17,6 @@ public class Database extends SQLiteOpenHelper {
     private static final String TAG = "DATABASE";
 
     // Database Versions
-    private static final int SKRUMAZ_100 = 10;
     private static final int SKRUMAZ_106 = 11;
     private static final int SKRUMAZ_108 = 12;
 

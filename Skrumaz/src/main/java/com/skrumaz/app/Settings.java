@@ -1,15 +1,12 @@
 package com.skrumaz.app;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.view.MenuItem;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.skrumaz.app.data.Preferences;

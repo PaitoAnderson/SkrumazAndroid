@@ -46,7 +46,7 @@ public class Tasks extends Fragment implements SwipeRefreshLayout.OnRefreshListe
     private List<Artifact> artifactCards = new ArrayList<>();
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter recyclerViewAdapter;
+    private ArtifactAdapter recyclerViewAdapter;
 
     private LinearLayout processContainer;
     private ProgressBar progressSpinner;
