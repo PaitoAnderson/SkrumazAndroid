@@ -21,7 +21,7 @@
         android:orientation="vertical"
         android:background="@color/primary_color" >
 
-        <com.viewpagerindicator.CirclePageIndicator
+        <com.skrumaz.app.ui.viewpageindicator.CirclePageIndicator
             android:id="@+id/indicator"
             android:padding="10dip"
             android:layout_height="wrap_content"

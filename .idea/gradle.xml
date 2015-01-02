@@ -10,8 +10,6 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/Skrumaz" />
-            <option value="$PROJECT_DIR$/Skrumaz/libs" />
-            <option value="$PROJECT_DIR$/Skrumaz/libs/ViewPageIndicator" />
           </set>
         </option>
       </GradleProjectSettings>

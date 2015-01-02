@@ -10,7 +10,7 @@ import android.widget.Button;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.skrumaz.app.tutorial.FragmentPagerAdapter;
 import com.skrumaz.app.tutorial.Images;
-import com.viewpagerindicator.CirclePageIndicator;
+import com.skrumaz.app.ui.viewpageindicator.CirclePageIndicator;
 
 import java.util.ArrayList;
 

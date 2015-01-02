@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.viewpagerindicator;
+package com.skrumaz.app.ui.viewpageindicator;
 
 import android.support.v4.view.ViewPager;
 

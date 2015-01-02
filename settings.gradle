@@ -1,1 +1,1 @@
-include ':Skrumaz:libs:ViewPageIndicator', ':Skrumaz'
+include ':Skrumaz'
