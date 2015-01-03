@@ -45,7 +45,10 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:21.0.3'
     compile 'com.android.support:cardview-v7:21.0.3'
     compile('com.uservoice:uservoice-android-sdk:1.2.0') {
+        exclude module: 'commons-logging'
+        exclude module: 'commons-codec'
         exclude module: 'httpclient'
+        exclude module: 'httpcore'
     }
     compile('de.keyboardsurfer.android.widget:crouton:1.8.5@aar') {
         exclude group: 'com.google.android', module: 'support-v4'

@@ -53,8 +53,7 @@ public class GetArtifacts {
             iteration.setOid(IterationId);
 
             // Get US/DE's
-            GetUserStories(context);
-            GetDefects(context);
+            GetArtifacts(context);
 
             // Store items in Database
             Artifacts db = new Artifacts(context);
@@ -98,8 +97,7 @@ public class GetArtifacts {
                     Log.i("GetArtifacts", "Iteration: " + iteration.getName());
 
                     // Get US/DE's
-                    GetUserStories(context);
-                    GetDefects(context);
+                    GetArtifacts(context);
 
                     // Store items in Database
                     Artifacts db = new Artifacts(context);
@@ -124,9 +122,9 @@ public class GetArtifacts {
         return artifacts;
     }
 
-    public void GetUserStories(Context context) {
+    public void GetArtifacts(Context context) {
 
-        ((MainActivity)context).SetProgress("Getting User Stories...");
+        ((MainActivity)context).SetProgress("Getting Artifacts...");
 
         // Setup HTTP Request
         DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -141,9 +139,9 @@ public class GetArtifacts {
             whereQuery = "(" + whereQuery + "%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(context) + "%22))";
         }
 
-        HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate,Owner,Description");
+        HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/artifact?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate,Owner,Description&types=hierarchicalrequirement,defect");
 
-             Log.d("GetArtifacts","https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate,Owner,Description&pretty=true");
+        Log.d("GetArtifacts","https://rally1.rallydev.com/slm/webservice/v2.0/artifact?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate,Owner,Description&types=hierarchicalrequirement,defect&pretty=true");
 
         // Setup HTTP Headers / Authorization
         get.setHeader("Accept", "application/json");
@@ -164,131 +162,46 @@ public class GetArtifacts {
                 }
 
                 // Get array of User Stories in Iteration for this user
-                JSONArray userStoriesArray = new JSONObject(responseStrBuilder.toString()).getJSONObject("QueryResult").getJSONArray("Results");
+                JSONArray artifactArray = new JSONObject(responseStrBuilder.toString()).getJSONObject("QueryResult").getJSONArray("Results");
 
                 // Iterate though User Stories
-                for (int i = 0; i < userStoriesArray.length(); i++) {
+                for (int i = 0; i < artifactArray.length(); i++) {
 
                     // Create an expandable list item for each user story
-                    Artifact userStory = new Artifact(userStoriesArray.getJSONObject(i).getString("_refObjectName"));
-                    userStory.setRank(userStoriesArray.getJSONObject(i).getString("DragAndDropRank"));
-                    userStory.setFormattedID(userStoriesArray.getJSONObject(i).getString("FormattedID"));
-                    userStory.setBlocked(userStoriesArray.getJSONObject(i).getBoolean("Blocked"));
-                    userStory.setStatus(ArtifactStatusLookup.stringToStatus(userStoriesArray.getJSONObject(i).getString("ScheduleState")));
-                    userStory.setLastUpdate(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(userStoriesArray.getJSONObject(i).getString("LastUpdateDate")));
-                    userStory.setDescription(userStoriesArray.getJSONObject(i).getString("Description"));
+                    Artifact artifact = new Artifact(artifactArray.getJSONObject(i).getString("_refObjectName"));
+                    artifact.setRank(artifactArray.getJSONObject(i).getString("DragAndDropRank"));
+                    artifact.setFormattedID(artifactArray.getJSONObject(i).getString("FormattedID"));
+                    artifact.setBlocked(artifactArray.getJSONObject(i).getBoolean("Blocked"));
+                    artifact.setStatus(ArtifactStatusLookup.stringToStatus(artifactArray.getJSONObject(i).getString("ScheduleState")));
+                    artifact.setLastUpdate(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(artifactArray.getJSONObject(i).getString("LastUpdateDate")));
+                    artifact.setDescription(artifactArray.getJSONObject(i).getString("Description"));
 
                     // Iterate though Tasks for User Story
-                    for (int j = 0; j < userStoriesArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getInt("Count"); j++)
+                    for (int j = 0; j < artifactArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getInt("Count"); j++)
                     {
-                        Task task = new Task(userStoriesArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getJSONObject("Name").names().getString(j));
-                        task.setFormattedID(userStoriesArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getJSONObject("FormattedID").names().getString(j));
+                        Task task = new Task(artifactArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getJSONObject("Name").names().getString(j));
+                        task.setFormattedID(artifactArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getJSONObject("FormattedID").names().getString(j));
 
                         // Add Tasks as children
-                        userStory.addTask(task);
+                        artifact.addTask(task);
                     }
 
                     // Update story with Owner name
                     try {
-                        userStory.setOwnerName(userStoriesArray.getJSONObject(i).getJSONObject("Owner").getString("_refObjectName"));
+                        artifact.setOwnerName(artifactArray.getJSONObject(i).getJSONObject("Owner").getString("_refObjectName"));
                     } catch(JSONException ex) {
-                        userStory.setOwnerName("No Owner");
+                        artifact.setOwnerName("No Owner");
                     }
 
-                    artifacts.add(userStory);
+                    artifacts.add(artifact);
                 }
 
             } else {
                 ((MainActivity)context).SetError(statusLine.getReasonPhrase());
-                Log.d("GetArtifacts", "US Error: " + statusLine.getReasonPhrase());
+                Log.d("GetArtifacts", "Artifact Error: " + statusLine.getReasonPhrase());
             }
 
         } catch (IOException | JSONException | ParseException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void GetDefects(Context context) {
-
-        ((MainActivity)context).SetProgress("Getting Defects...");
-
-        // Setup HTTP Request
-        DefaultHttpClient httpClient = new DefaultHttpClient();
-        String whereQuery = "(Iteration.Oid%20=%20%22" + iteration.getOid() + "%22)";
-
-        // Get Backlog Items
-        if (iteration.getOid() == Long.MAX_VALUE) {
-            whereQuery = "(Iteration.Name%20=%20%22%22)";
-        }
-
-        if (!Preferences.showAllOwners(context)) {
-            whereQuery = "(" + whereQuery + "%20and%20(Owner.Name%20=%20%22" + Preferences.getUsername(context) + "%22))";
-        }
-
-        HttpGet get = new HttpGet("https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate,Owner,Description");
-
-             Log.d("GetArtifacts","https://rally1.rallydev.com/slm/webservice/v2.0/defects?query=" + whereQuery + "&pagesize=100&fetch=Tasks:summary[FormattedID;Name],Rank,FormattedID,Blocked,ScheduleState,LastUpdateDate,Owner,Description&pretty=true");
-
-        // Setup HTTP Headers / Authorization
-        get.setHeader("Accept", "application/json");
-        get = ClientInfo.addHttpGetHeaders(get);
-        get.setHeader("Authorization", Preferences.getCredentials(context));
-        try {
-            // Make HTTP Request
-            HttpResponse response = httpClient.execute(get);
-            StatusLine statusLine = response.getStatusLine();
-            if (statusLine.getStatusCode() == HttpURLConnection.HTTP_OK) {
-
-                // Parse JSON Response
-                BufferedReader streamReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-                StringBuilder responseStrBuilder = new StringBuilder();
-                String inputStr;
-                while ((inputStr = streamReader.readLine()) != null) {
-                    responseStrBuilder.append(inputStr);
-                }
-
-                // Get array of User Stories in Iteration for this user
-                JSONArray defectsArray = new JSONObject(responseStrBuilder.toString()).getJSONObject("QueryResult").getJSONArray("Results");
-
-                // Iterate though Defects
-                for (int i = 0; i < defectsArray.length(); i++) {
-
-                    // Create an expandable list item for each defect
-                    Artifact defect = new Artifact(defectsArray.getJSONObject(i).getString("_refObjectName"));
-                    defect.setRank(defectsArray.getJSONObject(i).getString("DragAndDropRank"));
-                    defect.setFormattedID(defectsArray.getJSONObject(i).getString("FormattedID"));
-                    defect.setBlocked(defectsArray.getJSONObject(i).getBoolean("Blocked"));
-                    defect.setStatus(ArtifactStatusLookup.stringToStatus(defectsArray.getJSONObject(i).getString("ScheduleState")));
-                    defect.setLastUpdate(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(defectsArray.getJSONObject(i).getString("LastUpdateDate")));
-                    defect.setDescription(defectsArray.getJSONObject(i).getString("Description"));
-
-                    // Iterate though Tasks for Defect
-                    for (int j = 0; j < defectsArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getInt("Count"); j++)
-                    {
-                        Task task = new Task(defectsArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getJSONObject("Name").names().getString(j));
-                        task.setFormattedID(defectsArray.getJSONObject(i).getJSONObject("Summary").getJSONObject("Tasks").getJSONObject("FormattedID").names().getString(j));
-
-                        // Add Tasks as children
-                        defect.addTask(task);
-                    }
-
-                    // Update defect with Owner name
-                    try {
-                        defect.setOwnerName(defectsArray.getJSONObject(i).getJSONObject("Owner").getString("_refObjectName"));
-                    } catch(JSONException ex) {
-                        defect.setOwnerName("No Owner");
-                    }
-
-                    // Add defect with Tasks to List
-                    artifacts.add(defect);
-                }
-
-            } else {
-                ((MainActivity)context).SetError(statusLine.getReasonPhrase());
-                Log.d("GetArtifacts", "DE Error: " + statusLine.getReasonPhrase());
-            }
-
-        } catch (Exception e) {
             e.printStackTrace();
         }
     }
