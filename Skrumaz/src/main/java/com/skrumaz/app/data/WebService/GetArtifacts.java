@@ -53,7 +53,7 @@ public class GetArtifacts {
             iteration.setOid(IterationId);
 
             // Get US/DE's
-            GetArtifacts(context);
+            GetAllArtifacts(context);
 
             // Store items in Database
             Artifacts db = new Artifacts(context);
@@ -97,7 +97,7 @@ public class GetArtifacts {
                     Log.i("GetArtifacts", "Iteration: " + iteration.getName());
 
                     // Get US/DE's
-                    GetArtifacts(context);
+                    GetAllArtifacts(context);
 
                     // Store items in Database
                     Artifacts db = new Artifacts(context);
@@ -122,7 +122,7 @@ public class GetArtifacts {
         return artifacts;
     }
 
-    public void GetArtifacts(Context context) {
+    public void GetAllArtifacts(Context context) {
 
         ((MainActivity)context).SetProgress("Getting Artifacts...");
 

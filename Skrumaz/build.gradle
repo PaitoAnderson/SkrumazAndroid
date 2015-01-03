@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.skrumaz.app"
-        minSdkVersion 16
+        minSdkVersion 15
         targetSdkVersion 21
         versionCode 112
         versionName "1.1.2"
