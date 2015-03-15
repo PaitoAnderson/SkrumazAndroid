@@ -1,6 +1,5 @@
 package com.skrumaz.app.tutorial;
 
-import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -19,7 +18,6 @@ public class FragmentImageView extends Fragment {
 
     private Integer itemData;
     private Bitmap myBitmap;
-    public ProgressDialog pd;
     private ImageView ivImage;
 
     public static FragmentImageView newInstance() {
